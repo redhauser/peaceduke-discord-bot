@@ -1,0 +1,25 @@
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const lyricsFinder = require("lyrics-finder");
+const getArtistTitle = require("get-artist-title");
+
+module.exports = {
+    data: new SlashCommandBuilder()
+    .setName("lyrics")
+    .setDescription("Покаже слова до поточно граючою пісні."),
+    category: "музика",
+    async execute(message,args,Discord,client,player,config) {
+        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+        if(!client.queue[0]) return await message.reply("На даний момент нічого не грає.");
+        let briefdata = getArtistTitle(client.queue[0].title);
+        if(!briefdata) return await message.reply("Співака/пісню не знайдено.");
+        await message.reply("Слова " + client.queue[0].title + ":");
+        (async function(artist, title) {
+            let lyrics = await lyricsFinder(artist, title) || "Жодних слів не було знайдено.";
+            
+            for(let i = 0; i*2000<lyrics.length; i++) {
+                await message.channel.send(lyrics.slice(i*2000, (2000>lyrics.length ? lyrics.length : (i+1)*2000) ));
+            }
+
+        })(briefdata[0],briefdata[1]);
+    }
+}
