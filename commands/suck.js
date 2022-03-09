@@ -6,6 +6,7 @@ module.exports = {
     .setDescription("suck some dicks"),
     category: "розваги",
     async execute(message, args, Discord, client, player, config) {
+        //Replace names with placeholders
         if(message.member.id === config.artemID) {
             let asstour4ik = message.guild.members.cache.get(config.arturID);
             if(!asstour4ik || !asstour4ik.voice) return await message.reply("Він і так уже сакнув.");

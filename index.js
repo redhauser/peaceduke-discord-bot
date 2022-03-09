@@ -115,8 +115,13 @@ client.on('interactionCreate', async interaction => {
 
 client.on("messageCreate", async message => {
     if(message.content == "піздюк") { return message.reply("це я peaceduke");}
-    if(!client?.stats[message.member.id]?.messageCount) {
-        client.stats[message.member.id] = {
+    if(message.channel.type === "DM" && !message.author.bot) {
+        return await message.reply({content: "Привіт!\nЯкщо ти хочеш використовувати мої функції, будь ласка користуйся сервером Correction Fluid для цього.\nВ майбутньому, мої команди можуть стати частково функціональними у приватних повідомленнях!"});
+    } else if(message.channel.type === "DM") {
+        return;
+    } 
+    if(!client?.stats[message.member?.id]?.messageCount) {
+        client?.stats[message.member?.id] = {
             messageCount: 0
         }
     }

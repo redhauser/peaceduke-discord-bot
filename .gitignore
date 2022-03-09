@@ -1,2 +1,3 @@
 config.json
 todolist.txt
+./commands/connect4.js
