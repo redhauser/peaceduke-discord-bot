@@ -119,9 +119,9 @@ client.on("messageCreate", async message => {
         return await message.reply({content: "Привіт!\nЯкщо ти хочеш використовувати мої функції, будь ласка користуйся сервером Correction Fluid для цього.\nВ майбутньому, мої команди можуть стати частково функціональними у приватних повідомленнях!"});
     } else if(message.channel.type === "DM") {
         return;
-    } 
-    if(!client?.stats[message.member?.id]?.messageCount) {
-        client?.stats[message.member?.id] = {
+    }
+    if(client?.stats[message.member?.id]?.messageCount === undefined) {
+        client.stats[message.member.id] = {
             messageCount: 0
         }
     }
