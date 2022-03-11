@@ -9,7 +9,7 @@ module.exports = {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         if(!message.member.roles.cache.has(config.djRole)) return await message.reply({content: "У вас немає ролі DJ!", ephemeral: true});
         client.queue = [];
-        await message.reply({content: "Чергу повністю очищено."});
         await player.stop();
+        await message.reply({content: "Чергу повністю очищено."});
     }
 }

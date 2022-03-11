@@ -4,17 +4,17 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("poll")
     .setDescription("Дозволяє провести голосування!")
-    .addStringOption(option => option.setName("питання").setDescription("Питання яке би ви хотіли спитати у спільноти Correction Fluid").setRequired(true))
-    .addStringOption(option => option.setName("варіант1").setDescription("1 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант2").setDescription("2 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант3").setDescription("3 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант4").setDescription("4 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант5").setDescription("5 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант6").setDescription("6 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант7").setDescription("7 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант8").setDescription("8 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант9").setDescription("9 варіант до вашого питання").setRequired(false))
-    .addStringOption(option => option.setName("варіант10").setDescription("10 варіант до вашого питання").setRequired(false)),
+    .addStringOption(option => option.setName("питання").setDescription("Питання яке би ви хотіли спитати у спільноти Correction Fluid!").setRequired(true))
+    .addStringOption(option => option.setName("варіант1").setDescription("1 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант2").setDescription("2 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант3").setDescription("3 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант4").setDescription("4 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант5").setDescription("5 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант6").setDescription("6 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант7").setDescription("7 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант8").setDescription("8 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант9").setDescription("9 варіант до вашого питання.").setRequired(false))
+    .addStringOption(option => option.setName("варіант10").setDescription("10 варіант до вашого питання.").setRequired(false)),
     category: "розваги",
     async execute(message,args,Discord) {
         if(message.type === "DEFAULT") {

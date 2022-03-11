@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("remove")
     .setDescription("Видаляє дану кількість повідомлень. Потрібні права вищого модератора.")
-    .addNumberOption(option => option.setName("число").setDescription("Число повідомлень яке ви хочете видалити").setRequired(true)),
+    .addNumberOption(option => option.setName("число").setDescription("Число повідомлень яке ви хочете видалити.").setRequired(true)),
     category: "модерація",
     async execute(message, args) {
        if(!args) args = [message?.options.get("число").value];

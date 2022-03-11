@@ -4,14 +4,14 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("rolehandler")
     .setDescription("Відповідає за видачу ролей. Тільки для Трахмира.")
-    .addStringOption(option => option.setName("id1").setDescription("ID першої ролі").setRequired(true))
-    .addStringOption(option => option.setName("id2").setDescription("ID другої ролі").setRequired(true))
-    .addStringOption(option => option.setName("id3").setDescription("ID третьої ролі").setRequired(true))
-    .addStringOption(option => option.setName("id4").setDescription("ID четвертої ролі").setRequired(true))
-    .addStringOption(option => option.setName("emoji1").setDescription("Емоджі для реакції на першу роль").setRequired(false))
-    .addStringOption(option => option.setName("emoji2").setDescription("Емоджі для реакції на другу роль").setRequired(false))
-    .addStringOption(option => option.setName("emoji3").setDescription("Емоджі для реакції на третю роль").setRequired(false))
-    .addStringOption(option => option.setName("emoji4").setDescription("Емоджі для реакції на четверту роль").setRequired(false)),
+    .addStringOption(option => option.setName("id1").setDescription("ID першої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("id2").setDescription("ID другої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("id3").setDescription("ID третьої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("id4").setDescription("ID четвертої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("emoji1").setDescription("Емоджі для реакції на першу роль.").setRequired(false))
+    .addStringOption(option => option.setName("emoji2").setDescription("Емоджі для реакції на другу роль.").setRequired(false))
+    .addStringOption(option => option.setName("emoji3").setDescription("Емоджі для реакції на третю роль.").setRequired(false))
+    .addStringOption(option => option.setName("emoji4").setDescription("Емоджі для реакції на четверту роль.").setRequired(false)),
     category: "модерація",
     async execute(message,args,Discord,client, config) {
         if(!message.member.permissions.has("MANAGE_ROLES")) return message.reply({content: "Ви не маєте прав на використання цієї команди!", ephemeral: true});
