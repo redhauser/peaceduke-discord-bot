@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("con4")
     .setDescription("Зіграй чотири-в-ряд з другом!")
-    .addMentionableOption(option => option.setName("опонент").setDescription("користувач, з яким би ви хотіли зіграти").setRequired(false)),
+    .addMentionableOption(option => option.setName("опонент").setDescription("користувач, з яким би ви хотіли зіграти.").setRequired(false)),
     category: "ігри",
     async execute(message,args,Discord,client,player,config) {
         let playerX = message.member;

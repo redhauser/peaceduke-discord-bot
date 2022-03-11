@@ -6,7 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("play")
     .setDescription("Добавляє пісню в чергу.")
-    .addStringOption(option => option.setName("пісня").setDescription("може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб").setRequired(true)),
+    .addStringOption(option => option.setName("пісня").setDescription("може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб.").setRequired(true)),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
         try {

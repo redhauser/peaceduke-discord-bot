@@ -5,8 +5,8 @@ const fs = require("fs");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("stats")
-    .setDescription("Видає загальну інформацію про користувача на сервері")
-    .addMentionableOption(option => option.setName("user").setDescription("Користувач чию статистику ви б хотіли побачити")),
+    .setDescription("Видає загальну інформацію про користувача на сервері.")
+    .addMentionableOption(option => option.setName("user").setDescription("Користувач чию статистику ви б хотіли побачити.")),
     category: "інформація",
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});

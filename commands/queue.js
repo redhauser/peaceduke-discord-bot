@@ -4,7 +4,7 @@ const ytSearch = require("yt-search");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("queue")
-    .setDescription("Показує вам поточну чергу в плейлісті музикального бота "),
+    .setDescription("Показує вам поточну чергу в плейлісті музикального бота."),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});

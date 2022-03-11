@@ -8,6 +8,6 @@ module.exports = {
     async execute(message,args, Discord, client, player) {
 
         let crfile = "./media/f77453938f8f65071d2a448b68f3af23.mp4";
-        await message.reply({content: "xD", files: [{attachment: crfile, name: "cr.mp4"}]});
+        await message.reply({files: [{attachment: crfile, name: "cr.mp4"}]});
     }
 }

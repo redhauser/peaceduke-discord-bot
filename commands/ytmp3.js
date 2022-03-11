@@ -8,8 +8,8 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("ytmp3")
     .setDescription("Конвертує ютуб відео у mp3 формат.")
-    .addStringOption(option => option.setName("url").setDescription("посилання на відео").setRequired(true))
-    .addStringOption(option => option.setName("name").setDescription("назва .mp3 файла яку ви хочете отримати (!) ДОБАВЛЯТИ .MP3 В КІНЕЦЬ НЕ ПОТРІБНО").setRequired(false)),
+    .addStringOption(option => option.setName("url").setDescription("Посилання на відео").setRequired(true))
+    .addStringOption(option => option.setName("name").setDescription("Назва .mp3 файла, якого би ви хотіли отримати. Ставити .mp3 в не треба.").setRequired(false)),
     category: "музика",
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});

@@ -5,8 +5,8 @@ const ytdl = require("ytdl-core");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("plnow")
-    .setDescription("Заставляє бота приєднатись у голосовий канал і грати дану пісню")
-    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб").setRequired(true)),
+    .setDescription("Заставляє бота приєднатись у голосовий канал і грати дану пісню.")
+    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб.").setRequired(true)),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
         try {
@@ -46,7 +46,7 @@ module.exports = {
         if(video) {
         let urltovid = validURL(args[0]) ? args[0] : video.url;
         video.url = urltovid;
-        if(!urltovid) return message.reply({content: "Сталась помилка"});
+        if(!urltovid) return message.reply({content: "Сталась надзвичайна помилка. Якщо ви бачете цю помилку, повідомте редхаузеру!"});
         video.sender = message.member.user.tag;
         video.interaction = message;
         let embedLink = new Discord.MessageEmbed()

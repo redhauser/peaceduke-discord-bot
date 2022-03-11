@@ -14,7 +14,7 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const voice = require("@discordjs/voice");
-const Canvas = require("canvas");
+//const Canvas = require("canvas");
 const player = voice.createAudioPlayer({
     behaviors: {
         noSubscriber: voice.NoSubscriberBehavior.Stop,
@@ -105,12 +105,11 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
     const command = client.commands.get(interaction.commandName);
     args = false;
-    console.log("Виконую команду " + interaction.commandName + "...");
     await command.execute(interaction, args, Discord, client, player, config).catch((err)=>{
         console.log("Не вдалось виконати команду " + command.data.name + ".");
         console.error(err);
     });
-    console.log("Вдали виконав команду " + interaction.commandName + ".");
+    console.log("Закінчив виконання команди " + interaction.commandName + ".");
 });
 
 client.on("messageCreate", async message => {
@@ -132,13 +131,13 @@ client.on("messageCreate", async message => {
 
 
     if(client.commands.get(command)) {
-        console.log("Виконую команду " + command + "...");
+        //console.log("Виконую команду " + command + "...");
         client.commands.get(command).execute(message, args, Discord, client, player, config).catch((err) => {
         console.log("Не вдалось виконати команду " + command + " через префікс, а не (/) інтерфейс."); 
         console.error(err);
         message.channel.send("\n\nВідбулась помилка.\nЯкщо ви використалу команду не через `/" + command + "` а через `" + config.botPrefix + command +"`,\n рекомендуємо попробувати використати ту саму команду через `/" + command + "`")
     });
-        console.log("Вдало виконав команду " + command + ".");
+        console.log("Закінчив виконання команду " + command + ".");
     } else {
         console.log("Не знайшов команди " + command + ".");
     }
@@ -149,7 +148,7 @@ client.on("messageCreate", async message => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-    const canvas = Canvas.createCanvas(700,250);
+    /*const canvas = Canvas.createCanvas(700,250);
     const context = canvas.getContext("2d");
     let bg = await Canvas.loadImage("./media/canvastest.png");
     let epicimg = await Canvas.loadImage("./media/epicemoji.png");
@@ -164,6 +163,7 @@ client.on("guildMemberAdd", async (member) => {
 
     const attachment = new Discord.MessageAttachment(canvas.toBuffer(), "background.png");
     replyChannel.send({files: [attachment]});
+	*/
 });
 
 client.login(config.token);
