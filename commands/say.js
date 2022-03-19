@@ -6,8 +6,9 @@ module.exports = {
     .setDescription("Повторює те що ви кажете, шикарна фіча!!")
     .addStringOption(option => option.setName("повідомлення").setDescription("Ваше важливе повідомлення!").setRequired(true)),
     category: "розваги",
-    async execute(message,args) {
-        if (!args) { args =  [message.options.get("повідомлення").value] }
+    async execute(message,args, Discord, client, player, config) {
+        if(!message.member.roles.cache.has(config.botTesterRole)) return await message.reply({content: "У вас немає прав на використання цієї фічи!", ephemeral: true});
+        if (!args) { args = args[0] || [message?.options?.get("повідомлення")?.value]; }
         if (args.join(" ").toString()=="ur mom") return await message.reply({content: "дурачок?"});
         if (args.join(" ").toString()=="fuck you") return await message.reply({content: "ні, пішов ТИ в сраку!"});
         if (args.join(" ").toString()=="") return await message.reply({content: "Нічого сказати, чел."});

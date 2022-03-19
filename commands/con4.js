@@ -8,6 +8,8 @@ module.exports = {
     .addMentionableOption(option => option.setName("опонент").setDescription("користувач, з яким би ви хотіли зіграти.").setRequired(true)),
     category: "ігри",
     async execute(message,args,Discord,client,player,config) {
+        if(message.type !== "APPLICATION_COMMAND") return await message.reply({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/con4`!"});
+        
         let playerX = message.member;
         let playerOid = message?.options?.get("опонент")?.value || false;
         if(!playerOid) return await message.reply("Ви не вибрали опонента!");
@@ -146,7 +148,7 @@ module.exports = {
             if(gameDone) return collector.stop();
             if(user.id === config.clientId) return;
             
-            if(!(playerX.id === playerOid)) { 
+            if(!(playerX.id === playerOid)) {
             if(!(user == playerX.user || user == playerO)) return reaction.users.remove(user);
             if(!playerO && user != playerX.user) {
                 playerO = {user: user};
@@ -154,6 +156,8 @@ module.exports = {
             }
             if(user==playerX.user && currentTurn=="O") return reaction.users.remove(user);
             if(user==playerO && currentTurn=="X") return reaction.users.remove(user);
+            } else if(user != playerX.user) {
+                return reaction.users.remove(user);
             }
 
             let num = parseInt(reaction.emoji.name);
@@ -167,10 +171,6 @@ module.exports = {
                     } else if(board[indx] !== "u" && board[indx-7] == "u") {
                         board[indx-7] = currentTurn;  
                         i=7;
-                    }
-                    if(!i && board[indx]!== "u") {
-                        let dabot = await client.users.fetch(config.clientId);
-                        reaction.users.remove(dabot);
                     }
             }
 
@@ -207,6 +207,15 @@ module.exports = {
                     collector.stop();
                 }
             }
+            for(let i = 0; i < board.length; i++) {
+                if(board[i] == "u") { i=board.length;break; }
+                if(i==board.length-1) { gameDone = "OX";collector.stop();}
+            }  
+            if(board[parseInt(reaction.emoji.name)-1]!== "u") {
+                let dabot = await client.users.fetch(config.clientId);
+                return reaction.users.remove(dabot);
+                //return reaction.users.remove(user);
+            } 
             //console.log(board);
 
             } else {
@@ -217,12 +226,12 @@ module.exports = {
             reply.reactions.removeAll().catch(error => console.error("Відбулась помилка при видаленні реакції: ", error));
             if(!gameDone) {
                 await message.editReply({content: "Схоже, що один з гравців став АФК, і тому гра була закінчена."})
-            } else {
+            } else if(gameDone != "OX"){
 
                 if(playerX.user.id != playerO.id) {
                     desc = "У грі між " + builders.userMention(playerX.user.id)+ " і " + (playerO.username ? builders.userMention(playerO.id) : "нізким!") + ", переміг " + (gameDone==="X" ? builders.userMention(playerX.user.id) : (playerO.username ? builders.userMention(playerO.id) : "нізким!")) + "\n\n";
                 } else {
-                    desc = "У грі де " + builders.userMention(playerX.user.id)+ " грав сам з собою, він переміг за " + (gameDone==="X" ? "🟡" : "🔴") + "!!!\n\n";
+                    desc = "У грі де " + builders.userMention(playerX.user.id)+ " грав сам з собою, він переміг за " + (gameDone==="X" ? "🟡" : "🔴") + "!\n\n";
 
                 }
                 for(let i = 0; i < board.length; i++) {
@@ -237,6 +246,22 @@ module.exports = {
                 } else {
                     await message.editReply({content: "🎉" + playerO.username + " виграв!🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
                 }
+        } else {
+            
+            if(playerX.user.id != playerO.id) {
+                desc = "У грі між " + builders.userMention(playerX.user.id)+ " і " + (playerO.username ? builders.userMention(playerO.id) : "нізким!") + ", вони зіграли в нічию!\n\n";
+            } else {
+                desc = "У грі де " + builders.userMention(playerX.user.id)+ " грав сам з собою, він переміг за зіграв в нічию!\n\n";
+            }
+
+            for(let i = 0; i < board.length; i++) {
+                if(!(i%7)) desc+="\n"; 
+                if(board[i]=="u") desc+="🔳";
+                if(board[i]=="X") desc+="🟡";
+                if(board[i]=="O") desc+="🔴";
+            }    
+
+            await message.editReply({content: "☮️" + playerX.user.username + " і " + playerO.username + " зіграли в нічию! ☮️", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTile("Чотири-в-ряд!")]});
         }
         });
     }
