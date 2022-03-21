@@ -261,7 +261,7 @@ module.exports = {
                 if(board[i]=="O") desc+="🔴";
             }    
 
-            await message.editReply({content: "☮️" + playerX.user.username + " і " + playerO.username + " зіграли в нічию! ☮️", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTile("Чотири-в-ряд!")]});
+            await message.editReply({content: "☮️" + playerX.user.username + " і " + playerO.username + " зіграли в нічию! ☮️", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
         }
         });
     }
