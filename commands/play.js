@@ -22,6 +22,7 @@ module.exports = {
         if(!args.length) return await message.reply({content: "Ви повинні ввести посилання/назву пісні!", ephemeral: true});
         player.vc = vc;
 
+        /*
         const validURL = (str) =>{
             var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
             if(!regex.test(str)){
@@ -29,10 +30,10 @@ module.exports = {
             } else {
                 return true;
             }
-        } 
+        } */
         
         let video = false;
-        if (validURL(args[0])) {
+        if (ytdl.validateURL(args[0])) {
             video = (await ytdl.getInfo(args[0])).videoDetails;
             video.image = video.thumbnails[video.thumbnails.length-1].url;
             video.timestamp = Math.floor(video.lengthSeconds/60) + ":" + (video.lengthSeconds%60<10 ? ("0" + video.lengthSeconds%60) : video.lengthSeconds%60);
@@ -46,7 +47,7 @@ module.exports = {
             video = await videoFinder(args.join(" "));
         }
         if(video) {
-        let urltovid = validURL(args[0]) ? args[0] : video.url;
+        let urltovid = ytdl.validateURL(args[0]) ? args[0] : video.url;
         video.url = urltovid;
         if(!urltovid) return message.reply({content: "Помилка"});
         video.sender = message.member.user.tag;

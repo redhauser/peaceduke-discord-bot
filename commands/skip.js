@@ -9,7 +9,7 @@ module.exports = {
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         if(!client.queue.length) return message.reply("В черзі немає жодних пісень.");
-        args = args[0] || [message?.options?.get("кількість")?.value];
+        args = parseInt(args[0]) || [message?.options?.get("кількість")?.value];
         if(!args[0] || args[0] < 1) args[0]=1;
 
         for (let i = 0; i<args[0]; i++) {

@@ -34,23 +34,26 @@ module.exports = {
             }
             message.deleteReply();
         }
+        let reactIntegers = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
+        let desc = "**" + args[0] + "**";
+        desc+="\n\n\n";
         const embedMessage = new Discord.MessageEmbed()
         .setColor( "#"+ (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)))
         .setTitle("Опитування від " + message.member.displayName)
         .setAuthor({name: message.member.user.tag, iconURL: message.member.displayAvatarURL()})
-        .setURL("https://youtu.be/dQw4w9WgXcQ")
-        .setDescription(args[0]!=""?(args[0]):"Опитування");
+        .setURL("https://youtu.be/dQw4w9WgXcQ");
 
         if (args.length > 1) {
-            for(let i = 1;i < args.length; i++) {
-            embedMessage.addFields({name:"Варіант "+i,value: args[i]},);
+            for(let i = 0;i < args.length-1; i++) {
+            //embedMessage.addFields({name:"Варіант "+i,value: args[i]},);
+            desc+=reactIntegers[i] + " варіант: " + args[i+1] + "\n\n";
             }
         }
-        
+        embedMessage.setDescription(desc);
+
         embedMessage.setFooter({text:"Це опитування заспонсоровано сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
         
         let reactPoll = await message.channel.send({embeds: [embedMessage]});
-        let reactIntegers = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
         let yesNoQuestion = ["✅","❌"];
         if (args.length > 1) {
         for(let i=0;i<args.length-1;i++) {

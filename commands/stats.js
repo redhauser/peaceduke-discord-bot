@@ -37,10 +37,10 @@ module.exports = {
         statembed.addField("\u200B", "\u200B")
         .addField("Discord тег:", "`" + statuser.tag + "`",true)
         .addField("# Повідомлень:", client.stats[userid]?.messageCount?.toString() || "Дані відсутні.",true);
-        if(statguilduser?.presence?.status == "online") statembed.addField("Статус:","Онлайн 🟢", true);
-        if(statguilduser?.presence?.status == "idle") statembed.addField("Статус:","АФК 🟡", true);
-        if(statguilduser?.presence?.status == "offline") statembed.addField("Статус:","Офлайн ▫️", true);
-        if(statguilduser?.presence?.status == "dnd") statembed.addField("Статус:","Злий!!! ❌", true);
+        if(statguilduser?.presence?.status == "online")  { statembed.addField("Статус:","Онлайн 🟢", true); }
+        else if(statguilduser?.presence?.status == "idle") { statembed.addField("Статус:","АФК 🟡", true); }
+        else if(statguilduser?.presence?.status == "dnd") { statembed.addField("Статус:","Злий!!! ❌", true); }
+        else { statembed.addField("Статус:","Офлайн ▫️", true); }
         statembed.addField("\u200B", "\u200B")
         .addField("Має аккаунт з: 🌟", builders.time(statuser.createdAt),true)
         .addField("Приєднався на сервер: 👋", (statguilduser ? builders.time(statguilduser?.joinedAt) : "Не є учасником цього сервера."),true)

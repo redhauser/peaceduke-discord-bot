@@ -32,6 +32,6 @@ module.exports = {
         console.log("Заснув.")
         client.destroy();
         process.exit();
-        }, 2000);
+        }, 1000);
     }
 } 

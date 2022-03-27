@@ -30,20 +30,24 @@ module.exports = {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         let vc = message.member.voice.channel;
         if (!vc) return await message.reply({content: "Ви не знаходитесь у голосовому каналі!"});
-        args = args || [message?.options?.get("звук")?.value];
-        
-        client.queue = [];
-        await player.stop();
-        player.vc = vc;
-        const connection = await voice.joinVoiceChannel({
-            channelId: vc.id,
-            guildId: vc.guild.id,
-            adapterCreator: vc.guild.voiceAdapterCreator,
-        });
-        let resource = voice.createAudioResource("./media/soundpad/" + args[0] + ".mp3");
-        connection.subscribe(player);
-        await player.play(resource);
+        args = [message?.options?.get("звук")?.value];
+        if (!args[0]) return await message.reply({content: "Ви не вибрали звук!"});
+        await message.reply({content: "Граю звук...", ephemeral: true});
 
-        await message.reply({content: "Зіграв звук - " + args[0] + ".mp3!", ephemeral: true});
+        let resource = voice.createAudioResource("./media/soundpad/" + args[0] + ".mp3");
+        resource.playStream.once("readable", async () => {
+            client.queue = [];
+            await player.stop();
+            player.vc = vc;
+            const connection = voice.joinVoiceChannel({
+                channelId: vc.id,
+                guildId: vc.guild.id,
+                adapterCreator: vc.guild.voiceAdapterCreator,
+            });
+            connection.subscribe(player);
+            player.play(resource);
+            console.log("Зіграв звук - " + args[0] + ".mp3!");
+            await message.channel.send("Зіграв звук - " + args[0] + ".mp3!");
+        });
     }
 }
