@@ -32,7 +32,7 @@ module.exports = {
         if (!vc) return await message.reply({content: "Ви не знаходитесь у голосовому каналі!"});
         args = [message?.options?.get("звук")?.value];
         if (!args[0]) return await message.reply({content: "Ви не вибрали звук!"});
-        await message.reply({content: "Граю звук...", ephemeral: true});
+        await message.reply({content: "Граю звук...", ephemeral: false});
 
         let resource = voice.createAudioResource("./media/soundpad/" + args[0] + ".mp3");
         resource.playStream.once("readable", async () => {
@@ -47,7 +47,7 @@ module.exports = {
             connection.subscribe(player);
             player.play(resource);
             console.log("Зіграв звук - " + args[0] + ".mp3!");
-            await message.channel.send("Зіграв звук - " + args[0] + ".mp3!");
+            await message.editReply({content: "Зіграв звук - " + args[0] + ".mp3!"});
         });
     }
 }

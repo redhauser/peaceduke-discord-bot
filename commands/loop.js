@@ -7,7 +7,7 @@ module.exports = {
 	.addStringOption(option =>
 		option.setName("type")
 			.setDescription("Тип повтору який ви б хотіли поставити.")
-			.setRequired(true)
+			.setRequired(false)
 			.addChoice("ВКЛ", "on")
 			.addChoice("ВСІ", "all")
 			.addChoice("ВИМК", "off")),
@@ -16,7 +16,7 @@ module.exports = {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         if(!message.member.roles.cache.has(config.djRole)) return await message.reply({content: "У вас немає ролі DJ!", ephemeral: true});
         if(message.type === "APPLICATION_COMMAND") {
-        args = [message.options.get("type").value];
+        args = [message.options?.get("type")?.value] || ["noinput"];
         if(args[0] === "on") {
             player.isLooped = "on";
             await message.reply({content: "🔂 Програвач поставлено на повтор."});
@@ -25,17 +25,26 @@ module.exports = {
             player.isLooped = "all";
             await message.reply({content: "🔄 Програвач поставлено на повтор всієї черги."});
             console.log("Програвач поставлено на повтор черги.");
-        } else {
+        } else if(args[0] === "off"){
             player.isLooped = "off";
             await message.reply({content: "➡️ Програвач знято з повтору."});
             console.log("Програвач знято з повтору.")
+        } else {
+        if(player.isLooped == "off") {
+            player.isLooped = "on";
+        } else {
+            player.isLooped = "off";
         }
+        console.log((player.isLooped === "off") ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор.");
+        await message.reply({content: player.isLooped==="off" ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор."});
+    }
         } else {
             if(player.isLooped == "off") {
                 player.isLooped = "on";
             } else {
                 player.isLooped = "off";
             }
+            console.log((player.isLooped === "off") ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор.");
             await message.reply({content: player.isLooped==="off" ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор."});
         }
     }

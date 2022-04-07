@@ -11,14 +11,17 @@ module.exports = {
         if(!client.queue[0]) {
             await message.reply({content: "На даний момент черга пуста."});
         } else {
-            let content = "Поточний плейліст: \n┎"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + "\n ❙\n";
+            let isTheQueueTooLong = client.queue.length>16;
+            let content = "Поточний плейліст: \n┎(1)"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + "\n ❙\n";
             for(let i = 1;i<client.queue.length;i++) {
-                content += "┠↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                content += "┠(" + (i+1) + ")↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                if(i==15) i=client.queue.length;
             }
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
+            if(isTheQueueTooLong) addInfo+="А також в черзі ще " + (client.queue.length-16) + " пісень!";
             if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
-            if(player.isLooped === "all") addInfo+="🔄 Програвач стоїть на повторі всієї черги!\n";
+            if(player.isLooped === "all") addInfo+="🔄: Програвач стоїть на повторі всієї черги!\n";
             addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
             //await message.reply({content: content});
             let embedLink = new Discord.MessageEmbed()
@@ -105,12 +108,15 @@ module.exports = {
                 await message.channel.send("Покинув голосовий канал і тим самим очистив чергу.");
             }
             if(client.queue[0]) {
-            content = "Поточний плейліст: \n┎"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + "\n ❙\n";
+                isTheQueueTooLong = client.queue.length>16;
+            content = "Поточний плейліст: \n┎(1)"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + "\n ❙\n";
             for(let i = 1;i<client.queue.length;i++) {
-                content += "┠↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                content += "┠(" + (i+1) + ")↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                if(i==15) i=client.queue.length;
             }
             content += "┕-----------------------------------------------\n";
             addInfo = "";
+            if(isTheQueueTooLong) addInfo+="А також в черзі ще " + (client.queue.length-16) + " пісень!";
             if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
             if(player.isLooped === "all") addInfo+="🔄 Програвач стоїть на повторі всієї черги!\n";
             addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
@@ -129,16 +135,19 @@ module.exports = {
                 actionRow.components[i].setDisabled(true);
             }
             if(client.queue[0]) {
-                content = "Поточний плейліст: \n┎"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + (player.isLooped ? "🔄" : "") + "\n ❙\n";
+                isTheQueueTooLong = client.queue.length>16;
+                content = "Поточний плейліст: \n┎(1)"+(player.state.status==="paused" ? "⏸️" : "▶") +" " + " [" + client.queue[0].timestamp + "] " + client.queue[0].title + (player.isLooped ? "🔄" : "") + "\n ❙\n";
                 for(let i = 1;i<client.queue.length;i++) {
-                    content += "┠↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                    content += "┠(" + (i+1) +")↪️ " + " [" + client.queue[i].timestamp +"] " + client.queue[i].title + "\n";
+                    if(i==15) i=client.queue.length;
                 }
                 content += "┕-----------------------------------------------\n";
                 addInfo = "";
+                if(isTheQueueTooLong) addInfo+="А також в черзі ще " + (client.queue.length-16) + " пісень!";
                 if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
                 if(player.isLooped === "all") addInfo+="🔄 Програвач стоїть на повторі всієї черги!\n";
                 addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
-                await message.editReply({content: "Використайте /queue знову, щоби користуватися кнопками!", embeds: [new Discord.MessageEmbed(embedLink)
+                await reply.edit({content: "Використайте /queue знову, щоби користуватися кнопками!", embeds: [new Discord.MessageEmbed(embedLink)
                     .setDescription(content+addInfo)
                     .setTitle("Зараз грає: " + client.queue[0].title)
                     .setURL(client.queue[0].url)

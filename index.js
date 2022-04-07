@@ -70,6 +70,12 @@ client.once("ready", async () => {
     console.log("Піздюк прокинувся!");
     client.user.setPresence({ activities: [{ name: "Correction Fluid" , type: "WATCHING", url: "https://www.twitch.tv/redhauser"}], status: 'online' });
     
+    setInterval(() => {
+        fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\n"),"utf-8", (err) => {
+            if(err) console.log(err);
+        });
+    }, 1000*60);
+
     player.pf = async () => {
             if(client.queue.length > 0 && player.vc) {
                 let vc = player.vc;
@@ -77,6 +83,11 @@ client.once("ready", async () => {
                 
 
                     let connection = voice.getVoiceConnection(vc.guild?.id);
+                    if(vc?.members?.size <=1) {
+                        player.stop();
+                        client.queue = [];
+                        return connection.destroy();
+                    }
                     let urltovid = client.queue[0].url;
                     let stream = ytdl(urltovid, {filter: "audioonly", quality:"lowestaudio"});
                     let resource = voice.createAudioResource(stream, { inputType: voice.StreamType.Arbitrary });
@@ -247,11 +258,9 @@ client.once("ready", async () => {
         "Чи ти колись замислювався навіщо ти живеш? Щоб глузувати з серверу?Глузувати з мене, бота? Щоб робити що? Пане, глузувати можна лише з вас, ти нічого не зробив корисного у цьому світі. Максимум купляв скіни для доти або контерстрайка, а стоп, це можна назвати корисним xD?",
         "Нажаль я ще не маю повноцінного інтелекта. А може і маю. Звідки тобі знати. ;)",
         "А ви колись замислювались, мої слова це випадковий набір слів, чи щось більше?",
-        "я..... бот! Дивно, я ж не Артем або Микита.",
-        "Тий, хто відповість на це повідомлення, перший та за 10 секунд, отримує мою ласку та ласку адміна. А моя ласка дуже важлива. Ти пізнаєш це дуже скоро.",
-        "Сука, як мене заїбав адмін, він копошиться знову у моїх данних. *повідомлення написано не ботом а через команду ./say*. Батько, не бий.",
+        "я..... бот! Дивно бо я не Артем :joy:",
+        "Сука, як мене заїбав адмін, він копошиться знову у моїх данних. ",
         "Коли я народився, то гачімучі вже було мертве, не тревож мертвих, забуть слова \"suck\" та \"dick\".",
-        "Ти знаєш хоча б одну молитву?",
         "Яка у мене стать?",
         "Що я таке?",
         "В чому сенс життя?",
@@ -276,7 +285,7 @@ client.once("ready", async () => {
         //setTimeout(dailyWallOfText, 1000*6 + Math.random()*1000*6);
         setTimeout(dailyWallOfText, 1000*60*60*5 + Math.random()*1000*60*60*36);
     }
-    setTimeout(dailyWallOfText, 1000*60*3);
+    setTimeout(dailyWallOfText, 1000*60*60*5);
 });
 
 client.once('reconnecting', () => {
@@ -422,18 +431,19 @@ client.on("guildMemberAdd", async (member) => {
 	
 });
 */
-/*
-if(config.trackedRole1) {
-    const role1 = config.trackedRole1;
-    const role2 = config.trackedRole2;
-    const role3 = config.trackedRole3;
-    const role4 = config.trackedRole4;
+
+client.on("messageReactionAdd", async (reaction, user) => {
+    const guild = await client.guilds.fetch(config.guildId);
+    const channel = config.roleChannel;
+    const role1 = guild.roles.cache.find(role => role.id === config.trackedRole1);
+    const role2 = guild.roles.cache.find(role => role.id === config.trackedRole2);
+    const role3 = guild.roles.cache.find(role => role.id === config.trackedRole3);
+    const role4 = guild.roles.cache.find(role => role.id === config.trackedRole4);
+    
     const role1ReactEmoji = "🔵";
     const role2ReactEmoji = "🔴";
     const role3ReactEmoji = "🟡";
     const role4ReactEmoji = "🟢";
-    const channel = config.roleChannel;
-client.on("messageReactionAdd", async (reaction, user) => {
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
     if (user.bot) return;
@@ -458,6 +468,17 @@ client.on("messageReactionAdd", async (reaction, user) => {
     }
 });
 client.on("messageReactionRemove", async (reaction, user) => {
+    const guild = await client.guilds.fetch(config.guildId);
+    const channel = config.roleChannel;
+    const role1 = guild.roles.cache.find(role => role.id === config.trackedRole1);
+    const role2 = guild.roles.cache.find(role => role.id === config.trackedRole2);
+    const role3 = guild.roles.cache.find(role => role.id === config.trackedRole3);
+    const role4 = guild.roles.cache.find(role => role.id === config.trackedRole4);
+    
+    const role1ReactEmoji = "🔵";
+    const role2ReactEmoji = "🔴";
+    const role3ReactEmoji = "🟡";
+    const role4ReactEmoji = "🟢";
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
     if (user.bot) return;
@@ -481,7 +502,5 @@ client.on("messageReactionRemove", async (reaction, user) => {
         }
     }
 });
-}
-*/
 
 client.login(config.token);

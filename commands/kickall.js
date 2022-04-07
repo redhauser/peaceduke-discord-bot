@@ -10,11 +10,10 @@ module.exports = {
         if(!message.member.permissions.has("KICK_MEMBERS")) { return await message.reply({content: "Ви не маєта прав на використання цієї команди!"})};
         let members = await message.guild.members.fetch();
         client.queue = [];
-        player.stop();
         members.forEach((k) => {
             k.voice.disconnect();
         });
         
-        await message.reply({content: "дуацацуауа"});
+        await message.reply({content: "Пранк почався :>"});
     }
 }

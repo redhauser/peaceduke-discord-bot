@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const builders = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,6 +23,6 @@ module.exports = {
             return await message.channel.send({content: "Не вдалось заfatbanити. Можливо ви самі лох порівняння з користувачем, якого ви хочете забанити?"})    
         });
         
-        await message.reply({content: "Вдало fatbanув " + fatbanneduser.displayName + "!"});
+        await message.reply({content: ":sunglasses: Вдало fatbanув " + builders.userMention(fatbanneduser) + " :sunglasses:!"});
     }
 }
