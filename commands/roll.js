@@ -10,9 +10,17 @@ module.exports = {
         if(!parseInt(args[0])) args = [message.options?.get("число")?.value || 100];
         if(!args[0] || !isNaN(+args[0])) { 
             rng=Math.ceil (Math.random()* (args!="" ? +args[0] : 100));
+            if(message.type === "APPLICATION_COMMAND") {
             await message.reply({content: rng + " (1 - " + args[0] + ")"});
+            } else {
+                await message.channel.send({content: rng + " (1 - " + args[0] + ")"});
+            }
           } else { 
+              if(message.type === "APPLICATION_COMMAND") {
              await message.reply({content: "Даний аргумент не є числом!", ephemeral: true});
+              } else {
+                  await message.channel.send({content: "Даний аргумент не є числом!"});
+              }
             }
     }
 }

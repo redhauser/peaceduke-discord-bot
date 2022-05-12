@@ -16,10 +16,6 @@ module.exports = {
             isRole = true;
         });
         if(isRole) return await message.reply("Дане згадування не є користувачем!");
-             
-        fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\n"),"utf-8", (err) => {
-            if(err) console.log(err);
-        });
         
         let statguilduser = (await message.guild?.members?.cache?.get(userid));
         let statembed = await new Discord.MessageEmbed()
@@ -35,12 +31,12 @@ module.exports = {
             statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.")
         }
         statembed.addField("\u200B", "\u200B")
-        .addField("Discord тег:", "`" + statuser.tag + "`",true)
-        .addField("# Повідомлень:", client.stats[userid]?.messageCount?.toString() || "Дані відсутні.",true);
-        if(statguilduser?.presence?.status == "online")  { statembed.addField("Статус:","Онлайн 🟢", true); }
-        else if(statguilduser?.presence?.status == "idle") { statembed.addField("Статус:","АФК 🟡", true); }
-        else if(statguilduser?.presence?.status == "dnd") { statembed.addField("Статус:","Злий!!! ❌", true); }
-        else { statembed.addField("Статус:","Офлайн ▫️", true); }
+        .addField("🆔 Discord тег:", "`" + statuser.tag + "`",true)
+        .addField("#️⃣ Повідомлень:", client.stats[userid]?.messageCount?.toString() || "Дані відсутні.",true);
+        if(statguilduser?.presence?.status == "online")  { statembed.addField("📡 Статус:","Онлайн 🟢", true); }
+        else if(statguilduser?.presence?.status == "idle") { statembed.addField("📡 Статус:","АФК 🟡", true); }
+        else if(statguilduser?.presence?.status == "dnd") { statembed.addField("📡 Статус:","Злий!!! ❌", true); }
+        else { statembed.addField("📡 Статус:","Офлайн ▫️", true); }
         statembed.addField("\u200B", "\u200B")
         .addField("Має аккаунт з: 🌟", builders.time(statuser.createdAt),true)
         .addField("Приєднався на сервер: 👋", (statguilduser ? builders.time(statguilduser?.joinedAt) : "Не є учасником цього сервера."),true)

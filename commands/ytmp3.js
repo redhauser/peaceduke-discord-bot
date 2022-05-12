@@ -31,12 +31,16 @@ module.exports = {
         let song = ytdl(args[0], {filter: "audioonly"});
         let songdata = await ytdl.getInfo(args[0], function(err, info) {});
 
+        try {
         let output = ffmpeg(song)
         .toFormat("mp3")
         .on("end", async () => {
             await message.editReply({content: "Ось ваший mp3!",files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
             console.log("Вдало конвертував " + songdata.videoDetails.title +  " відео у mp3.");
         }).output("./media/audio.mp3").run();
+        } catch (err) {
+            await message.editReply({content: "Вибачте! Сталась помилка при конвертуванні відео. Можливо, це відео недоступне для конвертування."});
+        } 
 
     }
 }

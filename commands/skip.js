@@ -28,8 +28,8 @@ module.exports = {
                 client.queue.push(client.queue[0]);
                 client.queue.shift();
             }
-            await player.stop();
         }
         }
+        await player.stop();
     }
 }

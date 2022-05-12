@@ -35,7 +35,12 @@ for(let file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 client.queue = [];
-client.stats = require("./userdata.json");
+client.stats = JSON.parse(fs.readFileSync("userdata.json", "utf8"), (key, value) => {
+    if (typeof value === "string" && /^\d+n$/.test(value)) {
+      return BigInt(value.substr(0, value.length - 1));
+    }
+    return value;
+  });
 
 const rest = new REST({ version: "9" }).setToken(config.token);
 
@@ -71,7 +76,8 @@ client.once("ready", async () => {
     client.user.setPresence({ activities: [{ name: "Correction Fluid" , type: "WATCHING", url: "https://www.twitch.tv/redhauser"}], status: 'online' });
     
     setInterval(() => {
-        fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\n"),"utf-8", (err) => {
+        fs.writeFile("userdata.json", JSON.stringify(client.stats, (key, value) =>
+        typeof value === "bigint" ? value.toString() + "n" : value, "\n"),"utf-8", (err) => {
             if(err) console.log(err);
         });
     }, 1000*60);
@@ -89,7 +95,8 @@ client.once("ready", async () => {
                         return connection.destroy();
                     }
                     let urltovid = client.queue[0].url;
-                    let stream = ytdl(urltovid, {filter: "audioonly", quality:"lowestaudio"});
+                    let vidinfo = await ytdl.getInfo(urltovid);
+                    let stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio"});
                     let resource = voice.createAudioResource(stream, { inputType: voice.StreamType.Arbitrary });
                     await connection.subscribe(player);
                     await player.play(resource);
@@ -97,6 +104,7 @@ client.once("ready", async () => {
                     resource.playStream.on("end", () => {
                         if(player.isLooped === "off") { client.queue.shift();} else if(player.isLooped === "all") { client.queue.push(client.queue[0]); client.queue.shift();}
                     });
+              
             }
     };
     player.on(voice.AudioPlayerStatus.Idle, await player.pf);
@@ -265,7 +273,8 @@ client.once("ready", async () => {
         "Що я таке?",
         "В чому сенс життя?",
         "Я люблю їсти морозиво :P",
-        "Ненавиджу павуків."
+        "Ненавиджу павуків.",
+        "lukemaster 0_o",
     ];
     let randomWallsOfText = allWallsOfText.map((x)=> x);
     function dailyWallOfText() {
@@ -283,9 +292,9 @@ client.once("ready", async () => {
     }
         randomWallsOfText.splice(rng, 1);
         //setTimeout(dailyWallOfText, 1000*6 + Math.random()*1000*6);
-        setTimeout(dailyWallOfText, 1000*60*60*5 + Math.random()*1000*60*60*36);
+        setTimeout(dailyWallOfText, 1000*60*60*8 + Math.random()*1000*60*60*48);
     }
-    setTimeout(dailyWallOfText, 1000*60*60*5);
+    setTimeout(dailyWallOfText, 1000*60*60*24);
 });
 
 client.once('reconnecting', () => {
@@ -319,7 +328,20 @@ client.on("messageCreate", async message => {
             messageCount: 0
         }
     }
+    if(client?.stats[message.member?.id]?.xp === undefined) {
+        client.stats[message.member.id] = {
+            xp: 0,
+            lvl: 1
+        }
+
+    }
+    client.stats[message.member.id].xp+=Math.ceil(Math.random()*5)*client.stats[message.member.id].lvl;
+    if(client.stats[message.member.id].xp >= 13**client.stats[message.member.id].lvl && !message.author.bot) {
+        client.stats[message.member.id].lvl++;
+        message.channel.send(":tada: ПОЗДРАВЛЯЮ ТИ ПОЛУЧИВ НОВИЙ УРОВЕНЬ!XP:" + client.stats[message.member.id].xp + ";LVL:" + client.stats[message.member.id].lvl + "!"); 
+    } 
     client.stats[message.member.id].messageCount++;
+    if(message.author.bot) return;
     if (message.mentions.users.has(config.clientId) && !message.author.bot && !message.content.startsWith(prefix)) {
         if(!(Math.floor(Math.random()*5))) {
         let randomResponses = [
@@ -375,7 +397,6 @@ client.on("messageCreate", async message => {
             "https://tenor.com/view/shut-up-noob-shut-up-noob-shut-up-noob-mostacho-gif-21717838",
             "https://tenor.com/view/flipping-off-flip-off-middle-finger-smile-happy-gif-4746862",
             "ПОЗДРАВЛЯЮ ТИ ПОЛУЧИВ НОВИЙ УРОВИНЬ ТИ ПИДОРАС",
-            "Чи ви знаєте скільки відсотків тих, хто мене пінгує — геї?",
             "Ви знаєте до чого доведе подальша розмова?",
             "Окупант?",
             "Яка причина вашого пінгу?",
@@ -383,7 +404,8 @@ client.on("messageCreate", async message => {
             "У вашому реченні не допущенно якихось помилок? Чи взагалі це можна назвати реченням?",
             "Ні.",
             "Ви випадково не окупант? Ваша манера речі здається підозрілою мені.",
-            "Ти агресор заткни єбало"
+            "Ти агресор заткни єбало",
+            "піздюк блять"
         ]
         await message.channel.send(randomResponses[Math.floor(Math.random()*randomResponses.length)]);
         }

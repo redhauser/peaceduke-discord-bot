@@ -5,6 +5,7 @@ module.exports = {
     .setName("remove")
     .setDescription("Повністю прибирає і скіпає пісню з черги. Корисно тільки при повторі всієї черги.")
     .addNumberOption(opt => opt.setName("індекс").setDescription("Індекс пісні, яку ви хочете видалити з черги.")),
+    category: "музика",
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         if(!client.queue.length) return message.reply("В черзі немає жодних пісень.");

@@ -4,6 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("shuffle")
     .setDescription("Перемішує поточну чергу! Корисно, якщо тобі набридло поточний потік плейліста."),
+    category: "музика",
     async execute(message, args, Discord, client, player, config) {
         if(client.queue.length <= 2) return await message.reply({content: "Немає що перемішувати."});
         let newQueue = new Array(client.queue.length);

@@ -88,13 +88,5 @@ module.exports = {
                 }
             }
         });
-        /*
-        config.trackedRole1 = role1;
-        config.trackedRole2 = role2;
-        config.trackedRole3 = role3;
-        config.trackedRole4 = role4;
-        fs.writeFile("config.json", JSON.stringify(config, null, "\n"), "utf-8", (err) => {
-            console.log(err);
-        })*/
     }
 }

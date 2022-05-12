@@ -30,6 +30,7 @@ module.exports = {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
         let vc = message.member.voice.channel;
         if (!vc) return await message.reply({content: "Ви не знаходитесь у голосовому каналі!"});
+        if(message.type !== "APPLICATION_COMMAND") return await message.reply({content: "Будь ласка, використайте `/soundpad`."});
         args = [message?.options?.get("звук")?.value];
         if (!args[0]) return await message.reply({content: "Ви не вибрали звук!"});
         await message.reply({content: "Граю звук...", ephemeral: false});

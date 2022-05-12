@@ -1,6 +1,7 @@
 config.json
+configbackup.json
 todolist.txt
 todolist.md
 OLDcommands 
 commands/mafia.js
-commands/plist.js
+userdata.json

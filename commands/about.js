@@ -4,20 +4,34 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("about")
     .setDescription("Дізнайтеся більше про цього бота! Як ним користуватися, новини, та майбутнє."),
+    category: "інформація",
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+
 
         let about = new Discord.MessageEmbed()
         .setColor("#40e224")
         .setTitle("Про бота:")
-        .setDescription("**PeaceDuke - офіційний бот серверу Correction Fluid, розроблений редхуюзером.\nУ собі він поміщає фічи музикального бота, "
+        .setDescription("**PeaceDuke - " + ("офіційний бот серверу Correction Fluid, розроблений редхуюзером.") + "\nУ собі він поміщає фічи музикального бота, "
+        + "ігри, різні розваги та команди для модерації, а також старається бути активним учасником серверу.**\n\nPeaceDuke завжди розвивається - і якщо ви хочете покращити його, зверніться до редхавзера.\n\n"
+        + "Update 1.3:\nДобавлено `/mafia`, `/epicrpg`. Добавлено куча нових секретиків. Поведінка всіх команд була змінена у префікс інтерфейсі.\nДобавлена підтримка для інших серверів(якщо попросити у редхавзера).Добавлені нові цитатки\n"
+        + "\n\n\n**Насолоджуйтесь сервером Correction Fluid!**");
+        if(message.type === "APPLICATION_COMMAND") {
+            await message.reply({embeds: [about]});
+        } else {
+            await message.channel.send({embeds: [about]});
+        }
+    }
+}
+/*
+Update 1.2
+    .setDescription("**PeaceDuke - офіційний бот серверу Correction Fluid, розроблений редхуюзером.\nУ собі він поміщає фічи музикального бота, "
         + "ігри, різні розваги та команди для модерації, а також старається бути активним учасником серверу.**\n\nPeaceDuke завжди розвивається - і якщо ви хочете покращити його, зверніться до редхавзера.\n\n"
         + "**Якщо ви хочете дізнатися про існуючі команди та їх використання, використайте `/help`.**\n\n\n"
         + "Інформація про Patch 1.2:\nБуло добавлено `/playlist`,`/shuffle`,`/delete`,`/remove`\nДороблені та частково перероблені команди як `/loop`,`/queue`,`/skip`, та ще пару інших.\n/play та /plnow тепер може грати ютуб плейлисти!"
         + "\n\n\n**Насолоджуйтесь сервером Correction Fluid!**");
-        await message.reply({embeds: [about]});
-    }
-}
+        
+*/
 /*
     Update 1.1.1
             .setColor("#40e224")
