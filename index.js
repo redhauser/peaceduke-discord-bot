@@ -67,20 +67,116 @@ const rest = new REST({ version: "9" }).setToken(config.token);
     }
 })();
 
+client.replyOrSend = async (message, interaction) => {
+    if(interaction.type === "APPLICATION_COMMAND") {
+        return await interaction.reply(message);
+    } else {
+        return await interaction.channel.send(message);
+    }
+}
+
 client.on('error', (err) => {
     console.log(err.message);
     console.log("Відбулась невідома помилка.");
  });
 client.once("ready", async () => {
     console.log("Піздюк прокинувся!");
-    client.user.setPresence({ activities: [{ name: "Correction Fluid" , type: "WATCHING", url: "https://www.twitch.tv/redhauser"}], status: 'online' });
+    client.user.setPresence({ activities: [{ name: "Correction Fluid" , type: "WATCHING", url: "https://www.twitch.tv/redhauser"}], status: "online" });
     
     setInterval(() => {
         fs.writeFile("userdata.json", JSON.stringify(client.stats, (key, value) =>
         typeof value === "bigint" ? value.toString() + "n" : value, "\n"),"utf-8", (err) => {
             if(err) console.log(err);
         });
-    }, 1000*60);
+    }, 1000*60*2);
+    
+    function reselectRandomPresence() {
+        let presenceNeutralList = [
+            { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "idle"},
+            { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "dnd"},
+            { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "online"},
+            { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "idle"},
+            { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "dnd"},
+            { activities: [{name: "chill lofi beats", type: "LISTENING"}], status: "online"},
+            { activities: [], status: "online"},
+            { activities: [], status: "dnd"},
+        ];
+        let presenceOtherActivitiesList = [
+            { activities: [{name: "just vibing", type: "STREAMING", url: "https://www.twitch.tv/redhauser"}], status: "online"},
+            { activities: [{name: "Скрябіна", type: "LISTENING"}], status: "online"},
+            { activities: [{name: "chill lofi beats", type: "LISTENING"}], status: "online"},
+            { activities: [{name: "gachi remix", type: "LISTENING"}], status: "online"},
+            { activities: [{name: "Dota 2", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Dota 2", type: "PLAYING"}], status: "dnd"},
+            { activities: [{name: "Portal 2", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Enter the Gungeon", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "VALORANT", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "VALORANT", type: "PLAYING"}], status: "dnd"},
+            { activities: [{name: "Counter Strike: Global Offensive", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Counter Strike: Global Offensive", type: "PLAYING"}], status: "dnd"},
+            { activities: [{name: "Dota 2", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Defense of the Ancients", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Don't Starve Together", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Twitch", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "YouTube", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "за користувачами", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "як взламати сервер", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "як використувати AI", type: "WATCHING"}], status: "online"},
+            { activities: [{name: "Dota 2", type: ""}], status: "online"},
+            { activities: [{name: "Counter Strike: Global Offensive", type: "COMPETING"}], status: "online"},
+            { activities: [{name: "Dota 2", type: "COMPETING"}], status: "online"},
+            { activities: [{name: "VALORANT", type: "COMPETING"}], status: "online"},
+            { activities: [{name: "Wormix", type: "COMPETING"}], status: "online"}, 
+            { activities: [{name: "Brawl Stars", type: "COMPETING"}], status: "online"},    
+            { activities: [{name: "Brawl Stars", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Clash Royale", type: "PLAYING"}], status: "online"},   
+            { activities: [{name: "Gartic Phone", type: "PLAYING"}], status: "online"},   
+            { activities: [{name: "Visual Studio Code", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Mozilla Firefox", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Google Chrome", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "OMORI", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Undertale", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Deltarune", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "STALKER: Shadow of Chernobyl", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Among Us", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "STALKER: Call of Pripyat", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "STALKER: Clear Sky", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Terraria", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Turnip Boy Commits Tax Evasion", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Starbound", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Hollow Knight", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Hearts Of Iron IV", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Cossacks 3", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Wallpaper Engine", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "The Witcher: Enhanced Edition", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "VALORANT", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "The Witcher 3: Wild Hunt", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "StrikeForce Kitty", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "League Of Legends", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Epic Battle Fantasy", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Everlasting Summer", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Doki Doki Literature Club", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "osu!", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "osu!", type: "COMPETING"}], status: "online"},
+            { activities: [{name: "Minecraft", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Minecraft", type: "PLAYING"}], status: "dnd"},
+            { activities: [{name: "Minecraft", type: "PLAYING"}], status: "idle"},
+            { activities: [{name: "Mad Max", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Far Cry 3", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Dead by Daylight", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Minecraft", type: "PLAYING"}], status: "online"},
+        ];
+        let rng = Math.floor(Math.random()*10);
+        console.log(rng);
+        if(rng >= 7) {
+            client.user.setPresence(presenceOtherActivitiesList[Math.floor(Math.random()*presenceOtherActivitiesList.length)]);
+        } else {
+            client.user.setPresence(presenceNeutralList[Math.floor(Math.random()*presenceNeutralList.length)]);
+        }
+        setTimeout(reselectRandomPresence, Math.round(Math.random()*1000*60*60*5));
+    }
+    reselectRandomPresence();
 
     player.pf = async () => {
             if(client.queue.length > 0 && player.vc) {
@@ -95,8 +191,21 @@ client.once("ready", async () => {
                         return connection.destroy();
                     }
                     let urltovid = client.queue[0].url;
+                    let stream = null;
+
+                    try {
                     let vidinfo = await ytdl.getInfo(urltovid);
-                    let stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio"});
+                    stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 1<<25});
+                    } catch (err) {
+                        console.log("Сталася помилка при ytdl.downloadFromInfo. Немає можливості програти аудіо.");
+                        console.log("Помилка: ");
+                        console.log(err);
+                        let botChannelToNotifyUsers = client.channels.cache.get(config.botChannel);
+                        client.queue = [];
+                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Схоже, що на даний момент YouTube API не відповідає. Спробуйте пізніше!"});
+                    }
+                    
+                    if(stream) {
                     let resource = voice.createAudioResource(stream, { inputType: voice.StreamType.Arbitrary });
                     await connection.subscribe(player);
                     await player.play(resource);
@@ -104,6 +213,7 @@ client.once("ready", async () => {
                     resource.playStream.on("end", () => {
                         if(player.isLooped === "off") { client.queue.shift();} else if(player.isLooped === "all") { client.queue.push(client.queue[0]); client.queue.shift();}
                     });
+                    }
               
             }
     };
@@ -338,7 +448,11 @@ client.on("messageCreate", async message => {
     client.stats[message.member.id].xp+=Math.ceil(Math.random()*5)*client.stats[message.member.id].lvl;
     if(client.stats[message.member.id].xp >= 13**client.stats[message.member.id].lvl && !message.author.bot) {
         client.stats[message.member.id].lvl++;
-        message.channel.send(":tada: ПОЗДРАВЛЯЮ ТИ ПОЛУЧИВ НОВИЙ УРОВЕНЬ!XP:" + client.stats[message.member.id].xp + ";LVL:" + client.stats[message.member.id].lvl + "!"); 
+        let newEmbed = new Discord.MessageEmbed()
+        .setColor( "#"+ (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)))
+        .setTitle(message.member.displayName + " досяг нового рівня!")
+        .setDescription("🎉 Вітаю! Ти досяг " + client.stats[message.member.id].lvl + " рівня! Використай `/stats`, щоби дізнатися більше! 🎉");
+        message.channel.send({embeds: [newEmbed]}); 
     } 
     client.stats[message.member.id].messageCount++;
     if(message.author.bot) return;

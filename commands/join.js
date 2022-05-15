@@ -7,9 +7,9 @@ module.exports = {
     .setDescription("Заставляє бота приєднатися до вас у голосовий канал."),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
         const vc = message.member.voice.channel;
-        if(!vc) return await message.reply({command: "Ви повинні бути у голосовому каналі!", ephemeral: true});
+        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true}, message);
         player.vc = vc; 
 
         const connection = voice.joinVoiceChannel({
@@ -18,6 +18,6 @@ module.exports = {
             adapterCreator: vc.guild.voiceAdapterCreator,
         });
 
-        message.reply({content: "↪️ Приєднався до голосового каналу."});
+        await client.replyOrSend({content: "↪️ Приєднався до голосового каналу."}, message);
     }
 }

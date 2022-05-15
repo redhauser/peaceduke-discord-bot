@@ -7,15 +7,15 @@ module.exports = {
     .addStringOption(option => option.setName("повідомлення").setDescription("Ваше важливе повідомлення!").setRequired(true)),
     category: "розваги",
     async execute(message,args, Discord, client, player, config) {
-        if(!message.member.roles.cache.has(config.botTesterRole)) return await message.reply({content: "У вас немає прав на використання цієї фічи!", ephemeral: true});
+        if(!message.member.roles.cache.has(config.botTesterRole)) return await client.replyOrSend({content: "У вас немає прав на використання цієї фічи!", ephemeral: true},message);
         if (!args) { args = args[0] || [message?.options?.get("повідомлення")?.value]; }
-        if (args.join(" ").toString()=="ur mom") return await message.reply({content: "дурачок?"});
-        if (args.join(" ").toString()=="fuck you") return await message.reply({content: "ні, пішов ТИ в сраку!"});
-        if (args.join(" ").toString()=="") return await message.reply({content: "Нічого сказати, чел."});
+        if (args.join(" ").toString()=="ur mom") return await client.replyOrSend({content: "дурачок?"},message);
+        if (args.join(" ").toString()=="fuck you") return await client.replyOrSend({content: "ні, пішов ТИ в сраку!"},message);
+        if (args.join(" ").toString()=="") return await client.replyOrSend({content: "Нічого сказати, чел."},message);
      
 
-        await message.reply({content: "."});
+        let daReply = await message.reply({content: "."});
         await message.channel.send({content: args.join(" ")});
-        await message.deleteReply();
+        await daReply.delete();
     }
 }

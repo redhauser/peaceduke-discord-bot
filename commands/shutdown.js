@@ -8,12 +8,12 @@ module.exports = {
     .setDescription("Вирубає бота нахуй. Використовувати при надзвичайних ситуаціях. Тіки для адміна."),
     category: "модерація",
     async execute(message, args, Discord, client, player, config) {
-        console.log(message.user.id);
-        console.log(config.adminId)
-        if(!(message.user.id === config.adminId)) { return await message.reply({content: "Нєа. Мене так просто не вирубиш."})};
+        if(!(message.user?.id === config.adminId) || message.type !== "APPLICATION_COMMAND") { return await client.replyOrSend({content: "Нєа. Мене так просто не вирубиш."},message)};
         const vc = message?.member?.voice?.channel;
+        console.log(message.user.id);
+        console.log(config.adminId);
 
-        await message.reply({content: "Прощайте, людоньки!"});
+        await client.replyOrSend({content: "Прощайте, людоньки!"},message);
         console.log("Пішов спатоньки за ініціативою /shutdown.");
         if(vc) {
             const connection = voice.getVoiceConnection(vc.guild.id);

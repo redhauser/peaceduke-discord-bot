@@ -6,12 +6,13 @@ module.exports = {
     .setDescription("..."),
     category: "розваги",
     async execute(message, args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
         if(!args) args = [""];
-        await message.reply({content:"..."});
- 
+        if(message.type === "APPLICATION COMMAND") {
+        let daReply = await message.reply({content:"..."});
+        await daReply.delete();
+        }
         let thyrequest = await message.channel.send({content:"...Введіть секретну фразу..."});
-        message.deleteReply();
         const trespasserId = message.member.id;
         const trespasserCollector = message.channel.createMessageCollector({trespasserId, time: 10000, idle: 10000, dispose: true});
         trespasserCollector.on("collect", async (msg) => {

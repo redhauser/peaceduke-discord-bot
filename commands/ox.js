@@ -7,7 +7,7 @@ module.exports = {
     .addMentionableOption(option => option.setName("опонент").setDescription("Користувач, з яким ви хочете зіграти.")),
     category: "ігри",
     async execute(message, args, Discord, client, player, config) {
-        if(message.type !== "APPLICATION_COMMAND") return await message.reply({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/ox`!"});
+        if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/ox`!"});
         let rows = [];
         rows.push(new Discord.MessageActionRow()
         .addComponents(

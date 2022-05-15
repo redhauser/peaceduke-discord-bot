@@ -8,11 +8,11 @@ module.exports = {
     .setDescription("Покаже слова до поточно граючою пісні."),
     category: "музика",
     async execute(message,args,Discord,client,player,config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
-        if(!client.queue[0]) return await message.reply("На даний момент нічого не грає.");
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}),message;
+        if(!client.queue[0]) return await client.replyOrSend("На даний момент нічого не грає.",message);
         let briefdata = getArtistTitle(client.queue[0].title);
-        if(!briefdata) return await message.reply("Співака/пісню не знайдено.");
-        await message.reply("Слова " + client.queue[0].title + ":");
+        if(!briefdata) return await client.replyOrSend("Співака/пісню не знайдено.",message);
+        await client.replyOrSend("Слова " + client.queue[0].title + ":", message);
         (async function(artist, title) {
             let lyrics = await lyricsFinder(artist, title) || "Жодних слів не було знайдено.";
             

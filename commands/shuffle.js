@@ -6,7 +6,10 @@ module.exports = {
     .setDescription("Перемішує поточну чергу! Корисно, якщо тобі набридло поточний потік плейліста."),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
-        if(client.queue.length <= 2) return await message.reply({content: "Немає що перемішувати."});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+        if(!client.queue.length) return await client.replyOrSend({content: "❌ Черга пуста, немає що перемішувати."},message);
+        if(client.queue.length==1) return await client.replyOrSend({content: "❌ В черзі всього лиш 1 пісня, неможливо перемішати."},message);
+        if(client.queue.length==2) return await client.replyOrSend({content: "❌ В черзі всього лиш 2 пісні, немає сенсу перемішувати."},message);
         let newQueue = new Array(client.queue.length);
         let originalLength = client.queue.length;
 
@@ -19,6 +22,6 @@ module.exports = {
         console.log(newQueue);
         client.queue = newQueue;
         player.stop();
-        await message.reply({content: "🔀 Перемішав поточну чергу!"});
+        await client.replyOrSend({content: "🔀 Перемішав поточну чергу! Тепер грає: *" + client.queue[0].title + "*!"},message);
     }
 }

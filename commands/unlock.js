@@ -20,7 +20,7 @@ module.exports = {
         .setDescription("Цей канал розблокований! Насолоджуйтесь.")
         .setColor("55bffc");
 
-        await message.reply({embeds: [embed]});
+        await client.replyOrSend({embeds: [embed]},message);
     
     }
 }

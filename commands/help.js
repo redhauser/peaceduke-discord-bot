@@ -7,7 +7,7 @@ module.exports = {
     .addStringOption(option => option.setName("name").setDescription("Назва команди, про яку б ви хотіли би більше дізнатись.")),
     category: "інформація",
     async execute(message,args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel && message.channel.type != "DM") return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+        if(message.channel.id !== config.botChannel && message.channel.type != "DM") return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
         if(message.type == "APPLICATION_COMMAND") {
         args = args || [message?.options?.get("name")?.value];
         if(!args[0]) {
@@ -104,7 +104,7 @@ module.exports = {
                 commandList+=client.commands.at(i).data.name + "\t";
                 if(!(i%7) && i!=0) commandList+="\n";
             }
-            await message.reply({content: commandList});
+            await message.channel.send({content: commandList});
         }
     }
 }

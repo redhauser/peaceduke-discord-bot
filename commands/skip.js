@@ -7,8 +7,8 @@ module.exports = {
     .addIntegerOption(option => option.setName("кількість").setDescription("Кількість пісень яку ви хочете пропустити.").setRequired(false)),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
-        if(!client.queue.length) return message.reply("В черзі немає жодних пісень.");
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+        if(!client.queue.length) return await client.replyOrSend("В черзі немає жодних пісень.",message);
         args = args || [message?.options?.get("кількість")?.value];
         console.log(args);
         if(!args[0] || args[0] < 1) { args=[1]; } else if(args[0] > client.queue.length-1) { args[0] = client.queue.length;
@@ -16,9 +16,8 @@ module.exports = {
         console.log(args);
 
         for (let i = 0; i<args[0]; i++) {
-            if(!client.queue[0]) {i=args[0]; return await message.channel.send("Черга пуста.");} else { 
             if(!i) {
-                await message.reply("⏭️Пропущено " + client.queue[0].title + " .");
+                await client.replyOrSend("⏭️Пропущено " + client.queue[0].title + " .",message);
             } else {
                 await message.channel.send("⏭️Пропущено " + client.queue[0].title + " .");
             }
@@ -28,7 +27,7 @@ module.exports = {
                 client.queue.push(client.queue[0]);
                 client.queue.shift();
             }
-        }
+        
         }
         await player.stop();
     }

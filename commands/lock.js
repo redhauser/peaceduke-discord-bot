@@ -6,7 +6,7 @@ module.exports = {
     .setDescription("Блокує всім користувачам довзіл на відсилання повідомлень у певному чаті. Потребує права адміна."),
     category: "модерація",
     async execute(message,args,Discord,client,player,config) {
-        if(!message.member.roles.cache.has(config.adminRole)) return await message.reply({content: "Ви не адмін!"});
+        if(!message.member.roles.cache.has(config.adminRole)) return await client.replyOrSend({content: "Ви не адмін!"},message);
 
         const memberRole = await message.guild.roles.fetch(config.memberRole);
         await message.channel.permissionOverwrites.edit(memberRole, {
@@ -20,7 +20,7 @@ module.exports = {
         .setDescription("Цей канал заблокований.")
         .setColor("55bffc");
 
-        await message.reply({embeds: [embed]});
+        await client.replyOrSend({embeds: [embed]},message);
     
     }
 }

@@ -13,8 +13,8 @@ module.exports = {
 			.addChoice("ВИМК", "off")),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
-        if(!message.member.roles.cache.has(config.djRole)) return await message.reply({content: "У вас немає ролі DJ!", ephemeral: true});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+        if(!message.member.roles.cache.has(config.djRole)) return await client.replyOrSend({content: "У вас немає ролі DJ!", ephemeral: true},message);
         if(message.type === "APPLICATION_COMMAND") {
         args = [message.options?.get("type")?.value] || ["noinput"];
         if(args[0] === "on") {
@@ -45,7 +45,7 @@ module.exports = {
                 player.isLooped = "off";
             }
             console.log((player.isLooped === "off") ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор.");
-            await message.reply({content: player.isLooped==="off" ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор."});
+            await message.channel.send({content: player.isLooped==="off" ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор."});
         }
     }
 }

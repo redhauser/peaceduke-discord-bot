@@ -8,7 +8,7 @@ module.exports = {
     .addMentionableOption(option => option.setName("опонент").setDescription("користувач, з яким би ви хотіли зіграти.").setRequired(true)),
     category: "ігри",
     async execute(message,args,Discord,client,player,config) {
-        if(message.type !== "APPLICATION_COMMAND") return await message.reply({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/con4`!"});
+        if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/con4`!"});
         
         let playerX = message.member;
         let playerOid = message?.options?.get("опонент")?.value || false;

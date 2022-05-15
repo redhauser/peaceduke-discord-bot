@@ -5,7 +5,7 @@ module.exports = {
     .setName("coinflip")
     .setDescription("Кидає монетку, і каже на яку сторону впало."),
     category: "розваги",
-    async execute(message, args) {
-        await message.reply({content: "Кидаючи монетку у мене випало: " + ((Math.round(Math.random())) ? "<:averse:954834542148071464> Аверс" : "<:reverse:954834542106140812> Реверс"), ephemeral: false});
+    async execute(message, args, Discord, client, player, config) {
+        await client.replyOrSend({content: "Кинув монетку, і в мене випав: " + ((Math.round(Math.random())) ? "<:averse:954834542148071464> Аверс" : "<:reverse:954834542106140812> Реверс"), ephemeral: false}, message);
     }
 }

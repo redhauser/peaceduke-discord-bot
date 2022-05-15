@@ -12,7 +12,7 @@ module.exports = {
     .addSubcommand(subcommand => subcommand.setName("delete").setDescription("Видаляє вказаний вами збережений плейлист.").addIntegerOption(option => option.setName("id").setDescription("ID плейлиста, якого ви хочете видалити").setRequired(true))),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
-        if(message.type != "APPLICATION_COMMAND") return await message.reply({content: "Цю команду можна використовувати лише через (/) інтерфейс.", ephemeral: true});
+        if(message.type != "APPLICATION_COMMAND") return await message.channel.send({content: "Цю команду можна використовувати лише через (/) інтерфейс.", ephemeral: true});
         if(message.options.getSubcommand() == "show") {
             if(!client.stats[message.member.user.id]?.playlists || !client.stats[message.member.user.id]?.playlists[0]) {
                 await message.reply({content: "У вас немає збережених плейлистів."});

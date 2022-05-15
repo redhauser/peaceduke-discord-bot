@@ -8,7 +8,7 @@ module.exports = {
     category: "розваги",
     async execute (message,args,Discord,client,player,config) {
         args = args || [message?.options?.get("питання")?.value];
-        if(!args[0]) return await message.reply({content: "Ви не задали жодного питання!", ephemeral: true});
-        await message.reply({content: "Ваше питання було \"" + args[0] + "\"\nі я думаю, що " + (Math.round(Math.random()) ? "так." : "ні.")});
+        if(!args[0]) return await client.replyOrSend({content: "Ви не задали жодного питання!", ephemeral: true},message);
+        await client.replyOrSend({content: "Ваше питання було \"" + args.join(" ") + "\"\nі я думаю, що " + (Math.round(Math.random()) ? "так." : "ні.")},message);
     }
 }

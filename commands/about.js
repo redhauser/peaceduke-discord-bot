@@ -3,24 +3,22 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("about")
-    .setDescription("Дізнайтеся більше про цього бота! Як ним користуватися, новини, та майбутнє."),
+    .setDescription("Дізнайтеся більше про цього бота! Як ним користуватися, patch notes, та інші нецікаві речі."),
     category: "інформація",
     async execute(message,args,Discord,client,player,config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
 
 
         let about = new Discord.MessageEmbed()
         .setColor("#40e224")
         .setTitle("Про бота:")
         .setDescription("**PeaceDuke - " + ("офіційний бот серверу Correction Fluid, розроблений редхуюзером.") + "\nУ собі він поміщає фічи музикального бота, "
-        + "ігри, різні розваги та команди для модерації, а також старається бути активним учасником серверу.**\n\nPeaceDuke завжди розвивається - і якщо ви хочете покращити його, зверніться до редхавзера.\n\n"
-        + "Update 1.3:\nДобавлено `/mafia`, `/epicrpg`. Добавлено куча нових секретиків. Поведінка всіх команд була змінена у префікс інтерфейсі.\nДобавлена підтримка для інших серверів(якщо попросити у редхавзера).Добавлені нові цитатки\n"
+        + "ігри, різні розваги, команди для модерації, та різні секретики.**\n\nPeaceDuke завжди розвивається - і якщо ви хочете покращити його, зверніться до раді.\n\n"
+        + "Update 1.3 - повна* підтримка префікс інтерфейсу, пару змін для красоти, та LVL система."
         + "\n\n\n**Насолоджуйтесь сервером Correction Fluid!**");
-        if(message.type === "APPLICATION_COMMAND") {
-            await message.reply({embeds: [about]});
-        } else {
-            await message.channel.send({embeds: [about]});
-        }
+
+        await client.replyOrSend({embeds: [about]}, message);
+
     }
 }
 /*

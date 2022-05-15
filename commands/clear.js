@@ -6,10 +6,10 @@ module.exports = {
     .setDescription("Повністю очищає чергу у музикальному боті."),
     category: "музика",
     async execute(message,args,Discord,client,player,config) {
-        if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
-        if(!message.member.roles.cache.has(config.djRole)) return await message.reply({content: "У вас немає ролі DJ!", ephemeral: true});
+        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
+        if(!message.member.roles.cache.has(config.djRole)) return await client.replyOrSend({content: "У вас немає ролі DJ!", ephemeral: true}, message);
         client.queue = [];
         await player.stop();
-        await message.reply({content: "⏹️ Чергу повністю очищено."});
+        await client.replyOrSend({content: "⏹️ Чергу повністю очищено."}, message);
     }
 }

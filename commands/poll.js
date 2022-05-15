@@ -16,16 +16,16 @@ module.exports = {
     .addStringOption(option => option.setName("варіант9").setDescription("9 варіант до вашого питання.").setRequired(false))
     .addStringOption(option => option.setName("варіант10").setDescription("10 варіант до вашого питання.").setRequired(false)),
     category: "розваги",
-    async execute(message,args,Discord) {
+    async execute(message,args,Discord, client, player, config) {
         if(message.type === "DEFAULT") {
-        if(args.length<1) return message.reply("Недостатньо даних для початку опитування!");
+        if(args.length<1) return await client.replyOrSend("Недостатньо даних для початку опитування!",message);
 
         let indexOfQstSep = args.join(" ").indexOf("?");
-        if (indexOfQstSep==-1) return message.reply("Питання не вказане правильно! *Не забудьте поставити знак питання _?_ наприкінці питання*.");
+        if (indexOfQstSep==-1) return await client.replyOrSend("Питання не вказане правильно! *Не забудьте поставити знак питання _?_ наприкінці питання*.",message);
     
         args = [(args.join(" ").slice(0, indexOfQstSep+1))] .concat(args.join(" ").slice(indexOfQstSep+2, (args.join(" ")).length).split(" "));
         if (!args[1]) args.pop();
-        if (args.length>11) return message.reply("Максимальна кількість варіантів відповіді 10.");
+        if (args.length>11) return await client.replyOrSend("Максимальна кількість варіантів відповіді 10.",message);
         } else if (message.type === "APPLICATION_COMMAND") {
             message.reply({content: "..."});
             args = [message.options.get("питання").value]
@@ -51,7 +51,7 @@ module.exports = {
         }
         embedMessage.setDescription(desc);
 
-        embedMessage.setFooter({text:"Це опитування заспонсоровано сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
+        //embedMessage.setFooter({text:"Це опитування заспонсоровано сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
         
         let reactPoll = await message.channel.send({embeds: [embedMessage]});
         let yesNoQuestion = ["✅","❌"];

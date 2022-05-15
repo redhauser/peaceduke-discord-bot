@@ -12,9 +12,9 @@ module.exports = {
             let user = message.guild.members.cache.get(config.specialuser2ID);
             if(!user || !user.voice) return await message.reply("Він і так уже сакнув.");
             await user.voice.disconnect();
-            await message.reply({content: "артурчик вдало сакнув дік :thumbsup:", ephemeral: true});
+            await client.replyOrSend({content: "артурчик вдало сакнув дік :thumbsup:", ephemeral: true},message);
         } else {
-            await message.reply({content: "Сак сом дікс!"});
+            await client.replyOrSend({content: "Сак сом дікс!"},message);
         }
     }
 }
