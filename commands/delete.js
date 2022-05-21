@@ -16,6 +16,12 @@ module.exports = {
        await message.channel.messages.fetch({limit: args[0]}).then(msgs =>{
                 message.channel.bulkDelete(msgs);
         });
-       await client.replyOrSend({content: "Вдало видалено " + args + " повідомлень!", ephemeral: true}, message);
+       let daReply = await client.replyOrSend({content: "Вдало видалено " + args[0] + " повідомлень!", ephemeral: true},message);
+       if(message.type != "APPLICATION_COMMAND") {
+            setTimeout(async ()=>{
+                await daReply.delete();
+            }, 1000);
+        }
+       
     }
 }

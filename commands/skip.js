@@ -10,10 +10,8 @@ module.exports = {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
         if(!client.queue.length) return await client.replyOrSend("В черзі немає жодних пісень.",message);
         args = args || [message?.options?.get("кількість")?.value];
-        console.log(args);
         if(!args[0] || args[0] < 1) { args=[1]; } else if(args[0] > client.queue.length-1) { args[0] = client.queue.length;
         }
-        console.log(args);
 
         for (let i = 0; i<args[0]; i++) {
             if(!i) {

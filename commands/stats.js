@@ -17,6 +17,8 @@ module.exports = {
         });
         if(isRole) return await client.replyOrSend("Дане згадування не є користувачем!",message);
         
+        if(!client.stats[userid]?.messageCount) { client.stats[userid].messageCount = 1;}
+
         let statguilduser = (await message.guild?.members?.cache?.get(userid));
         let statembed = await new Discord.MessageEmbed()
         .setColor((await statuser.fetch()).accentColor)

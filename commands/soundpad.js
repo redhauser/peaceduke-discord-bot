@@ -33,9 +33,9 @@ module.exports = {
         if (!vc) return await message.reply({content: "Ви не знаходитесь у голосовому каналі!"});
         args = [message?.options?.get("звук")?.value];
         if (!args[0]) return await message.reply({content: "Ви не вибрали звук!"});
-        await message.reply({content: "Граю звук...", ephemeral: false});
+        await message.reply({content: "Пробую зіграти звук...", ephemeral: false});
 
-        let resource = voice.createAudioResource("./media/soundpad/" + args[0] + ".mp3");
+        let resource = voice.createAudioResource("./media/soundpad/" + args[0] + ".mp3", { inputType: voice.StreamType.Arbitrary });
         resource.playStream.once("readable", async () => {
             client.queue = [];
             await player.stop();
@@ -45,8 +45,8 @@ module.exports = {
                 guildId: vc.guild.id,
                 adapterCreator: vc.guild.voiceAdapterCreator,
             });
-            connection.subscribe(player);
-            player.play(resource);
+            await connection.subscribe(player);
+            await player.play(resource);
             console.log("Зіграв звук - " + args[0] + ".mp3!");
             await message.editReply({content: "Зіграв звук - " + args[0] + ".mp3!"});
         });

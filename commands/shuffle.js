@@ -22,6 +22,7 @@ module.exports = {
         console.log(newQueue);
         client.queue = newQueue;
         player.stop();
+        player.pf();
         await client.replyOrSend({content: "🔀 Перемішав поточну чергу! Тепер грає: *" + client.queue[0].title + "*!"},message);
     }
 }

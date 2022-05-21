@@ -95,6 +95,12 @@ client.once("ready", async () => {
             { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "online"},
             { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "idle"},
             { activities: [{name: "Correction Fluid", type: "WATCHING"}], status: "dnd"},
+            { activities: [{name: "Correction Fluid", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "Correction Fluid", type: "PLAYING"}], status: "idle"},
+            { activities: [{name: "Correction Fluid", type: "PLAYING"}], status: "dnd"},
+            { activities: [{name: "/help", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "!help", type: "PLAYING"}], status: "online"},
+            { activities: [{name: "#бот-чат", type: "PLAYING"}], status: "online"},
             { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "online"},
             { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "idle"},
             { activities: [{name: "Correction Fluid", type: "LISTENING"}], status: "dnd"},
@@ -169,7 +175,7 @@ client.once("ready", async () => {
         ];
         let rng = Math.floor(Math.random()*10);
         console.log(rng);
-        if(rng >= 7) {
+        if(rng >= 9) {
             client.user.setPresence(presenceOtherActivitiesList[Math.floor(Math.random()*presenceOtherActivitiesList.length)]);
         } else {
             client.user.setPresence(presenceNeutralList[Math.floor(Math.random()*presenceNeutralList.length)]);
@@ -201,8 +207,11 @@ client.once("ready", async () => {
                         console.log("Помилка: ");
                         console.log(err);
                         let botChannelToNotifyUsers = client.channels.cache.get(config.botChannel);
-                        client.queue = [];
-                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Схоже, що на даний момент YouTube API не відповідає. Спробуйте пізніше!"});
+                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при програванні відео " + client.queue[0].title + ". Пропускаю цю пісню..."});
+                        client.queue.shift();
+                        if(client.queue.length) {
+                            player.pf();
+                        }
                     }
                     
                     if(stream) {
@@ -427,22 +436,23 @@ client.on('interactionCreate', async interaction => {
 
 client.on("messageCreate", async message => {
     if(message.guild?.id != config.guildId) return;
-    if(message.content == "піздюк") { return message.reply("це я peaceduke");}
-    if(message.channel.type === "DM" && !message.author.bot) {
+    //if(message.content == "піздюк") { return message.reply("це я peaceduke");}
+    /*if(message.channel.type === "DM" && !message.author.bot) {
         return await message.reply({content: "Привіт!\nЯкщо ти хочеш використовувати мої функції, будь ласка користуйся сервером Correction Fluid для цього.\nВ майбутньому, мої команди можуть стати частково функціональними у приватних повідомленнях!"});
     } else if(message.channel.type === "DM") {
         return;
-    }
-    if(client?.stats[message.member?.id]?.messageCount === undefined) {
+    }*/
+    if(!client?.stats[message.member?.id]) {
         client.stats[message.member.id] = {
-            messageCount: 0
-        }
+
+        };
     }
-    if(client?.stats[message.member?.id]?.xp === undefined) {
-        client.stats[message.member.id] = {
-            xp: 0,
-            lvl: 1
-        }
+    if(!client?.stats[message.member?.id]?.messageCount) {
+        client.stats[message.member.id].messageCount = 0;
+    }
+    if(!client?.stats[message.member?.id]?.lvl) {
+        client.stats[message.member.id].xp = 0;
+        client.stats[message.member.id].lvl = 1;
 
     }
     client.stats[message.member.id].xp+=Math.ceil(Math.random()*5)*client.stats[message.member.id].lvl;
@@ -635,6 +645,22 @@ client.on("messageReactionRemove", async (reaction, user) => {
         }
         else {
             return ;
+        }
+    }
+});
+
+client.on("voiceStateUpdate", async (oldState, newState) => {
+    //console.log(oldState);
+    //console.log(newState);
+    let channel = await newState.guild.channels.fetch(oldState.channelId);
+    if(oldState.channelId && !newState.channelId) { 
+        /////console.log(newState.member.displayName + " покинув гс.");
+        if(channel.members.size <= 1 && channel.members.find(member=>member.id==config.clientId)?.voice?.channelId==oldState.channelId) {
+            console.log("Всі користувачі вийшли з гс тому вийду і я.");
+            client.queue = [];
+            player.vc = false;
+            player.isLooped = "off";
+            (await newState.guild.members.fetch(config.clientId)).voice.disconnect();
         }
     }
 });

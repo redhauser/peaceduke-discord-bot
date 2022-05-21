@@ -21,7 +21,7 @@ module.exports = {
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
             if(isTheQueueTooLong) addInfo+="А також ще " + (client.queue.length-16) + " пісень!\n";
-            if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
+            if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі поточної пісні!\n";
             if(player.isLooped === "all") addInfo+="🔄: Програвач стоїть на повторі всієї черги!\n";
             addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
             //await message.reply({content: content});
@@ -124,7 +124,7 @@ module.exports = {
             content += "┕-----------------------------------------------\n";
             addInfo = "";
             if(isTheQueueTooLong) addInfo+="А також ще " + (client.queue.length-16) + " пісень!\n";
-            if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
+            if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі поточної пісні!\n";
             if(player.isLooped === "all") addInfo+="🔄 Програвач стоїть на повторі всієї черги!\n";
             addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
             await message.editReply({embeds: [new Discord.MessageEmbed(embedLink)
@@ -151,7 +151,7 @@ module.exports = {
                 content += "┕-----------------------------------------------\n";
                 addInfo = "";
                 if(isTheQueueTooLong) addInfo+="А також ще " + (client.queue.length-16) + " пісень!\n";
-                if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі!\n";
+                if(player.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі поточної пісні!\n";
                 if(player.isLooped === "all") addInfo+="🔄 Програвач стоїть на повторі всієї черги!\n";
                 addInfo += player.state.status==="paused" ? "⏸️: Програчавач стоїть на паузі.\n" : "";
                 await reply.edit({content: "Поточна музикальна черга: ", embeds: [new Discord.MessageEmbed(embedLink)

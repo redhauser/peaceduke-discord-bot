@@ -9,8 +9,8 @@ module.exports = {
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
         if(!client.queue.length) return await client.replyOrSend("В черзі немає жодних пісень.",message);
-        args = [message?.options?.get("індекс")?.value] || [parseInt(args[0])];
-        if(!args[0] || args[0] < 1 || args[0]===undefined || isNaN(args[0])) args=[1];
+        args = args || [message?.options?.get("індекс")?.value];
+        if(!args[0] || args[0] < 1 || args[0]===undefined || isNaN(+args[0])) args=[1];
         if(args[0]>=client.queue.length) args[0] = client.queue.length;
 
         if(args[0]==1) {
