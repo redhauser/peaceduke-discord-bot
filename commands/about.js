@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const builders = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,20 +9,28 @@ module.exports = {
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
 
-
+        // special space character - "⠀"
         let about = new Discord.MessageEmbed()
         .setColor("#40e224")
-        .setTitle("Про бота:")
-        .setDescription("**PeaceDuke - Discord бот створений redhauser#8140.\nВін має розвинуті фічи музикального бота, "
-        + "мініігри, команди для модерації, LVL систему, та інші.**\n\nPeaceDuke завжди розвивається - і якщо ви маєте ідеї як можна покращити бота, зверніться до раді!\n\n"
-        + "**Patch 1.3.1** - команда `loop`, `delete` тепер мають повну підтримку префікс інтерфейсу.\nПофіксив пару багів, зробив пару граматичних та естетичних змін.\nКоманда `stats` тепер повинна показувати більш точну інформацію про кількість повідомлень користувача.\n`plist` команда буде відсутня до наступнього великого апдейта.\n"
-        + "**Update 1.3** - повна* підтримка префікс інтерфейсу, пару змін для краси, та LVL система.\n"
-        );
+        .setTitle("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Про PeaceDuke:")
+        .setDescription("⠀⠀⠀⠀**PeaceDuke** - мультифункціональний Discord бот\n" + 
+        "⠀⠀⠀у собі має фічи DJ бота, модерації, мініігор, та інші.\n" + 
+        "⠀Якщо маєте ідею як покращити бота, зверніться до раді.\nВикористайте /help, щоби дізнатися про можливості бота.\n\n" + 
+        "⠀⠀⠀⠀⠀⠀⠀Поточна версія - **Update 1.3.2:**\n⠀_Головні нові зміни: повна підтримка префікс інтерфейсу._"+
+        "\n\n\n⠀⠀⠀⠀⠀⠀Включений з :⠀⠀" + builders.time(client.readyAt) +
+        "\n⠀⠀⠀⠀⠀⠀Розроблюється з: " + builders.time((new Date(2022, 0, 1, 22, 30))) + 
+        "\n\n"+//⠀⠀⠀⠀⠀⠀PeaceDuke розроблюється redhauser#8140\n"+
+        "\n⠀⠀⠀⠀⠀⠀**⊙** " + builders.hyperlink("GitHub", "https://github.com/redhauser") + " **⊙** **redhauser#8140** **⊙** " + builders.hyperlink("osu!", "https://osu.ppy.sh/users/26200992") + " **⊙**");
 
         await client.replyOrSend({embeds: [about]}, message);
 
     }
 }
+/*"**PeaceDuke - Discord бот створений redhauser#8140.\nВін має розвинуті фічи музикального бота, "
+        + "мініігри, команди для модерації, LVL систему, та інші.**\n\nPeaceDuke завжди розвивається - і якщо ви маєте ідеї як можна покращити бота, зверніться до раді!\n\n"
+        + "**Patch 1.3.1** - команда `loop`, `delete` тепер мають повну підтримку префікс інтерфейсу.\nПофіксив пару багів, зробив пару граматичних та естетичних змін.\nКоманда `stats` тепер повинна показувати більш точну інформацію про кількість повідомлень користувача.\n`plist` команда буде відсутня до наступнього великого апдейта.\n"
+        + "**Update 1.3** - повна* підтримка префікс інтерфейсу, пару змін для краси, та LVL система.\n"
+        ); */
 /*
 Update 1.2
     .setDescription("**PeaceDuke - офіційний бот серверу Correction Fluid, розроблений редхуюзером.\nУ собі він поміщає фічи музикального бота, "

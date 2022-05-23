@@ -7,7 +7,7 @@ module.exports = {
     .addMentionableOption(option => option.setName("опонент").setDescription("Користувач, з яким ви хочете зіграти.")),
     category: "ігри",
     async execute(message, args, Discord, client, player, config) {
-        if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/ox`!"});
+        //if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/ox`!"});
         let rows = [];
         rows.push(new Discord.MessageActionRow()
         .addComponents(
@@ -57,16 +57,22 @@ module.exports = {
         let playerX = message.member;
         let playerOid = message.mentions?.users?.firstKey() || message?.options?.get("опонент")?.value || "Not decided";
         if(playerOid === playerX.id) {
-            return await message.reply("Ви не можете грати сам з собою!");
+            return await client.replyOrSend("Ви не можете грати сам з собою!",message);
         } else if(playerOid === config.clientId) {
-            return await message.reply("Ви не можете грати з піздюком!");
+            return await client.replyOrSend("Ви не можете грати з піздюком!",message);
         }
         let isRole = false;
         await client.users.fetch(playerOid).catch( async () => {
             isRole = true;
         });
         let playerO = message.guild.members.cache?.get(playerOid) || false;
-        if(isRole && playerOid !== "Not decided") return await message.reply("Дане згадування не є користувачем!");
+        if(isRole && playerOid !== "Not decided") return await client.replyOrSend("Дане згадування не є користувачем!",message);
+
+
+        if(playerO.bot) {
+            return await client.replyOrSend("Ви не можете грати з ботами!",message);
+        }
+
 
         let currentPlayer = "X";
         let board = ["-","-","-","-","-","-","-","-","-"];
@@ -81,14 +87,20 @@ module.exports = {
             [0,4,8],
             [2,4,6]
         ];
+        let reply;
+        let filter;
         if(playerO) {
-            await message.reply({content: "Хрестики нолики: \n<@!" + playerX.id + "> грає з <@!" + playerO.id + "> !", components: [rows[0], rows[1], rows[2]]});
+            reply = await client.replyOrSend({content: "Хрестики нолики: \n<@!" + playerX.id + "> грає з <@!" + playerO.id + "> !", components: [rows[0], rows[1], rows[2]]},message);
         } else {
-            await message.reply({content: "Хрестики нолики: \n<@!" + playerX.id + "> грає!", components: [rows[0], rows[1], rows[2]]});            
+            reply = await client.replyOrSend({content: "Хрестики нолики: \n<@!" + playerX.id + "> грає!", components: [rows[0], rows[1], rows[2]]},message);            
         }
         let turns = 0;
-        let reply = await message.fetchReply();
-        const filter = (i) => i.message.interaction.id === reply.interaction.id;
+        if(message.type === "APPLICATION_COMMAND") {
+            reply = await message.fetchReply();
+            filter = (i) => i.message.interaction.id === reply.interaction.id;
+        } else {
+            filter = (i) => i.message.id === reply.id;
+        }
         const collector = message.channel.createMessageComponentCollector({filter, time: 45000 });
         collector.on("collect", async (m) => {
             collector.resetTimer();
@@ -129,7 +141,7 @@ module.exports = {
                     .setTitle("Результат гри між " + playerX.displayName + " та " + playerO.displayName + ":")
                     .setDescription((currentPlayer==="X" ? playerX.displayName : playerO.displayName) + " переміг!")
                     .setColor("1ed3fc");
-                    return await message.editReply({content: "Хрестики нолики:",embeds: [embed], components: [rows[0],rows[1],rows[2]]});
+                    return await reply.edit({content: "Хрестики нолики:",embeds: [embed], components: [rows[0],rows[1],rows[2]]});
                 }
             }
             
@@ -139,11 +151,11 @@ module.exports = {
                 .setTitle("Результат гри між " + playerX.displayName + " та " + playerO.displayName + ":")
                 .setDescription("Нічия!")
                 .setColor("1ed3fc");
-                return await message.editReply({content: "Хрестики нолики:",embeds: [embed], components: [rows[0],rows[1],rows[2]]});
+                return await reply.edit({content: "Хрестики нолики:",embeds: [embed], components: [rows[0],rows[1],rows[2]]});
             }
                 currentPlayer = currentPlayer === "X" ? "O" : "X"; 
                 await m.deferUpdate();
-                await message.editReply({components: [rows[0],rows[1],rows[2]]});
+                await reply.edit({components: [rows[0],rows[1],rows[2]]});
             } else {
                 await m.deferUpdate();
             }
@@ -154,9 +166,9 @@ module.exports = {
             }
             if(!gameDone) {
                 if(turns) { 
-                    await message.editReply({content: "Схоже, що один з гравців став АФК.\nТому, останній гравець який ходив - " + (currentPlayer == "O" ? playerX.nickname : playerO.displayName) + " виграв!", components: [rows[0],rows[1],rows[2]]});
+                    await reply.edit({content: "Схоже, що один з гравців став АФК.\nТому, останній гравець який ходив - " + (currentPlayer == "O" ? playerX.nickname : playerO.displayName) + " виграв!", components: [rows[0],rows[1],rows[2]]});
                 } else {
-                    await message.editReply({content: "Схоже, що початківець цієї гри, " + playerX.displayName + ", став АФК."});
+                    await reply.edit({content: "Схоже, що початківець цієї гри, " + playerX.displayName + ", став АФК."});
                 }
             }
         });

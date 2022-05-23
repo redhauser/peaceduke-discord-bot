@@ -8,7 +8,7 @@ module.exports = {
     category: "інформація",
     async execute(message,args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel && message.channel.type != "DM") return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
-        if(message.type == "APPLICATION_COMMAND") {
+        //if(message.type == "APPLICATION_COMMAND") {
         args = args || [message?.options?.get("name")?.value];
         if(!args[0]) {
         const actionRow = new Discord.MessageActionRow()
@@ -27,11 +27,8 @@ module.exports = {
         let page1 = new Discord.MessageEmbed()
         .setColor("55bffc")
         .setTitle("Допомога з командами, сторінка " + (pageIndex+1))
-        .setDescription("PeaceDuke - офіційний бот Correction Fluid.\nЯкщо є якісь проблеми, всі мати до редхуюзера.\n\n\nЦя команда допоможе вам дізнатись про всі команді які існують.\nВи також можете використовувати "+config.botPrefix +" а не /, але не всі команди так працюють.\nВи можете прогорнути сторінки щоби дізнатися про команди і їх опис, та\nвикористати /help назвакоманди щоби дізнатися про більше деталей.\n\n`/help` - **показує це повідомлення**\n`/help назваКоманди` - **показує детальний опис команди**");
-
-        await message.reply({embeds: [page1], components: [actionRow]});
-        let reply = (await message.fetchReply());
-
+        .setDescription("PeaceDuke - мультифункціональний Discord бот,\nякий у собі має фічи DJ бота, модерації, мініігор, та інші.\nЯкщо є якісь проблеми, всі матюки до раді.\n\n\nЦя команда допоможе вам дізнатись про всі команді які існують.\nВи також можете використовувати `"+config.botPrefix +"` а не `/`.\nВи можете прогорнути сторінки щоби дізнатися про команди і їх опис, та\nвикористати `/help назваКоманди` щоби дізнатися про більше деталей.\n\n`/help` - **показує це повідомлення**\n`/help назваКоманди` - **показує детальний опис команди**");
+        
         /*
         КАТЕГОРІЇ:
                 музика
@@ -41,9 +38,17 @@ module.exports = {
                 інформація
         */
         
-
-        const filter = (i) => i.message?.interaction?.id === reply.interaction?.id;
-        const collector = message.channel.createMessageComponentCollector({filter, time: 120000 });
+        let filter = null;
+        let reply = null;
+        if(message.type === "APPLICATION_COMMAND") {
+            await message.reply({embeds: [page1], components: [actionRow]});
+            reply = (await message.fetchReply());
+            filter = (i) => i.message?.interaction?.id === reply.interaction?.id; 
+        } else {
+            reply = await message.channel.send({embeds: [page1], components: [actionRow]})
+            filter = (i) => i.message?.id === reply?.id;
+        }
+        const collector = message.channel.createMessageComponentCollector({filter, time: 1000*60*2 });
         collector.on("collect", async (m) => {
             collector.resetTimer();
             if(m.customId === "primary") {
@@ -76,11 +81,15 @@ module.exports = {
             }
         });
         collector.on("end", async () => {
-            await message.editReply({content: "**Використайте /help повторно, щоби знову могти прогорнути сторінки цього посібнику!**",components: []});
+            if(message.type === "APPLICATION_COMMAND") {
+                await message.editReply({content: "**Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!**",components: []});
+            } else {
+                await reply.edit({content: "**Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!**",components: []});
+            }
         });
         } else {
             let givenCommand = client.commands.get(args[0]);
-            if(!givenCommand) return await message.reply("Не правильно вказана назва команди.");
+            if(!givenCommand) return await client.replyOrSend("Не зміг знайти команду з назвою **" + args[0] + "**. Спробуйте ще раз!", message);
             let desc = "Інформація про команду:\n`/" + givenCommand.data.name + "` - **" + givenCommand.data.description + "**\n";
             desc += "Категорія: **" + givenCommand.category + "**.\n\n";
             desc += "Параметри: \n";
@@ -96,15 +105,15 @@ module.exports = {
             .setColor("55bffc")
             .setTitle("Допомога з командами - " + givenCommand.data.name)
             .setDescription(desc)
-            await message.reply({embeds: [helppage]});
+            await client.replyOrSend({embeds: [helppage]}, message);
         }
-        } else {
+        /*} else {
             let commandList = "**Якщо ви хочете побачити деталізований посібник по командам, натомість використайте `/help`.**\n\nВсі команди:\n";
             for(let i = 0; i<client.commands.size; i++) {
                 commandList+=client.commands.at(i).data.name + "\t";
                 if(!(i%7) && i!=0) commandList+="\n";
             }
             await message.channel.send({content: commandList});
-        }
+        }*/
     }
 }

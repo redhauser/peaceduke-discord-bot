@@ -17,6 +17,7 @@ module.exports = {
         });
         if(isRole) return await client.replyOrSend("Дане згадування не є користувачем!",message);
         
+        if(!client.stats[userid]) { client.stats[userid] = {};}
         if(!client.stats[userid]?.messageCount) { client.stats[userid].messageCount = 1;}
 
         let statguilduser = (await message.guild?.members?.cache?.get(userid));
@@ -26,9 +27,9 @@ module.exports = {
         .setAuthor({name: statuser.tag, iconURL: await statuser.avatarURL()})
         .setThumbnail(await statuser.avatarURL());
         if(userid == message.guild?.ownerId) {
-            statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.\nКористувач є власником цього серверу.👑")
+            statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.\nКористувач є власником цього серверу. 👑")
         } else if (statuser.bot) {
-            statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.\nКористувач є ботярой.👾")
+            statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.\nКористувач є ботярой. 👾")
         } else {
             statembed.setDescription("Загальна інформація про `" + ((statguilduser?.nickname) ? statguilduser.nickname : statuser.username) + "`.")
         }
@@ -37,7 +38,7 @@ module.exports = {
         .addField("#️⃣ Повідомлень:", client.stats[userid]?.messageCount?.toString() || "Дані відсутні.",true);
         if(statguilduser?.presence?.status == "online")  { statembed.addField("📡 Статус:","Онлайн 🟢", true); }
         else if(statguilduser?.presence?.status == "idle") { statembed.addField("📡 Статус:","АФК 🟡", true); }
-        else if(statguilduser?.presence?.status == "dnd") { statembed.addField("📡 Статус:","Злий!!! ❌", true); }
+        else if(statguilduser?.presence?.status == "dnd") { statembed.addField("📡 Статус:","DND ⛔", true); }
         else { statembed.addField("📡 Статус:","Офлайн ▫️", true); }
         statembed.addField("\u200B", "\u200B")
         .addField("🌟 Має аккаунт з: ", builders.time(statuser.createdAt),true)

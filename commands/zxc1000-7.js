@@ -11,6 +11,6 @@ module.exports = {
         for(let i = 993;i>0;i-=7) {
             await message.channel.send(i + "-7");
         }
-        await message.channel.send("Я дед інсайд <:zz:927392475218346044> <:zxcdeadinsideghoul:897141811192147979>");
+        await message.channel.send("Я дед інсайд <:zxc:927392475218346044>");
     }
 }

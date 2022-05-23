@@ -11,7 +11,7 @@ module.exports = {
     .addStringOption(option => option.setName("id4").setDescription("ID четвертої ролі.").setRequired(true)),
     category: "модерація",
     async execute(message,args,Discord,client,player, config) {
-        if(!message.member.permissions.has("MANAGE_ROLES")) return message.reply({content: "Ви не маєте прав на використання цієї команди!", ephemeral: true});
+        if(!message.member.id === config.adminId) return message.reply({content: "Ви не маєте прав на використання цієї команди!", ephemeral: true});
         //Поміняти на правильне ID при запуску на cf
         const channel = config.roleChannel;
         if(!args) args = [message.options.get("id1").value,message.options.get("id2").value,message.options.get("id3").value,message.options.get("id4").value,message.options.get("emoji1")?.value,message.options.get("emoji2")?.value,message.options.get("emoji3")?.value,message.options.get("emoji4")?.value];

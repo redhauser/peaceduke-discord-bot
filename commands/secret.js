@@ -8,9 +8,13 @@ module.exports = {
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
         if(!args) args = [""];
-        if(message.type === "APPLICATION COMMAND") {
-        let daReply = await message.reply({content:"..."});
-        await daReply.delete();
+        if(message.type === "APPLICATION_COMMAND") {
+            await message.reply({content:"..."});
+            await message.deleteReply();
+        } else {
+            await message.channel.messages.fetch({limit: 1}).then(msgs =>{
+                message.channel.bulkDelete(msgs);
+            });
         }
         let thyrequest = await message.channel.send({content:"...Введіть секретну фразу..."});
         const trespasserId = message.member.id;

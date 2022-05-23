@@ -6,6 +6,6 @@ module.exports = {
     .setDescription("Кидає монетку, і каже на яку сторону впало."),
     category: "розваги",
     async execute(message, args, Discord, client, player, config) {
-        await client.replyOrSend({content: "Кинучи монетку у мене випав: " + ((Math.round(Math.random())) ? "<:averse:954834542148071464> Аверс" : "<:reverse:954834542106140812> Реверс"), ephemeral: false}, message);
+        await client.replyOrSend({content: "Кинучи монетку у мене випав: " + ((Math.round(Math.random())) ? "<:averse:978254747507253268> Аверс" : "<:reverse:978254792264654878> Реверс"), ephemeral: false}, message);
     }
 }

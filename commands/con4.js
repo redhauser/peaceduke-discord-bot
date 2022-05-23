@@ -8,22 +8,26 @@ module.exports = {
     .addMentionableOption(option => option.setName("опонент").setDescription("користувач, з яким би ви хотіли зіграти.").setRequired(true)),
     category: "ігри",
     async execute(message,args,Discord,client,player,config) {
-        if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/con4`!"});
+        //if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/con4`!"});
         
         let playerX = message.member;
-        let playerOid = message?.options?.get("опонент")?.value || false;
-        if(!playerOid) return await message.reply("Ви не вибрали опонента!");
+        let playerOid = message.mentions?.users?.firstKey() || message?.options?.get("опонент")?.value || message.member.id;
+        if(!playerOid) return await client.replyOrSend("Ви не вибрали опонента!",message);
         if(playerOid === config.clientId) {
-            return await message.reply("Ви не можете грати з піздюком!");
+            return await client.replyOrSend("Ви не можете грати з піздюком!",message);
         }
         let isRole = false;
         await client.users.fetch(playerOid).catch( async () => {
             isRole = true;
         });
-        if(isRole) return await message.reply("Дане згадування не є користувачем!");
+        if(isRole) return await client.replyOrSend("Дане згадування не є користувачем!");
         let playerO = (await client.users.fetch(playerOid)) || false;
         //7x7
         
+        if(playerO.bot) {
+            return await client.replyOrSend("Ви не можете грати з ботами!",message);
+        }
+
         let gameDone = false;
         const winningArrays = [
             [0, 1, 2, 3],
@@ -136,8 +140,13 @@ module.exports = {
         .setColor("1ed3fc")
         .setTitle("Чотири-в-ряд!")
         .setDescription(desc);
-        await message.reply({embeds: [embed]});
-        let reply = await message.fetchReply();
+        let reply;
+        if(message.type === "APPLICATION_COMMAND") {
+            await message.reply({embeds: [embed]});
+            reply = await message.fetchReply();
+        } else {
+            reply = await message.channel.send({embeds: [embed]});
+        }
         for(let i = 0; i<7; i++) {
             await reply.react(reactIntegers[i]);
         }
@@ -190,7 +199,7 @@ module.exports = {
                 if(board[i]=="O") desc+="🔴";
             }
 
-            await message.editReply({embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+            await reply.edit({embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
 
             for(let i = 0; i<winningArrays.length; i++) {
                 let tile0 = board[winningArrays[i][0]];
@@ -225,7 +234,7 @@ module.exports = {
         collector.on("end", async () => {
             reply.reactions.removeAll().catch(error => console.error("Відбулась помилка при видаленні реакції: ", error));
             if(!gameDone) {
-                await message.editReply({content: "Схоже, що один з гравців став АФК, і тому гра була закінчена."})
+                await reply.edit({content: "Схоже, що один з гравців став АФК, і тому гра була закінчена."})
             } else if(gameDone != "OX"){
 
                 if(playerX.user.id != playerO.id) {
@@ -242,9 +251,9 @@ module.exports = {
                 }    
 
                 if(gameDone == "X") {
-                    await message.editReply({content: "🎉" + playerX.user.username + " виграв!🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+                    await reply.edit({content: "🎉" + playerX.user.username + " виграв!🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
                 } else {
-                    await message.editReply({content: "🎉" + playerO.username + " виграв!🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+                    await reply.edit({content: "🎉" + playerO.username + " виграв!🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
                 }
         } else {
             
@@ -261,7 +270,7 @@ module.exports = {
                 if(board[i]=="O") desc+="🔴";
             }    
 
-            await message.editReply({content: "☮️" + playerX.user.username + " і " + playerO.username + " зіграли в нічию! ☮️", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+            await reply.edit({content: "☮️" + playerX.user.username + " і " + playerO.username + " зіграли в нічию! ☮️", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
         }
         });
     }
