@@ -4,7 +4,7 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Перевіряє чи бот живий, його пінг та скільки часу включений."),
+    .setDescription("Перевіряє чи бот живий. І також показує useless information."),
     category: "інформація",
     async execute(message,args, Discord, client, player, config){
         if(message.channel.id !== config.botChannel && message.channel.type != "DM") return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);

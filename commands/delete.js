@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("delete")
-    .setDescription("Видаляє дану кількість повідомлень. Потрібні права вищого модератора.")
+    .setDescription("Видаляє дану кількість повідомлень. Потрібні права керування повідомленнями.")
     .addNumberOption(option => option.setName("число").setDescription("Число повідомлень яке ви хочете видалити.").setRequired(true)),
     category: "модерація",
     async execute(message, args, Discord, client, player, config) {

@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("lock")
-    .setDescription("Блокує всім користувачам дозвіл на відсилання повідомлень у певному чаті. Потребує відповідні права."),
+    .setDescription("Блокує всім довзіл надсилання повідомлень у цьому чаті. Потребує права керування каналами."),
     category: "модерація",
     async execute(message,args,Discord,client,player,config) {
         if(!message.member.permissions.has("MANAGE_CHANNELS")) return await client.replyOrSend({content: "Ви не маєте відповідні права!"},message);

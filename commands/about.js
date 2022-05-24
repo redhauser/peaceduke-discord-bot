@@ -4,7 +4,7 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("about")
-    .setDescription("Дізнайтеся більше про цього бота! Як ним користуватися, patch notes, та інші нецікаві речі."),
+    .setDescription("Дізнайтеся більше про бота. Більшість з цієї інформації це тупо щоби бустить моє его."),
     category: "інформація",
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
@@ -16,7 +16,7 @@ module.exports = {
         .setDescription("⠀⠀⠀⠀**PeaceDuke** - мультифункціональний Discord бот\n" + 
         "⠀⠀⠀у собі має фічи DJ бота, модерації, мініігор, та інші.\n" + 
         "⠀Якщо маєте ідею як покращити бота, зверніться до раді.\nВикористайте /help, щоби дізнатися про можливості бота.\n\n" + 
-        "⠀⠀⠀⠀⠀⠀⠀Поточна версія - **Update 1.3.2:**\n⠀_Головні нові зміни: повна підтримка префікс інтерфейсу._"+
+        "⠀⠀⠀⠀⠀⠀⠀Поточна версія - **Update 1.3.3:**\n⠀_Головні нові зміни: повна підтримка префікс інтерфейсу._"+
         "\n\n\n⠀⠀⠀⠀⠀⠀Включений з :⠀⠀" + builders.time(client.readyAt) +
         "\n⠀⠀⠀⠀⠀⠀Розроблюється з: " + builders.time((new Date(2022, 0, 1, 22, 30))) + 
         "\n\n"+//⠀⠀⠀⠀⠀⠀PeaceDuke розроблюється redhauser#8140\n"+

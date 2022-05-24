@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const voice = require("@discordjs/voice");
 const fs = require("fs");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("shutdown")
-    .setDescription("Вирубає бота нахуй. Використовувати при надзвичайних ситуаціях. Тіки для адміна."),
+    .setDescription("Вирубає бота нахуй. Тіки для раді."),
     category: "модерація",
     async execute(message, args, Discord, client, player, config) {
         if(!(message.member?.id === config.adminId)) { return await client.replyOrSend({content: "Нєа. Мене так просто не вирубиш."},message)};

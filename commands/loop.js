@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("loop")
-    .setDescription("Ставить або знімає повтор на дану пісню або всю чергу.")
+    .setDescription("Включає/виключає повтор даної пісні або черги.")
 	.addStringOption(option =>
 		option.setName("type")
 			.setDescription("Тип повтору який ви б хотіли поставити.")

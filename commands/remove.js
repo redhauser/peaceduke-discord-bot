@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("remove")
-    .setDescription("Повністю прибирає і скіпає пісню з черги. Корисно тільки при повторі всієї черги.")
+    .setDescription("Працює майже ідентично до skip, але прибирає пісню за індексом і навіть при повторі черги.")
     .addNumberOption(opt => opt.setName("індекс").setDescription("Індекс пісні, яку ви хочете видалити з черги.")),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {

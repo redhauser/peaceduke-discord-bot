@@ -5,7 +5,7 @@ const getArtistTitle = require("get-artist-title");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("lyrics")
-    .setDescription("Покаже слова до поточно граючою пісні."),
+    .setDescription("Показує слова до поточної пісні."),
     category: "музика",
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}),message;

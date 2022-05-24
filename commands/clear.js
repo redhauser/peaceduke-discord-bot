@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription("Повністю очищає чергу у музикальному боті."),
+    .setDescription("Повністю очищує поточну музикальну чергу."),
     category: "музика",
     async execute(message,args,Discord,client,player,config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);

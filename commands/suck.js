@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("suck")
-    .setDescription("suck some dicks"),
+    .setDescription("Suck some dicks. Special command, made in honor of Asstour4ik."),
     category: "розваги",
     async execute(message, args, Discord, client, player, config) {
         //Replace names with placeholders
@@ -14,7 +14,7 @@ module.exports = {
             await user.voice.disconnect();
             await client.replyOrSend({content: "артурчик вдало сакнув дік :thumbsup:", ephemeral: true},message);
         } else {
-            await client.replyOrSend({content: "Сак сом дікс!"},message);
+            await client.replyOrSend({content: "Suck some dicks!"},message);
         }
     }
 }

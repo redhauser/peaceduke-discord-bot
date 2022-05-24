@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("shuffle")
-    .setDescription("Перемішує поточну чергу! Корисно, якщо тобі набридло поточний потік плейліста."),
+    .setDescription("Перемішує поточну чергу! Корисно, якщо тобі набрид поточний потік плейліста."),
     category: "музика",
     async execute(message, args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
@@ -19,7 +19,6 @@ module.exports = {
             client.queue.splice(rng, 1);
         }
         
-        console.log(newQueue);
         client.queue = newQueue;
         player.stop();
         player.pf();

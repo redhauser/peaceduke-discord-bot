@@ -4,7 +4,7 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("fatban")
-    .setDescription("Довзоляє кинуть якогось дурачка в таймаут на 10 хвилин. Потребує права вищого модератора.")
+    .setDescription("Довзоляє кинуть якогось дурачка в таймаут на 10 хвилин. Потребує права мутити користувачів.")
     .addMentionableOption(option => option.setName("дурак").setDescription("Дурак, якого ви хочете кинуть в таймаут.").setRequired(true)),
     category: "модерація",
     async execute(message,args,Discord,client,player,config) {

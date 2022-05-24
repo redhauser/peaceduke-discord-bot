@@ -5,7 +5,7 @@ const ffmpeg = require("fluent-ffmpeg");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("ytmp3")
-    .setDescription("Конвертує ютуб відео у mp3 формат.")
+    .setDescription("Конвертує ютуб відео у mp3 формат. (це моя улюблена фіча)")
     .addStringOption(option => option.setName("url").setDescription("Посилання на відео яке ви хочете конвертувати").setRequired(true))
     .addStringOption(option => option.setName("name").setDescription("Назва .mp3 файла. Ставити .mp3 не потрібно.").setRequired(false)),
     category: "музика",
@@ -19,8 +19,6 @@ module.exports = {
         let daReply = await message.reply({content: "Ваший файл оброблюється..."});
 
         args = [args[0], args.slice(1).join(" ")];
-        console.log(args);
-
 
         let song = ytdl(args[0], {filter: "audioonly"});
         let songdata = await ytdl.getInfo(args[0], function(err, info) {console.log(err, info);});

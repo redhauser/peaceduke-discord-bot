@@ -109,7 +109,6 @@ module.exports = {
                     client.queue.splice(rng, 1);
                 }
                 
-                console.log(newQueue);
                 client.queue = newQueue;
                 player.stop();
                 await message.channel.send({content: "🔀 Перемішав поточну чергу! Тепер грає: *" + client.queue[0].title + "*!"});

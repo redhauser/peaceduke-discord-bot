@@ -4,7 +4,7 @@ const voice = require("@discordjs/voice");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("pause")
-    .setDescription("Ставить музикального бота на паузу."),
+    .setDescription("Ставить/знімає паузу з програвання музики."),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);

@@ -4,7 +4,7 @@ const voice = require("@discordjs/voice");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("join")
-    .setDescription("Заставляє бота приєднатися до вас у голосовий канал."),
+    .setDescription("Змушує бота приєднатися до вашого голосовогу каналу."),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
         if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
@@ -18,6 +18,6 @@ module.exports = {
             adapterCreator: vc.guild.voiceAdapterCreator,
         });
 
-        await client.replyOrSend({content: "↪️ Приєднався до голосового каналу."}, message);
+        await client.replyOrSend({content: "↪️ Приєднався до <#" + vc.id + ">!"}, message);
     }
 }

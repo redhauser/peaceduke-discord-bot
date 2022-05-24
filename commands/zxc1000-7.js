@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("zxc1000-7")
-    .setDescription("Го zxc на мид,если не позер?"),
+    .setDescription("Го zxc на мід, якщо не позер?"),
     category: "розваги",
     async execute(message,args, Discord, client, player, config) {
         if(message.member.id !== config.nikistrike) return await client.replyOrSend({content: "Цю команду можна використовувати тільки о великому Niki Strike!", ephemeral: true},message);

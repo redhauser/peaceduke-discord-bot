@@ -1,10 +1,10 @@
-# peaceduke-discord-bot
-The repository representing the code of PeaceDuke the Discord bot, originally made for the server Correction Fluid.
+### peaceduke-discord-bot
+# This is the repository representing the code of PeaceDuke the Discord bot, originally made for the server Correction Fluid.
 
-# If this repository was shared with you or became public
-it probably means I would like your help in optimizing it/making new features/maintaining it, or would like to share its code
-with the world.
+PeaceDuke - is a Discord bot, that has a-sorta-advanced-but-actually-mediocre music playing system, lets you play minigames with others, moderate your server and other stuff.
+PeaceDuke is developed by me, redhauser.
 
+# How to start it up:
+I recommend starting it using:
 
-
-Please help!
+**env YTDL_NO_UPDATE=1 node .**

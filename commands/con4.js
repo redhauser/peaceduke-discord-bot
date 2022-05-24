@@ -174,7 +174,6 @@ module.exports = {
                 collector.resetTimer();
                 for(let i = 0;i<7;i++) {
                     let indx = num+(i*7)-1;
-                    //console.log(board[indx] + " : " + indx);
                     if(i==6 && board[indx] === "u") {
                         board[indx] = currentTurn;
                     } else if(board[indx] !== "u" && board[indx-7] == "u") {
@@ -184,7 +183,6 @@ module.exports = {
             }
 
             currentTurn = currentTurn==="X" ? "O" : "X";
-            //console.log(currentTurn);
             reaction.users.remove(user);
             
             if(playerX.user.id != playerO.id) {
@@ -225,7 +223,6 @@ module.exports = {
                 return reaction.users.remove(dabot);
                 //return reaction.users.remove(user);
             } 
-            //console.log(board);
 
             } else {
                 return reaction.users.remove(user);
@@ -234,7 +231,7 @@ module.exports = {
         collector.on("end", async () => {
             reply.reactions.removeAll().catch(error => console.error("Відбулась помилка при видаленні реакції: ", error));
             if(!gameDone) {
-                await reply.edit({content: "Схоже, що один з гравців став АФК, і тому гра була закінчена."})
+                await reply.edit({content: "🌙 Схоже, що один з гравців став АФК, і тому гра була закінчена."})
             } else if(gameDone != "OX"){
 
                 if(playerX.user.id != playerO.id) {

@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("roll")
-    .setDescription("Викидає випадкове число від 1 до даного числа, або до 100 якщо число не вказане.")
+    .setDescription("Викидує випадкове число від 1 до даного числа, або до 100 якщо число не вказане.")
     .addNumberOption(option => option.setName("число").setDescription("Максимальне число яке може випасти.")),
     category: "розваги",
     async execute(message, args, Discord, client, player, config) {

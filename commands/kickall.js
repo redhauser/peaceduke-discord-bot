@@ -11,7 +11,9 @@ module.exports = {
         let members = await message.guild.members.fetch();
         client.queue = [];
         members.forEach((k) => {
-            k.voice.disconnect();
+            if(k.voice) {
+                k.voice.disconnect();
+            }
         });
         
         await client.replyOrSend({content: "Пранк почався :>"}, message);

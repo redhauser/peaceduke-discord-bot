@@ -76,8 +76,8 @@ client.replyOrSend = async (message, interaction) => {
 }
 
 client.on('error', (err) => {
-    console.log(err.message);
     console.log("Відбулась невідома помилка.");
+    console.log(err.message);
  });
 client.once("ready", async () => {
     console.log("Піздюк прокинувся!");
@@ -174,7 +174,6 @@ client.once("ready", async () => {
             { activities: [{name: "Minecraft", type: "PLAYING"}], status: "online"},
         ];
         let rng = Math.floor(Math.random()*10);
-        console.log(rng);
         if(rng >= 9) {
             client.user.setPresence(presenceOtherActivitiesList[Math.floor(Math.random()*presenceOtherActivitiesList.length)]);
         } else {
@@ -530,7 +529,6 @@ client.on("messageCreate", async message => {
 
 
     if(client.commands.get(command)) {
-        //console.log("Виконую команду " + command + "...");
         client.commands.get(command).execute(message, args, Discord, client, player, config).catch((err) => {
         console.log("Не вдалось виконати команду " + command + " через префікс, а не (/) інтерфейс."); 
         console.error(err);
@@ -640,16 +638,17 @@ client.on("messageReactionRemove", async (reaction, user) => {
 });
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
-    //console.log(oldState);
-    //console.log(newState);
     let channel = await newState.guild.channels.fetch(oldState.channelId);
     if(oldState.channelId && !newState.channelId) { 
-        /////console.log(newState.member.displayName + " покинув гс.");
         if(channel.members.size <= 1 && channel.members.find(member=>member.id==config.clientId)?.voice?.channelId==oldState.channelId) {
             console.log("Всі користувачі вийшли з гс тому вийду і я.");
             client.queue = [];
             player.vc = false;
             player.isLooped = "off";
+            
+            const reportChannel = client.channels.cache.get(config.botChannel);
+
+            await reportChannel.send({content: "↩️ Покинув голосовий канал бо всі користувачі вийшли."});
             (await newState.guild.members.fetch(config.clientId)).voice.disconnect();
         }
     }

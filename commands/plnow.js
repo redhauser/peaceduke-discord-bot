@@ -8,8 +8,8 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("plnow")
-    .setDescription("Заставляє бота приєднатись у голосовий канал і грати дану пісню.")
-    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб.").setRequired(true)),
+    .setDescription("Змушує бота грати дану пісню прям зараз, рухаючи музикальну чергу.")
+    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в ютубі або пряме посилання на ютуб-відео.").setRequired(true)),
     category: "музика",
     async execute(message,args, Discord, client, player, config) {
 
