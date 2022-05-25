@@ -17,8 +17,7 @@ module.exports = {
         client.queue = [];
         client.isLooped = false;
         
-        fs.writeFile("userdata.json", JSON.stringify(client.stats, (key, value) =>
-        typeof value === "bigint" ? value.toString() + "n" : value, "\n"),"utf-8", (err) => {
+        fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\n"),"utf-8", (err) => {
             if(err) console.log(err);
         });
         setTimeout(() => {

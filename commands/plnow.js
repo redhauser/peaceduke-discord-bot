@@ -41,7 +41,7 @@ module.exports = {
             try {
                 plid = (await ytpl.getPlaylistID(args[0]));
                 }    catch (err) {
-                    video = (await ytdl.getInfo(args[0])).videoDetails;
+                    video = (await ytdl.getBasicInfo(args[0])).videoDetails;
                     video.image = video.thumbnails[video.thumbnails.length-1].url;
                     video.timestamp = Math.floor(video.lengthSeconds/60) + ":" + (video.lengthSeconds%60<10 ? ("0" + video.lengthSeconds%60) : video.lengthSeconds%60);
                     video.seconds = +video.lengthSeconds;

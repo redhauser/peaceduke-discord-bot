@@ -21,7 +21,7 @@ module.exports = {
         args = [args[0], args.slice(1).join(" ")];
 
         let song = ytdl(args[0], {filter: "audioonly"});
-        let songdata = await ytdl.getInfo(args[0], function(err, info) {console.log(err, info);});
+        let songdata = await ytdl.getBasicInfo(args[0], function(err, info) {console.log(err, info);});
 
         try {
         let output = ffmpeg(song)
@@ -30,11 +30,14 @@ module.exports = {
             if(message.type !== "APPLICATION_COMMAND") {
             await daReply.edit({content: "Ось ваший mp3!",files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
             console.log("Вдало конвертував " + songdata.videoDetails.title +  " відео у mp3.");
+            console.log(song);
+            console.log(output);
             } else {
                 await message.editReply({content: "Ось ваший mp3!",files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
                 console.log("Вдало конвертував " + songdata.videoDetails.title +  " відео у mp3.");
             }
         }).output("./media/audio.mp3").run();
+    
         } catch (err) {
             console.log("Відбулась помилка при конвертуванні в mp3:", err);
         } 

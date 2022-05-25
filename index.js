@@ -35,12 +35,7 @@ for(let file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 client.queue = [];
-client.stats = JSON.parse(fs.readFileSync("userdata.json", "utf8"), (key, value) => {
-    if (typeof value === "string" && /^\d+n$/.test(value)) {
-      return BigInt(value.substr(0, value.length - 1));
-    }
-    return value;
-  });
+client.stats = JSON.parse(fs.readFileSync("userdata.json", "utf8"));
 
 const rest = new REST({ version: "9" }).setToken(config.token);
 
@@ -84,8 +79,7 @@ client.once("ready", async () => {
     client.user.setPresence({ activities: [{ name: "Correction Fluid" , type: "WATCHING", url: "https://www.twitch.tv/redhauser"}], status: "online" });
     
     setInterval(() => {
-        fs.writeFile("userdata.json", JSON.stringify(client.stats, (key, value) =>
-        typeof value === "bigint" ? value.toString() + "n" : value, "\n"),"utf-8", (err) => {
+        fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\n"),"utf-8", (err) => {
             if(err) console.log(err);
         });
     }, 1000*60*2);
@@ -532,7 +526,7 @@ client.on("messageCreate", async message => {
         client.commands.get(command).execute(message, args, Discord, client, player, config).catch((err) => {
         console.log("Не вдалось виконати команду " + command + " через префікс, а не (/) інтерфейс."); 
         console.error(err);
-        message.channel.send("\n\nВідбулась помилка.\nЯкщо ви використалу команду не через `/" + command + "` а через `" + config.botPrefix + command +"`,\n рекомендуємо попробувати використати ту саму команду через `/" + command + "`")
+        message.channel.send("\n\nВідбулась невідома помилка при виконанні команди **" + command + "**. Повідомте про цю помилку раді!")
     });
         console.log("Закінчив виконання команду " + command + ".");
     } else {
