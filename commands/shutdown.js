@@ -10,7 +10,7 @@ module.exports = {
         if(!(message.member?.id === config.adminId)) { return await client.replyOrSend({content: "Нєа. Мене так просто не вирубиш."},message)};
         
         await client.replyOrSend({content: "Прощайте, людоньки!"},message);
-        console.log("Пішов спатоньки за ініціативою shutdown.");
+        console.log("Виключаю всі системи, за ініціативою команди shutdown.");
 
         player.stop();
         player.vc = false;
@@ -21,7 +21,7 @@ module.exports = {
             if(err) console.log(err);
         });
         setTimeout(() => {
-        console.log("Заснув.")
+        console.log("Заснув. :<")
         client.destroy();
         process.exit();
         }, 1000);

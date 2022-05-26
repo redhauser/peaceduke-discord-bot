@@ -50,13 +50,13 @@ const rest = new REST({ version: "9" }).setToken(config.token);
         }
         return Promise.all(promises);
     });*/
-        console.log('Почав перезапускати (/) команди.');
+        console.log("Почав перезапускати (/) команди.");
 
         await rest.put(
             Routes.applicationGuildCommands(config.clientId, config.guildId),
             { body: commands },
         );        
-        console.log('Вдало перезапустив (/) команди.');
+        console.log("Вдало перезапустив (/) команди.");
     } catch (error) {
         console.error(error);
     }
@@ -71,8 +71,8 @@ client.replyOrSend = async (message, interaction) => {
 }
 
 client.on('error', (err) => {
-    console.log("Відбулась невідома помилка.");
-    console.log(err.message);
+    console.log("Сталась невідома помилка.");
+    console.log(err);
  });
 client.once("ready", async () => {
     console.log("Піздюк прокинувся!");
@@ -196,7 +196,7 @@ client.once("ready", async () => {
                     let vidinfo = await ytdl.getInfo(urltovid);
                     stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 1<<25});
                     } catch (err) {
-                        console.log("Сталася помилка при ytdl.downloadFromInfo. Немає можливості програти аудіо.");
+                        console.log("Сталася помилка при ytdl.downloadFromInfo(). Немає можливості програти аудіо.");
                         console.log("Помилка: ");
                         console.log(err);
                         let botChannelToNotifyUsers = client.channels.cache.get(config.botChannel);
@@ -211,7 +211,7 @@ client.once("ready", async () => {
                     let resource = voice.createAudioResource(stream, { inputType: voice.StreamType.Arbitrary });
                     await connection.subscribe(player);
                     await player.play(resource);
-                    console.log("Зараз граю - " + client.queue[0]?.title);
+                    console.log("Зараз граю - \"" + client.queue[0]?.title + "\"");
                     resource.playStream.on("end", () => {
                         if(player.isLooped === "off") { client.queue.shift();} else if(player.isLooped === "all") { client.queue.push(client.queue[0]); client.queue.shift();}
                     });
@@ -387,7 +387,7 @@ client.once("ready", async () => {
         let rng = Math.floor(Math.random()*randomWallsOfText.length);
         if(!randomWallsOfText.length) {
             randomWallsOfText = allWallsOfText.map((x)=> x);
-            console.log("Почав росказувати рандомні фразочки заново.");
+            console.log("Дійшов кінця списку рандомних фразочок, починаю спочатку.");
         } else {
         channel.send(randomWallsOfText[rng]);
         
@@ -400,10 +400,10 @@ client.once("ready", async () => {
 });
 
 client.once('reconnecting', () => {
-    console.log('Перепідключився!');
+    console.log("Перепідключився!");
 });
 client.once('disconnect', () => {
-    console.log('Відключився!');
+    console.log("Відключився!");
 });
 
 client.on('interactionCreate', async interaction => {
@@ -411,10 +411,10 @@ client.on('interactionCreate', async interaction => {
     const command = client.commands.get(interaction.commandName);
     args = false;
     await command.execute(interaction, args, Discord, client, player, config).catch((err)=>{
-        console.log("Не вдалось виконати команду " + command.data.name + ".");
+        console.log("Не вдалось виконати команду " + command.data.name + ". Сталась помилка: ");
         console.error(err);
     });
-    console.log("Закінчив виконання команди " + interaction.commandName + ".");
+    console.log("Завершив команду " + interaction.commandName + ".");
 });
 
 client.on("messageCreate", async message => {
@@ -501,8 +501,6 @@ client.on("messageCreate", async message => {
             "You put your fat dick between their ass",
             "Як щодо не їбати мені мозг, сука?",
             "БЛЯ то САМЕ ЧУСТВО коли ти блять УЄБАН НАХУЙ ХАХАХХАХАХАХХАХХАХАХХАХАХА",
-            "https://tenor.com/view/shut-up-noob-shut-up-noob-shut-up-noob-mostacho-gif-21717838",
-            "https://tenor.com/view/flipping-off-flip-off-middle-finger-smile-happy-gif-4746862",
             "ПОЗДРАВЛЯЮ ТИ ПОЛУЧИВ НОВИЙ УРОВИНЬ ТИ ПИДОРАС",
             "Ви знаєте до чого доведе подальша розмова?",
             "Окупант?",
@@ -526,11 +524,11 @@ client.on("messageCreate", async message => {
         client.commands.get(command).execute(message, args, Discord, client, player, config).catch((err) => {
         console.log("Не вдалось виконати команду " + command + " через префікс, а не (/) інтерфейс."); 
         console.error(err);
-        message.channel.send("\n\nВідбулась невідома помилка при виконанні команди **" + command + "**. Повідомте про цю помилку раді!")
+        message.channel.send("\n\nВідбулась невідома помилка при виконанні команди **" + command + "**. Повідомте про це повідомлення раді!")
     });
-        console.log("Закінчив виконання команду " + command + ".");
+        console.log("Завершив команду " + command + ".");
     } else {
-        console.log("Не знайшов команди " + command + ".");
+        console.log("Не знайшов команду " + command + ".");
     }
 
     //REMOVES ALL GLOBAL COMMANDS!
@@ -635,7 +633,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     let channel = await newState.guild.channels.fetch(oldState.channelId);
     if(oldState.channelId && !newState.channelId) { 
         if(channel.members.size <= 1 && channel.members.find(member=>member.id==config.clientId)?.voice?.channelId==oldState.channelId) {
-            console.log("Всі користувачі вийшли з гс тому вийду і я.");
+            console.log("Покинув голосовий канал бо всі інші користувачі вийшли.");
             client.queue = [];
             player.vc = false;
             player.isLooped = "off";
