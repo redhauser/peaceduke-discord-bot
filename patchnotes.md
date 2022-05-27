@@ -31,10 +31,6 @@ Updated the /stats command, should be more consistent and less buggy now.
 
 All of the commands' lines have been revisioned
 
-/plist has been remade, and instead of saving the entire fucking return value from (ytdl.getInfo) it actually only saves the urls, which doesn't require fucking JSON BigInt bypasses. Also its use interface has been entirely overhauled.
-
-Even though /plist is well and working now, I won't be adding it in Patch 1.3.6. Instead, it's gonna go in the 1.4 Update, to make the update more grand. Yeah, I'm a bitch.
-
 Updated all the logging messages to be more readable and to be more grammatically correct.
 
 Removed all the random console.logs that I forgot to remove while debugging.
@@ -42,6 +38,8 @@ Removed all the random console.logs that I forgot to remove while debugging.
 Slightly updated the to-do list.
 
 Slightly updated README.md.
+
+Patch 1.3.8 - probably the last patch of the 1.3 Update. I'm thinking of finally starting to work on the 1.4 update.
 
 Also I'm thinking of removing patch notes......????
 

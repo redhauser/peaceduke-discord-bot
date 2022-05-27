@@ -27,19 +27,26 @@ module.exports = {
         let output = ffmpeg(song)
         .toFormat("mp3")
         .on("end", async () => {
+            try {
             if(message.type !== "APPLICATION_COMMAND") {
             await daReply.edit({content: "Ось ваший mp3!",files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
             console.log("Вдало конвертував " + songdata.videoDetails.title +  " відео у mp3.");
-            console.log(song);
-            console.log(output);
             } else {
                 await message.editReply({content: "Ось ваший mp3!",files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
                 console.log("Вдало конвертував " + songdata.videoDetails.title +  " відео у mp3.");
             }
+        } catch (err) {
+            console.log("Відбулась помилка при конвертуванні в mp3:", err);
+
+            await message.channel.send({content: "Невдалось конвертувати відео **\"" + songdata.videoDetails.title + "\"** у mp3 формат."});
+        }
         }).output("./media/audio.mp3").run();
     
         } catch (err) {
             console.log("Відбулась помилка при конвертуванні в mp3:", err);
+
+            await message.channel.send({content: "Невдалось конвертувати відео **\"" + songdata.videoDetails.title + "\"** у mp3 формат."});
+
         } 
 
     }
