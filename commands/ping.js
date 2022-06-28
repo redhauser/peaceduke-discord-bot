@@ -8,7 +8,7 @@ module.exports = {
     aliases: ["пінг", "живий", "ботчек", "botcheck", "botalive", "alive", "pulse", "пульс", "pong"],
     category: "інформація",
     hidden: false,
-    botChatExclusive: true,
+    botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config){
 

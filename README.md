@@ -25,13 +25,33 @@ or
 cd ~/peaceduke-discord-bot
 ```
 
+Or, if you want to, install the git repository from the ground up by doing:
+
+```sh
+git clone git@github.com:redhauser/peaceduke-discord-bot.git
+```
+
+If you clone it, don't forget to create three .json files (mentioned here later), and to do `npm install`!
+
 Then, do:
 
 ```sh
 git pull
 ```
 
-From here, go to any server and do `/shutdown`. The bot shutdowns and also saves all important data (guildsconfig.json and userdata.json).
+Don't forget to update all the npm packages, and to install any new packages that the bot now uses:
+
+```sh
+npm install
+```
+
+and
+
+```sh
+npm update
+```
+
+From here, go to any server and do `=shutdown` (or `!shutdown` or `/shutdown`). The bot shutdowns and also saves all important data (guildsconfig.json and userdata.json).
 
 PM2 will automatically restart the bot.
 
@@ -61,7 +81,7 @@ cat ~/.pm2/logs/index-out.log
 cat ~/.pm2/logs/index-error.log
 ```
 
-## Configuration files and others:
+## Configuration files:
 
 The bot requires three files to function: a **config.json** file, a **guildsconfig.json** file, and a **userdata.json**.
 
@@ -81,7 +101,6 @@ If you already have filled out files from bot's runtime, use them. If not, here 
     "redhauserId": "redhauser's id",
     "correctionFluidId": "correction fluid id",
     "botUniversalPrefix": "the bot's goto prefix",
-
     "specialuserID1": "a4k",
     "specialuserID2": "art",
     "specialuserID3": "niki"
@@ -92,7 +111,7 @@ The _spotifyAccessToken_ value must be null. The bot figures it out on runtime.
 
 ### guildsconfig.json
 
-**guildsconfig.json** is the second, most important configuration file. I recommend to fill this one out, but the bot will function if you don't, it will just behave completely unconfigured. Here is its template: 
+**guildsconfig.json** is quite important, but it's not required, since i have implemented the `config` command, available for all server owners. The only exception - changing the mainChannel property for Correction Fluid. Anyways, here is its template: 
 
 ```json
 {

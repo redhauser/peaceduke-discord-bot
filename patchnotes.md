@@ -1,5 +1,9 @@
 # Patch notes (for self)
 
+## Post 1.4 Update Patches patch notes:
+
+`1.4.1` - Very minor update. Quite surpisingly, updating the bot from the (to be honest) outdated `1.3.8` version to this went pretty smooth. This patch updated the npm package.json, by deleting @discordjs/opus dependency (which caused quite some issues), and updating most of the packages to their respective newest version. Also fixed a small config.js issue. I'm honestly happy I didn't have to update a lot. Also slightly updated the README.
+
 ## Update 1.4 patch notes:
 
 As of 31.05 i'm starting to write the new patch notes. Doing a few small but imho qol changes as of right now :D

@@ -367,6 +367,9 @@ module.exports = {
             await reply.edit({content: " ", embeds: [await generateConfigEmbed()], components: [configSelectMenuActionRow, configActionRow]});
         });
         configButtonCollector.on("end", async () => {
+            if(message.type === "APPLICATION_COMMAND") {
+                reply = await message.fetchReply();
+            }
             await reply.edit({content: " ", embeds: [await generateConfigEmbed()], components: []});
         });
 
