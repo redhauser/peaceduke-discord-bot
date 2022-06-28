@@ -3,13 +3,17 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription("Повністю очищує поточну музикальну чергу."),
+    .setDescription("Зупиняє музику і повністю очищує музикальну чергу."),
+    aliases: ["стоп", "очистити", "stop", "клір", "stopmusic", "клеар", "clear", "c", "с", "emptyqueue"],
     category: "музика",
-    async execute(message,args,Discord,client,player,config) {
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
-        if(!message.member.roles.cache.has(config.djRole)) return await client.replyOrSend({content: "У вас немає ролі DJ!", ephemeral: true}, message);
-        client.queue = [];
-        await player.stop();
-        await client.replyOrSend({content: "⏹️ Чергу повністю очищено."}, message);
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: true,
+    async execute(message, args, Discord, client, voice, config) {
+        voice.queue = [];
+        
+        await voice.player.stop();
+        await client.replyOrSend({content: "⏹️ Зупинив програвання музики і повністю очистив чергу."}, message);
+        console.log("[" + message.guild.name +"] Зупинив програвання музики і повністю очистив чергу.");
     }
 }

@@ -4,9 +4,16 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("secret")
     .setDescription("..."),
+    aliases: ["divine", "travel", "секрет", "exoticworlds"],
     category: "розваги",
-    async execute(message, args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
+        if(!config.guilds[message.guildId].secretVcChannel || !config.guilds[message.guildId].secretVcPassPhrase) {
+            return await client.replyOrSend({content: "Хм... схоже, що дізнатися про секрет неможливо на цьому сервері. Спитайте власника сервера або розробника бота!"}, message);
+        }
+        
         if(!args) args = [""];
         if(message.type === "APPLICATION_COMMAND") {
             await message.reply({content:"..."});
@@ -20,22 +27,22 @@ module.exports = {
         const trespasserId = message.member.id;
         const trespasserCollector = message.channel.createMessageCollector({trespasserId, time: 10000, idle: 10000, dispose: true});
         trespasserCollector.on("collect", async (msg) => {
-            if(msg.content.toLowerCase().trim() == "divinetravel" || msg.content.toLowerCase().trim() == "divine travel") {
-                args = ["divinetravel"];
+            if(msg.content.toLowerCase().trim() == config.guilds[message.guildId].secretVcPassPhrase) {
+                args = [config.guilds[message.guildId].secretVcPassPhrase];
                 msg.delete();
                 trespasserCollector.stop();
             }
             trespasserCollector.checkEnd();
         });
         trespasserCollector.on("end", async () => {
-            if(args[0].toLowerCase().trim() == "divinetravel" || args[0].toLowerCase().trim() == "divine travel") {
+            if(args[0].toLowerCase().trim() == config.guilds[message.guildId].secretVcPassPhrase) {
                 const guy = message.guild.members.cache.get(message.member.id);
                 const currentVc = message.member.voice?.channel;
                 if(!currentVc || !guy.voice) { thyrequest.delete();return message.channel.send("Для пізнання істини... потрібно знаходитись у голосовому каналі. Спробуй ще раз, з цим знанням.")}
-                //Замінити на правильний ID при Correction Fluid
-                guy.voice.setChannel(config.divineTravelChannel);
+
+                guy.voice.setChannel(config.guilds[message.guildId].secretVcChannel);
                 thyrequest.delete();
-                await message.channel.send("Насолоджуйся.");
+                await message.channel.send(":>");
             } else {
                 thyrequest.delete();
                 await message.channel.send("Можливо, пізнання таких секретів не для вас.")

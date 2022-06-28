@@ -5,14 +5,18 @@ module.exports = {
     .setName("say")
     .setDescription("Повторює те що ви кажете, шикарна фіча!!")
     .addStringOption(option => option.setName("повідомлення").setDescription("Ваше важливе повідомлення!").setRequired(true)),
+    aliases: ["скажи", "saythis", "сей"],
     category: "розваги",
-    async execute(message,args, Discord, client, player, config) {
-        //if(!message.member.roles.cache.has(config.botTesterRole)) return await client.replyOrSend({content: "У вас немає прав на використання цієї фічи!", ephemeral: true},message);
+    hidden: false,
+    botChatExclusive: false,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
         if (!args) { args = args[0] || [message?.options?.get("повідомлення")?.value]; }
-        if (args.join(" ").toString()=="ur mom") return await client.replyOrSend({content: "дурачок?"},message);
-        if (args.join(" ").toString()=="fuck you") return await client.replyOrSend({content: "ні, пішов ТИ в сраку!"},message);
-        if (args.join(" ").toString()=="") return await client.replyOrSend({content: "Нічого сказати, чел."},message);
-     
+
+        if(!args[0]) {
+            return await client.replyOrSend({content: "...", ephemeral: true}, message);
+        }
+
         if(message.type==="APPLICATION_COMMAND") {
             await message.reply({content: "."});
             await message.deleteReply();

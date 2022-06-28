@@ -1,48 +1,97 @@
 # Patch notes (for self)
 
-## Update 1.3 new features:
+## Update 1.4 patch notes:
 
-Brand new leveling system, prefix command interace has been made to look much better and more commands now support the prefix interface.
-The /queue command has been slightly redesigned.
+As of 31.05 i'm starting to write the new patch notes. Doing a few small but imho qol changes as of right now :D
 
-## Patch 1.3.1-1.3.7 new features:
+28.06. I think i'm done! Everything _seems_ to be working... and i sure hope it will stay that way. There a few things i have not done - i have not _really_ made /mafia nor /rpg. I will definitely work on them! But they are gonna come in the next 1.4.+ patches. I'm pretty happy with this update, I think so...
 
-Compared to the 1.3 update, now **ALL** commands actually support the prefix interface. In the 1.3 update, only a few commands were actually reworked to work with the prefix interface, the actual change was that all commands looked better in the prefix interface due to them not using the message.reply() method. 
+### CROSS-SERVER SUPPORT:
 
-Few abandoned and near to useless commands have been deleted, with examples such as: "/pay", "/rules", "/soundpad".
-"/soundpad" has been removed due to it been almost never used and also even when used, it wouldn't work half the time.
-The media/soundpad has been removed accordingly.
+Finally. I'm. Working. On. This.
 
-The media folder now only has vital documents.
+Sooooo now config.json only has VITAL paramaters only about the application itself (PeaceDuke).
 
-"/plist" also has been removed, to be brought back in the next major update. It was removed due to how terrible it was worked, caused many file-saving problems, and other issues.
+All of the config properties that were about a single guild - now go to guildsconfig.json.
 
-The "about" command has been overhauled.
+guildsconfig.json contains all guilds' configuration settings.
 
-node_modules is no longer being commited to the cloud, saving precious time and space.
+On init, bot now reloads slash commands for all servers.
 
-The bot now leaves the voice channel when everyone else has left that voice channel.
+All commands now report back on which server the command was executed on.
 
-Updated the /stats command, should be more consistent and less buggy now.
+I have _mostly_ reworked all commands to work on all servers. Because i still need to rework client.queue and player. And then! The bot! Might! Truly! Be! Cross! Server! Supported!
 
-/play and /plnow also have been overhauled.
+Yeahh, that's pretty much it. For now.
 
-/play and /plnow commands should cause less lag than before.
+userdata.json now takes into account other servers. added client events like guildmemberadd and guildcreate to account for both userdata.json and guildsconfig.json.
 
-All of the commands' lines have been revisioned
+added a /config command. it's cool.
 
-Updated all the logging messages to be more readable and to be more grammatically correct.
+EVERYTHING WORKS CROSS-SERVER NOW!!!
 
-Removed all the random console.logs that I forgot to remove while debugging.
+### QOL prefix interface changes.
 
-Slightly updated the to-do list.
+All commands now have ALIASES. These aliases can only be used via the prefix interface (since using them with the slash interface would be a fucking catastrophe due to how unusable and clunked up it would become.)
 
-Slightly updated README.md.
+Commands now can be HIDDEN. This means that this command will not show up in the (/) command menu nor in the /help command.
 
-Patch 1.3.8 - probably the last patch of the 1.3 Update. I'm thinking of finally starting to work on the 1.4 update.
+However, if you do discover a hidden command, you should know its name, so I think doing something like /help pay and it telling you about that commands seems fair.
 
-Also I'm thinking of removing patch notes......????
+/help now shows a commands' aliases and whether its hidden if used with /help commandName. If just browsing /help, hidden commands will not show up.
 
-Because just what IF somebody reads all this shit....??? And that person IS NOT ME????!!!!
+Commands being hidden opens up the possibility of adding joke and secret commands.
 
-I think that's it...?
+This also makes it so i can bring back older commands that i intentionally got rid of since they were so jokey. Nice!
+
+Because of that, im bringing back these commands: pay, brawl, clashroyale, confetti, epic, rules. F*ck you soundpad. Ain't coming back. And so is troll. What a dumb command.
+
+When using the queue command in the prefix interface it now actually has all those buttons. Soo I guess NOW (i think) all commands truly work with the prefix interface. Somehow forgot about that previously lmfao.
+
+Commands now have properties of botChannelExclusive and djRoleRequired. These are now checked at interactionCreate and messageCreate instead of the command itself.
+
+### Role handling
+
+I remade the /rolehandler command entirely and the role tracking system!! It now works so smooth! No brainfuckery needed! So cool!
+
+### Other changes.
+
+YO I FINISHED THE NEW SYSTEM OF PLAYER AND CLIENT QUEUE YOOOO EVERYTHING SEEMS TO BE WOKRING NOW?!?!?
+
+i am "almost" finished with making the bot cross-server... the only things left are client.queue and player. I was thinking of making a single variable like "voice", and it would be an object that contains guild id's as properties, and inside these there would be a queue, player, etc. so for example smth like this: voice["guildid"].queue and voice["guildid"].player. I'm not sure...
+
+/suck and /zxc1000-7 are now hidden commands. I'm doing this, cuz... idk...
+
+/config now exists.
+
+A lot of changes have been made, and at this point im barely writing all of them. 
+
+/plist is completely done! I'm happy with it!
+
+Changed a lot of commands' descriptions, to just sound better.
+
+/plist is going amazing. The only thing left - to make all those buttons in /plist show usable.
+
+The output of userdata.json actually looks so damn good now. Wow. I just misunderstood the `space` argument previously.lol.
+
+FINALLY WORKING ON /plist ! Going good so far, thousand times better than it was before.
+
+/stop has been renamed to /clear. lmfao.
+
+/remove - a few changes. Now without any arguments, deletes the last song from the queue. Makes more sense like that tbh.
+
+/con4 - fixed a really dumb oversight, new game confirmation, a few aesthetic and code changes.
+
+NOW I FINALLY DONE DID IT! The bot now checks client.stats on missing values and adds them if needed. THIS IS DONE SO I DONT HAVE TO PUT A MILLION BAJILLION CHECKS in other parts of code. Also it does the same on guildMemberAdd event.
+
+The to-be-completely-honest-kind-of-intrusive-and-annoying message from the bot whenever you level up now deletes itself after several seconds, giving you enough time to read it.
+
+/lyrics now can also show lyrics of a specified song. Also minor changes.
+
+Minor /help improvements. Slight changes to the roll command.
+
+/clear has been renamed to /stop.
+
+/play and /plnow now first say wtf they're doing and then if successfully find a video, show it in an embed. This was done cause reply time was on average ~4 seconds and if it was higher than 5 seconds, using it in slash interface would say "Application is not responding" or some bs like that.
+
+The bot now logs when it gets kicked from a vc. This is done so it clears up the queue and player.vc.

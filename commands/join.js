@@ -1,18 +1,23 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const voice = require("@discordjs/voice");
+const voiceAPI = require("@discordjs/voice");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("join")
-    .setDescription("Змушує бота приєднатися до вашого голосовогу каналу."),
+    .setDescription("Приєднує бота до вашого голосовогу каналу."),
+    aliases: ["джоін", "джойн", "приєднатися", "vcrn", "j"],
     category: "музика",
-    async execute(message,args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, message);
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: true,
+    async execute(message,args, Discord, client, voice, config) {
+        
         const vc = message.member.voice.channel;
         if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true}, message);
-        player.vc = vc; 
+        voice.vc = vc; 
+        voice.tc = message.channel;
 
-        const connection = voice.joinVoiceChannel({
+        voiceAPI.joinVoiceChannel({
             channelId: vc.id,
             guildId: vc.guild.id,
             adapterCreator: vc.guild.voiceAdapterCreator,

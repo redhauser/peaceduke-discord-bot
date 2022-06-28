@@ -1,24 +1,27 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder, SlashCommandChannelOption } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Ця команда дозволе вам дізнатися про використання всіх існуючих команд!")
-    .addStringOption(option => option.setName("name").setDescription("Назва команди, про яку б ви хотіли би більше дізнатись.")),
+    .addStringOption(option => option.setName("name").setDescription("Назва команди, про яку ви б хотіли більше дізнатись.")),
+    aliases: ["хелп","commandinfo","commands","команди", "допомога"],
     category: "інформація",
-    async execute(message,args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel && message.channel.type != "DM") return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
-        //if(message.type == "APPLICATION_COMMAND") {
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
+
         args = args || [message?.options?.get("name")?.value];
         if(!args[0]) {
         const actionRow = new Discord.MessageActionRow()
             .addComponents(
                 new Discord.MessageButton()
-                    .setCustomId("primary")
+                    .setCustomId("helpMessageArrow0")
                     .setLabel("◀️")
                     .setStyle("PRIMARY"),
                 new Discord.MessageButton()
-                    .setCustomId("primary2")
+                    .setCustomId("helpMessageArrow1")
                     .setLabel("▶️")
                     .setStyle("PRIMARY")
             );
@@ -26,9 +29,18 @@ module.exports = {
         let pageIndex = 0;
         let page1 = new Discord.MessageEmbed()
         .setColor("55bffc")
-        .setTitle("Допомога з командами, сторінка " + (pageIndex+1))
-        .setDescription("PeaceDuke - мультифункціональний Discord бот,який у собі \nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді.\n\n\nЦя команда допоможе вам дізнатись про всі існуючі команди.\nВи також можете використовувати `"+config.botPrefix +"` перед командами, замість `/`.\nВи можете прогорнути сторінки щоби дізнатися про функції кожної команди, та\nвикористати `/help назваКоманди` щоби дізнатися більше.\n\n`/help` - **показує це повідомлення**\n`/help назваКоманди` - **показує детальний опис команди**");
+        .setTitle("Допомога з командами, посібник")
+        .setDescription("PeaceDuke - мультифункціональний Discord бот,який у собі \nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді.\n\n\nЦя команда допоможе вам дізнатись про всі існуючі команди.\nВи також можете використовувати `"+ config.guilds[message.guildId].botPrefix +"` перед командами, замість `/`.\nВи можете прогорнути сторінки щоби дізнатися про функції кожної команди, та\nвикористати `/help назваКоманди` щоби дізнатися більше.\n\n`/help` - **показує це повідомлення**\n`/help назваКоманди` - **показує детальний опис команди**");
         
+        let categories = ["музика", "ігри", "інформація", "розваги", "модерація"];
+        let categoriesShortDescription = [
+            "Музикальні команди дозволяють вам грати музику в голосовому каналі та контролювати музикальну чергу!",
+            "Команди-ігри дозволяють вам зіграти певну гру з другом, друзями або з самим собою!",
+            "Інформаційні команди показують інформацію про користувачів/бота/інше.",
+            "Команди-розваги мають різний функціонал.",
+            "Модераційні команди полегшують модерацію серверу."
+        ];
+
         /*
         КАТЕГОРІЇ:
                 музика
@@ -37,63 +49,100 @@ module.exports = {
                 модерація
                 інформація
         */
+
+        let musiccommands = [];
+        let gamescommands = [];
+        let infocommands = [];
+        let funcommands = [];
+        let moderationcommands = [];
+        for(let i = 0; i<client.commands.size;i++) {
+            if(client.commands.at(i).category == "ігри") gamescommands.push(client.commands.at(i));
+            if(client.commands.at(i).category == "розваги") funcommands.push(client.commands.at(i));
+            if(client.commands.at(i).category == "музика") musiccommands.push(client.commands.at(i));
+            if(client.commands.at(i).category == "інформація") infocommands.push(client.commands.at(i));
+            if(client.commands.at(i).category == "модерація") moderationcommands.push(client.commands.at(i));
+        }
         
         let filter = null;
-        let reply = null;
+        let reply = await client.replyOrSend({embeds: [page1], components: [actionRow]}, message);
         if(message.type === "APPLICATION_COMMAND") {
-            await message.reply({embeds: [page1], components: [actionRow]});
             reply = (await message.fetchReply());
-            filter = (i) => i.message?.interaction?.id === reply.interaction?.id; 
+            filter = (i) => i.message.interaction?.id === reply.interaction?.id; 
         } else {
-            reply = await message.channel.send({embeds: [page1], components: [actionRow]})
-            filter = (i) => i.message?.id === reply?.id;
+            filter = (i) => i.message.id === reply.id;
         }
-        const collector = message.channel.createMessageComponentCollector({filter, time: 1000*60*2 });
+
+
+        const collector = message.channel.createMessageComponentCollector({filter, time: 1000*60*5 });
         collector.on("collect", async (m) => {
+            await m.deferUpdate();
             collector.resetTimer();
-            if(m.customId === "primary") {
-                await m.deferUpdate();
+
+            if(m.customId === "helpMessageArrow0") {
                 if(pageIndex>0) {
                     pageIndex--;
                 }
-            } else if(m.customId === "primary2") {
-                await m.deferUpdate();
-                if(pageIndex*7 < client.commands.size){
+            } else if(m.customId === "helpMessageArrow1") {
+                if(pageIndex<5){
                     pageIndex++;
                 }
             }
 
             if(pageIndex == 0) {
-                await m.editReply({embeds: [new Discord.MessageEmbed(page1)]});
+
+                await reply.edit({embeds: [new Discord.MessageEmbed(page1)]});
+            
             } else if(pageIndex>0){
-                let desc = "Команди:\n";
-                for(let i = 0;i < 7;i++) {
-                    let cmd = client.commands.at(i + pageIndex*7-7);
-                    if(i+(pageIndex-1)*7 < client.commands.size) {
+                let desc = categoriesShortDescription[pageIndex-1]+"\n\n\n";
+
+                let currentCommands = [];
+                for(let i = 0;i < client.commands.size;i++) {
+                    if(client.commands.at(i).category === categories[pageIndex-1]) currentCommands.push(client.commands.at(i));
+                }
+
+                for(let i = 0;i < currentCommands.length;i++) {
+                    let cmd = currentCommands[i];
+                    if(!cmd.hidden) {
                         desc += "`/" + cmd.data.name + "` - **" + cmd.data.description +"**\n";
                     }
                 }
+
                 let newEmbed = new Discord.MessageEmbed()
                 .setColor("55bffc")
-                .setTitle("Допомога з командами, сторінка " + (pageIndex+1))
+                .setTitle("Допомога з командами, категорія **_" + categories[pageIndex-1] + "_**")
                 .setDescription(desc);
-                await m.editReply({embeds: [newEmbed]});
+                await reply.edit({embeds: [newEmbed], components: [actionRow]});
             }
         });
+
+
         collector.on("end", async () => {
-            if(message.type === "APPLICATION_COMMAND") {
-                await message.editReply({content: "Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!",components: []});
-            } else {
-                await reply.edit({content: "Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!",components: []});
-            }
+            await reply.edit({content: "_Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!_",components: []});
         });
+
+
         } else {
-            let givenCommand = client.commands.get(args[0]);
+            
+            let foundalias = client.commandsAliases.find(
+                (obj) => {
+                    if((obj.alias.find(obj=>obj===args[0]))) {
+                        return true;
+                    }
+                }
+            )?.command;
+
+            let givenCommand;
+            if(foundalias) {
+                givenCommand = client.commands.get(foundalias);
+            }
             if(!givenCommand) return await client.replyOrSend("Не зміг знайти команду з назвою **" + args[0] + "**. Спробуйте ще раз!", message);
             let desc = "Інформація про команду:\n`/" + givenCommand.data.name + "` - **" + givenCommand.data.description + "**\n";
             desc += "Категорія: **" + givenCommand.category + "**.\n\n";
-            desc += "Параметри: \n";
+            if(givenCommand.aliases) { desc+= "Інші назви цієї команди які можна використати у префікс (**" + config.guilds[message.guildId].botPrefix + "**) інтерфейсі:\n`" + givenCommand.aliases.join("`,`") + "`.\n";}
+            if(givenCommand.hidden) { desc += "_Ця команда прихована/секретна._\n";}
+            desc+="\n";
             if(givenCommand.data.options[0]) {
+            desc += "Параметри: \n";
                 for(let i = 0; i<givenCommand.data.options.length;i++) {
                     desc += "[" + (i+1) + "]: `" + givenCommand.data.options[i].name + "` - **" + givenCommand.data.options[i].description + (givenCommand.data.options[i].required ? "** _(Обов'язковий)_" : "** _(Необов'язковий)_") + "\n";
                 }
@@ -107,6 +156,7 @@ module.exports = {
             .setDescription(desc)
             await client.replyOrSend({embeds: [helppage]}, message);
         }
+        //This is an outdated variant... TBH, it has its upsides, likes seeing all commands at once, but it looks like shit. And also, i only made it when i couldn't figure out how to use buttons with prefix interface.
         /*} else {
             let commandList = "**Якщо ви хочете побачити деталізований посібник по командам, натомість використайте `/help`.**\n\nВсі команди:\n";
             for(let i = 0; i<client.commands.size; i++) {

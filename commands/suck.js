@@ -3,16 +3,21 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("suck")
-    .setDescription("Suck some dicks. Special command, made in honor of Asstour4ik."),
+    .setDescription("Special command, made in honor of Asstour4ik."),
+    aliases: ["артур", "artour4ik", "asstour4ik", "сак"],
     category: "розваги",
-    async execute(message, args, Discord, client, player, config) {
-        //Replace names with placeholders
+    hidden: true,
+    botChatExclusive: false,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
+        
         if(message.member.id === config.specialuser1ID) {
-            if(message.channel.id !== config.botChannel) return await message.reply({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true});
             let user = message.guild.members.cache.get(config.specialuser2ID);
-            if(!user || !user.voice) return await message.reply("Він і так уже сакнув.");
+            if(!user || !user.voice) return await client.replyOrSend("Він і так уже сакнув.", message);
             await user.voice.disconnect();
-            await client.replyOrSend({content: "артурчик вдало сакнув дік :thumbsup:", ephemeral: true},message);
+            await client.replyOrSend({content: "Артурчик вдало сакнув дік :thumbsup:", ephemeral: true},message);
+        } else if(message.member.id === config.specialuser2ID) {
+            await client.replyOrSend({content: "Артем відсмоктав смачний член!"}, message);
         } else {
             await client.replyOrSend({content: "Suck some dicks!"},message);
         }

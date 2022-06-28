@@ -1,92 +1,143 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-//const fs = require("fs");
+const builders = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("rolehandler")
-    .setDescription("Відповідає за видачу ролей. Тільки для Трахмира.")
-    .addStringOption(option => option.setName("id1").setDescription("ID першої ролі.").setRequired(true))
-    .addStringOption(option => option.setName("id2").setDescription("ID другої ролі.").setRequired(true))
-    .addStringOption(option => option.setName("id3").setDescription("ID третьої ролі.").setRequired(true))
-    .addStringOption(option => option.setName("id4").setDescription("ID четвертої ролі.").setRequired(true)),
+    .setDescription("Відповідає за видачу ролей. Тільки для власника серверу.")
+    .addStringOption(option => option.setName("role1").setDescription("ID/назва/згадування першої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("emoji1").setDescription("Емодзі першої ролі.").setRequired(true))
+    .addStringOption(option => option.setName("role2").setDescription("ID/назва/згадування другої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji2").setDescription("Емодзі другої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role3").setDescription("ID/назва/згадування третьої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji3").setDescription("Емодзі третьої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role4").setDescription("ID/назва/згадування четвертої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji4").setDescription("Емодзі четвертої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role5").setDescription("ID/назва/згадування п'ятої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji5").setDescription("Емодзі п'ятої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role6").setDescription("ID/назва/згадування шостої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji6").setDescription("Емодзі шостої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role7").setDescription("ID/назва/згадування сьомої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji7").setDescription("Емодзі сьомої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role8").setDescription("ID/назва/згадування восьмої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji8").setDescription("Емодзі восьмої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role9").setDescription("ID/назва/згадування дев'ятої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji9").setDescription("Емодзі дев'ятої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("role10").setDescription("ID/назва/згадування десятої ролі.").setRequired(false))
+    .addStringOption(option => option.setName("emoji10").setDescription("Емодзі десятої ролі.").setRequired(false)),
+    aliases: ["ролехандлер", "ролі", "roles", "rolegive", "ролехендлер", "roletracker", "role-tracker","рольтрекер", "роль-трекер"],
     category: "модерація",
-    async execute(message,args,Discord,client,player, config) {
-        if(!message.member.id === config.adminId) return message.reply({content: "Ви не маєте прав на використання цієї команди!", ephemeral: true});
-        //Поміняти на правильне ID при запуску на cf
-        const channel = config.roleChannel;
-        if(!args) args = [message.options.get("id1").value,message.options.get("id2").value,message.options.get("id3").value,message.options.get("id4").value,message.options.get("emoji1")?.value,message.options.get("emoji2")?.value,message.options.get("emoji3")?.value,message.options.get("emoji4")?.value];
-        if(args.length<3) return message.reply({content: "Недостатньо аргументів", ephemeral: true});
-        if(message.channel.id !== channel) return message.reply({content: "В цьому чаті не можна видавати ролі.", ephemeral: true});
-        const role1 = message.guild.roles.cache.find(role => role.id === args[0]);
-        const role2 = message.guild.roles.cache.find(role => role.id === args[1]);
-        const role3 = message.guild.roles.cache.find(role => role.id === args[2]);
-        const role4 = message.guild.roles.cache.find(role => role.id === args[3]);
-        
-        const role1ReactEmoji = "🔵";
-        const role2ReactEmoji = "🔴";
-        const role3ReactEmoji = "🟡";
-        const role4ReactEmoji = "🟢";
+    hidden: false,
+    botChatExclusive: false,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
+        if(!message.member.id === message.guild.ownerId) return await client.replyOrSend({content: "Тільки власник серверу може використовувати цю команду!", ephemeral: true}, message);
 
+        let roleIds = [];
+        let emojis = [];
+
+        if(message.type === "APPLICATION_COMMAND") {
+            for(let i = 0;i < message.options.data.length; i++) {
+                if(!(i%2)) {
+                    if(!message.options.data[i].name.startsWith("role")) return await message.client.replyOrSend({content: "Ви вказали емодзі коли треба було вказати роль.", ephemeral: true}, message);
+                    let roleId = false;
+                    try {
+                        //Check whether the supplied value is a role ID.
+                        let role = await message.guild.roles.cache.find(role => role.id == message.options.data[i].value);
+                        roleId = role.id;
+                    } catch (err) {
+                        //Check whether the supplied value is a role name.
+                        try {
+                            let role = await message.guild.roles.cache.find(role => role.name == message.options.data[i].value);
+                            roleId = role.id;
+                        } catch (err) {
+                            //Check whether the supplied value is a role mention. There is definitely a better method that the one I used here, but. It works. So whatever.
+                            if(message.options.data[i].value.startsWith("<@&") && message.options.data[i].value.endsWith(">")) {
+                                let role = await message.guild.roles.cache.find(role => role.id == (message.options.data[i].value.substring(3, message.options.data[i].value.length-1)));
+                                roleId = role.id;
+                            } else {
+                            console.log("[" + message.guild.name +"] Відбулась помилка при виконанні команди rolehandler: Користувач не вказав правильний аргумент:", err);
+                            }
+                        }
+                    }
+                    if(!roleId) { return client.replyOrSend({content: "Вибачте, але ваший " + (i+1) + "-й вказаний аргумент не є ні `ID` ролі, ні _назвою_ ролі, ні @згадуванням ролі.\n", ephemeral: true}, message);}
+                    roleIds.push(roleId);
+                } else {
+                    if(!message.options.data[i].name.startsWith("emoji")) return await message.client.replyOrSend({content: "Ви вказали роль коли треба було вказати емодзі.", ephemeral: true}, message);
+                    let emoji = message.options.data[i].value;
+                    emojis.push(emoji);
+                }
+            }
+        } else {
+            for(let i = 0; i < args.length; i++) {
+                if(!(i%2)) {
+                    let roleId = false;
+                    try {
+                        //Check whether the supplied value is a role ID.
+                        let role = await message.guild.roles.cache.find(role => role.id == args[i]);
+                        roleId = role.id;
+                    } catch (err) {
+                        //Check whether the supplied value is a role name.
+                        try {
+                            let role = await message.guild.roles.cache.find(role => role.name == args[i]);
+                            roleId = role.id;
+                        } catch (err) {
+                            //Check whether the supplied value is a role mention. There is definitely a better method that the one I used here, but. It works. So whatever.
+                            if(args[i].startsWith("<@&") && args[i].endsWith(">")) {
+                                let role = await message.guild.roles.cache.find(role => role.id == (args[i].substring(3, args[i].length-1)));
+                                roleId = role.id;
+                            } else {
+                            console.log("[" + message.guild.name +"] Відбулась помилка при виконанні команди rolehandler: Користувач не вказав правильний аргумент:", err);
+                            }
+                        }
+                    }
+                    if(!roleId) { return client.replyOrSend({content: "Вибачте, але ваший " + (i+1) + "-й вказаний аргумент не є ні `ID` ролі, ні _назвою_ ролі, ні @згадуванням ролі\n", ephemeral: true}, message);}
+                    roleIds.push(roleId);
+                } else {
+                    emojis.push(args[i]);
+                }
+            }
+        }
+
+        if(args.length<2) return await client.replyOrSend({content: "Ви не дали достатньо аргументів. Для видання ролі, я повинен отримати хочаби одну роль і хочаби одне емодзі.", ephemeral: true}, message);
+        if(roleIds.length !== emojis.length) return await client.replyOrSend({content: "Вибачте, але ви не вказали більше ролей ніж емодзі. Ви повинні вказати емодзі на кожну роль!", ephemeral: true}, message);
+
+        let roleContent = "";
+
+        let reactRoles = [];
+        
+        for(let i = 0; i < roleIds.length; i++) {
+            let role = await message.guild.roles.cache.find(role => role.id == roleIds[i]);
+            roleContent += emojis[i] + " для ролі " + builders.roleMention(role.id) + "\n";
+
+            reactRoles.push({
+                reactEmoji: emojis[i],
+                reactRoleId: roleIds[i]
+            });
+        }
+        
         let embedMessage = new Discord.MessageEmbed()
         .setColor("#FF00FF")
-        .setTitle("Вибери роль!")
-        .setDescription("Вибери яку роль ти б хотів отримати і відреагуй відповідно!\n(Якщо у тебе вже є роль, а ти хочеш її позбутись, то відреагуй а потім зніми реакцію на ту роль)\n\n\n" + role1ReactEmoji + "для " + role1.name +"\n" + role2ReactEmoji + "для " + role2.name + "\n"  + role3ReactEmoji + "для " + role3.name +"\n"  + role4ReactEmoji + "для " + role4.name +"\n");
+        .setTitle("Вибери собі роль!")
+        .setDescription("Вибери яку роль ти би хотів отримати і відреагуй відповідно!\n_Якщо хочеш позбутися роль, то відреагуй а потім зніми реакцію._\n\n\n" 
+                        + roleContent
+        );
         
-        await message.reply(".");
-        await message.deleteReply();
+        if(message.type === "APPLICATION_COMMAND") {
+            await message.reply({content: "Вдало добавив новий роль-трекер на сервер.", ephemeral: true});
+        }
+
         let reactEmbedMessage = await message.channel.send({embeds: [embedMessage]});
-        reactEmbedMessage.react(role1ReactEmoji);
-        reactEmbedMessage.react(role2ReactEmoji);
-        reactEmbedMessage.react(role3ReactEmoji);
-        reactEmbedMessage.react(role4ReactEmoji);
+        for(let i = 0; i < emojis.length; i++) {
+            reactEmbedMessage.react(emojis[i]);
+        }
 
-        client.on("messageReactionAdd", async (reaction, user) => {
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
-            if (!reaction.message.guild) return;
-
-            if (reaction.message.channel.id == channel) {
-                if(reaction.emoji.name == role1ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(role1);
-                }
-                if(reaction.emoji.name == role2ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(role2);
-                }
-                if(reaction.emoji.name == role3ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(role3);
-                }
-                if(reaction.emoji.name == role4ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(role4);
-                }
-                else {
-                    return ;
-                }
-            }
+        config.guilds[message.guildId].roleTrackers.push({
+            rolehandlerMessageId: reactEmbedMessage.id,
+            rolehandlerChannelId: message.channel.id,
+            reactRoles: reactRoles
         });
-        client.on("messageReactionRemove", async (reaction, user) => {
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
-            if (!reaction.message.guild) return;
 
-            if (reaction.message.channel.id == channel) {
-                if(reaction.emoji.name == role1ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(role1);
-                }
-                if(reaction.emoji.name == role2ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(role2);
-                }
-                if(reaction.emoji.name == role3ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(role3);
-                }
-                if(reaction.emoji.name == role4ReactEmoji) {
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(role4);
-                }
-                else {
-                    return ;
-                }
-            }
-        });
+        console.log("[" + message.guild.name + "] Добавив новий роль-трекер на сервер.");
     }
 }

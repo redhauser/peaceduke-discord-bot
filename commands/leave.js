@@ -1,30 +1,31 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const voice = require("@discordjs/voice");
+const voiceAPI = require("@discordjs/voice");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("leave")
-    .setDescription("Заставляє бота покинути голосовий канал."),
+    .setDescription("Змушує бота відключитися від голосового каналу."),
+    aliases: ["лів", "лівни", "novcrn", "disconnect", "leavevc", "l"],
     category: "музика",
-    async execute(message,args, Discord, client, player, config) {
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: true,
+    async execute(message,args, Discord, client, voice, config) {
         const vc = message.member.voice.channel;
 
-        if(!vc) return client.replyOrSend({content: "Ви повинні знаходитись у голосовому каналі щоби використати цю команду!", ephemeral: true},message);
-        if(!client.voice.adapters.size) return await client.replyOrSend({content: "Не знаходився у голосовому каналі."},message);
-        player.vc = false;
+        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі, щоби використати цю команду!", ephemeral: true},message);
+        if(!(await client.voice.adapters.get(message.guild.id))) return await client.replyOrSend({content: "Не був у голосовому каналі."},message);
+        voice.vc = false;
+        voice.tc = message.channel;
 
-        const connection = await voice.joinVoiceChannel({
-            channelId: vc.id,
-            guildId: vc.guild.id,
-            adapterCreator: vc.guild.voiceAdapterCreator,
-        });
+        const connection = await voiceAPI.getVoiceConnection(vc.guild?.id);
 
-        client.queue = [];
-        await player.stop();
+        voice.queue = [];
+        await voice.player.stop();
         connection?.destroy();
-        player.isLooped = "off";
+        voice.isLooped = "off";
 
         await client.replyOrSend({content: "↩️ Покинув голосовий канал."}, message);
+        console.log("[" + message.guild.name + "] Покинув голосовий канал.");
     }
 }

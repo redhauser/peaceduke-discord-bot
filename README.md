@@ -1,71 +1,160 @@
 # peaceduke-discord-bot
 ## This is the repository representing the code of PeaceDuke the Discord bot.
 
-PeaceDuke - is a Discord bot, that has all the basic music-related features, like play,plnow,queue,loop,pause,skip,remove,shuffle,etc., has a bunch of mini-games,
-moderation features, and a few community features. 
+PeaceDuke - is a Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
 
-PeaceDuke is developed by me, redhauser.
+PeaceDuke is developed by me, **redhauser** (_redhauser#8140_ on Discord).
+
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png" alt="peaceduke">
+</p>
 
 ## How to boot the bot up and update it (this is for myself):
 
-### Method #1: How to update it on my current hosting (RECOMMENDED):
+### How to update it on my current hosting:
 
 Go into the current running build by doing:
 
-> cd ~/currentRunbuild
+```sh
+cd ~/currentRunbuild
+```
+
+or
+
+```sh
+cd ~/peaceduke-discord-bot
+```
 
 Then, do:
 
-> git pull
+```sh
+git pull
+```
 
-From here, go to Correction Fluid and do /shutdown. The bot will shutdown and immediately restart due to the pm2 service.
+From here, go to any server and do `/shutdown`. The bot shutdowns and also saves all important data (guildsconfig.json and userdata.json).
 
-You've successfuly updated it to the latest build and restarted it! Congrats.
+PM2 will automatically restart the bot.
+
+If you're planning to update and not touch the bot for a while, I'd also recommend to do:
+
+```sh
+env YTDL_NO_UPDATE=1 pm2 restart 0 --update-env
+```
+
+It will ensure that ytdl-core package won't cause any issues.
+
+Conrgats! You've successfuly updated the bot to the latest build and restarted it.
 
 If you want to see the current log do:
 
-> pm2 log
+```sh
+pm2 log
+```
 
 If you want to see the entirety of output logs:
 
-> cat ~/.pm2/logs/index-out.log
+```sh
+cat ~/.pm2/logs/index-out.log
+```
 
-> cat ~/.pm2/logs/index-error.log
+```sh
+cat ~/.pm2/logs/index-error.log
+```
 
-### Method #2: How to start it up from the ground up (USE ONLY IF SOMETHING BREAKS COMPLETELY IN THE CURRENT SYSTEM. IF NOT, REFER TO THE FIRST METHOD.):
+## Configuration files and others:
 
-First, clone the repository from the main branch by doing:
+The bot requires three files to function: a **config.json** file, a **guildsconfig.json** file, and a **userdata.json**.
 
-> git clone git@github.com:redhauser/peaceduke-discord-bot.git
+If you already have filled out files from bot's runtime, use them. If not, here you go:
 
-Then, after successfully cloning it, move the existing *config.json* and *userdata.json* out of your previous build of PeaceDuke into the new build, or if you don't already have these, create *config.json* with the required data and create an empty/filled out *userdata.json*.
+### config.json
 
-Following that, install all the required npm modules by doing:
+**config.json** is the most important file. You NEED to fill it out completely to function. Here is its template:
 
-> npm install
+```json
+{
+    "clientId": "the bot's id",
+    "token": "the bot's token",
+    "spotifyClientId": " spotify app's client id",
+    "spotifyClientSecret": "spotify app's client secret",
+    "spotifyAccessToken": null,
+    "redhauserId": "redhauser's id",
+    "correctionFluidId": "correction fluid id",
+    "botUniversalPrefix": "the bot's goto prefix",
 
-The installation and the setup is done. Now, to boot the bot up:
+    "specialuserID1": "a4k",
+    "specialuserID2": "art",
+    "specialuserID3": "niki"
+}
+```
 
-> env YTDL_NO_UPDATE=1 node .
+The _spotifyAccessToken_ value must be null. The bot figures it out on runtime.
 
-I recommend booting it up with the YTDL auto updates disabled, since it has proven to cause problems in the past, but if you don't care about that, you can still use:
+### guildsconfig.json
 
-> node . 
+**guildsconfig.json** is the second, most important configuration file. I recommend to fill this one out, but the bot will function if you don't, it will just behave completely unconfigured. Here is its template: 
 
-or 
+```json
+{
+    "templateGuildId": {
+        "randomQuotes": false,
+        "guildId": "templateGuildId",
+        "slashCommands": true,
+        "botPrefix": "",
+        "djRole": "",
+        "memberRole": "",
+        "mainChannel": "",
+        "secretVcChannel": "",
+        "secretVcPassPhrase": "",
+        "botChannel": "",
+        "roleTrackers": [
+            {
+                "rolehandlerMessageId": "",
+                "rolehandlerChannelId": "",
+                "reactRoles": [
+                    {"reactEmoji": "", "reactRoleId": ""},
+                    {"reactEmoji": "", "reactRoleId": ""}
+                ]
+            }
+        ]
+    }
+}
+```
 
-> node index.js
+If you want it to be uncofigured, you still need to create a **guildsconfig.json** file, but instead, just put this in it:
 
-## NOTE:
+```json
+{}
+```
 
-Since i'm now switching to the pm2 system, instead of the last few steps do:
+The bot will not crash, and figure out everything else by itself.
 
-> pm2 start index.js
+### userdata.json
 
-And, if for some reason it's no longer considered a service, do add it as a pm2 service, so it can reboot if anything happens.
+**userdata.json** is not the third most important file. You can almost completely abandon this one, but if you do, you'll still need to create a **userdata.json**
+file with this in it:
 
-## Conclusion...?
+```json
+{}
+```
 
-And you're doneeee. This readme is basically a step by step guide for myself, if I somehow forget how to do this. I also hope no one else sees this.
+However, if you want to tinker with some of its contents, as an example, write accurate message count values, here is its template: 
+
+```json
+{
+    "userid": {
+        "guilds": {
+            "guildId": {
+                "messageCount": 1,
+                "xp": 1,
+                "lvl": 1
+            }
+        },
+        "playlists": []
+    }
+}
+```
 
 ##### :>
+
+##### And well, that's it.

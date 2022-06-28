@@ -5,52 +5,55 @@ module.exports = {
     .setName("ox")
     .setDescription("Зіграй хрестики-нолики з другом!")
     .addMentionableOption(option => option.setName("опонент").setDescription("Користувач, з яким ви хочете зіграти.")),
+    aliases: ["tictactoe","tic-tac-toe","хрестикинолики","хрестики-нолики","xo","ох","хо"],
     category: "ігри",
-    async execute(message, args, Discord, client, player, config) {
-        //if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але ця команда не працює через префікс. Натомість, використайте `/ox`!"});
+    hidden: false,
+    botChatExclusive: false,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
         let rows = [];
         rows.push(new Discord.MessageActionRow()
         .addComponents(
             new Discord.MessageButton()
-                .setCustomId('0')
+                .setCustomId('0oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
             new Discord.MessageButton()
-                .setCustomId('1')
+                .setCustomId('1oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
             new Discord.MessageButton()
-                .setCustomId('2')
-                .setLabel('-')
-                .setStyle('SECONDARY'),
-        ));
-        rows.push(new Discord.MessageActionRow()
-        .addComponents(
-            new Discord.MessageButton()
-                .setCustomId('3')
-                .setLabel('-')
-                .setStyle('SECONDARY'),
-            new Discord.MessageButton()
-                .setCustomId('4')
-                .setLabel('-')
-                .setStyle('SECONDARY'),
-            new Discord.MessageButton()
-                .setCustomId('5')
+                .setCustomId('2oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
         ));
         rows.push(new Discord.MessageActionRow()
         .addComponents(
             new Discord.MessageButton()
-                .setCustomId('6')
+                .setCustomId('3oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
             new Discord.MessageButton()
-                .setCustomId('7')
+                .setCustomId('4oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
             new Discord.MessageButton()
-                .setCustomId('8')
+                .setCustomId('5oxindex')
+                .setLabel('-')
+                .setStyle('SECONDARY'),
+        ));
+        rows.push(new Discord.MessageActionRow()
+        .addComponents(
+            new Discord.MessageButton()
+                .setCustomId('6oxindex')
+                .setLabel('-')
+                .setStyle('SECONDARY'),
+            new Discord.MessageButton()
+                .setCustomId('7oxindex')
+                .setLabel('-')
+                .setStyle('SECONDARY'),
+            new Discord.MessageButton()
+                .setCustomId('8oxindex')
                 .setLabel('-')
                 .setStyle('SECONDARY'),
         ));
@@ -97,7 +100,7 @@ module.exports = {
         let turns = 0;
         if(message.type === "APPLICATION_COMMAND") {
             reply = await message.fetchReply();
-            filter = (i) => i.message.interaction.id === reply.interaction.id;
+            filter = (i) => i.message.interaction?.id === reply.interaction?.id;
         } else {
             filter = (i) => i.message.id === reply.id;
         }
@@ -116,7 +119,7 @@ module.exports = {
                     m.deferUpdate()
                     return;
                 }
-            tile = parseInt(m.customId);
+            tile = parseInt((m.customId).charAt(0));
             if(board[tile] !== "-") { return m.deferUpdate();}
             board[tile] = currentPlayer;
             rows[Math.floor(tile/3)].components[tile%3].label = board[tile];

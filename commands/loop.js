@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("loop")
-    .setDescription("Включає/виключає повтор даної пісні або черги.")
+    .setDescription("Включає/виключає повтор поточної пісні або повтор всієї черги.")
 	.addStringOption(option =>
 		option.setName("type")
 			.setDescription("Тип повтору який ви б хотіли поставити.")
@@ -11,73 +11,47 @@ module.exports = {
 			.addChoice("ON", "on")
 			.addChoice("ALL", "all")
 			.addChoice("OFF", "off")),
+    aliases: ["луп", "повтор", "repeat", "replay"],
     category: "музика",
-    async execute(message, args, Discord, client, player, config) {
-        //PS: I FUCKING HATE THIS FUNCTION. THIS CODE IS SO FUCKING TERRIBLE. PLEASE REWRITE IT. ITS JUST DISGUSTING??? WHY THE FUCK DID I USE SO MANY IF-ELSE NESTS?????????????????????????/
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
-        if(!message.member.roles.cache.has(config.djRole)) return await client.replyOrSend({content: "У вас немає ролі DJ!", ephemeral: true},message);
+    hidden: false,
+    botChatExclusive: true,
+    djRoleRequired: true,
+    async execute(message, args, Discord, client, voice, config) {
+
         if(message.type === "APPLICATION_COMMAND") {
-        
-        args = [message.options?.get("type")?.value] || ["off"];
-        if(args[0] === "on") {
-            player.isLooped = "on";
-            await message.reply({content: "🔂 Програвач поставлено на повтор поточної пісні."});
-            console.log("Програвач поставлено на повтор поточної пісні.");
-        } else if (args[0] === "all") {
-            player.isLooped = "all";
-            await message.reply({content: "🔄 Програвач поставлено на повтор всієї черги."});
-            console.log("Програвач поставлено на повтор черги.");
-        } else if(args[0] === "off"){
-            player.isLooped = "off";
-            await message.reply({content: "➡️ Програвач знято з повтору."});
-            console.log("Програвач знято з повтору.")
-        } else {
-        if(player.isLooped == "off") {
-            player.isLooped = "on";
-        } else {
-            player.isLooped = "off";
+            args = [message.options.get("type")?.value];
         }
-        console.log((player.isLooped === "off") ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор поточної пісні.");
-        await message.reply({content: player.isLooped==="off" ? "➡️ Програвач знято з повтору." : "🔂 Програвач поставлено на повтор поточної пісні."});
-    }
-        } else {
-            if(args[0] !== "all" && args[0] != "off" && args[0]!="on") {
-            if(player.isLooped == "all") {
-                player.isLooped = "off";
-                await message.channel.send({content: "➡️ Програвач знято з повтору."});
-                console.log("Програвач знято з повтору.")
-            } else if (player.isLooped == "off") {
-                player.isLooped = "on";
-                await message.channel.send({content: "🔂 Програвач поставлено на повтор поточної пісні."});
-                console.log("Програвач поставлено на повтор поточної пісні.");
-            } else if(player.isLooped == "on") {
-                player.isLooped = "all";
-                await message.channel.send({content: "🔄 Програвач поставлено на повтор всієї черги."});
-                console.log("Програвач поставлено на повтор черги.");
-            } else {
-                player.isLooped = "off";
-                await message.channel.send({content: "➡️ Програвач знято з повтору."});
-                console.log("Програвач знято з повтору.")
-            }
-            } else {
-                if(args[0] == "all") {
-                    player.isLooped = "all";
-                    await message.channel.send({content: "🔄 Програвач поставлено на повтор всієї черги."});
-                    console.log("Програвач поставлено на повтор черги.");
-                } else if(args[0] == "on") {
-                    player.isLooped = "on";
-                    await message.channel.send({content: "🔂 Програвач поставлено на повтор поточної пісні."});
-                    console.log("Програвач поставлено на повтор поточної пісні.");
-                } else if(args[0] == "off") {
-                    player.isLooped = "off";
-                    await message.channel.send({content: "➡️ Програвач знято з повтору."});
-                    console.log("Програвач знято з повтору.")
-                } else {
-                    player.isLooped = "off";
-                    await message.channel.send({content: "➡️ Програвач знято з повтору."});
-                    console.log("Програвач знято з повтору.")
-                }
+
+        if((args[0] == null || !args[0]) || (args[0] != "off" && args[0] != "on" && args[0] != "all")) {
+            switch (voice.isLooped) {
+                case "off":
+                args = ["on"];    
+                    break;
+                case "on":
+                args = ["all"];    
+                    break;
+                case "all":
+                args = ["off"];    
+                    break;
             }
         }
+
+        if(args[0] == "on") {
+            voice.isLooped = "on";
+            await client.replyOrSend({content: "🔂 Програвач поставлено на повтор поточної пісні."}, message);
+            console.log("[" + message.guild.name + "] Програвач поставлено на повтор поточної пісні.");
+        } else if(args[0] == "all") {
+            voice.isLooped = "all";
+            await client.replyOrSend({content: "🔄 Програвач поставлено на повтор всієї черги."}, message);
+            console.log("[" + message.guild.name + "] Програвач поставлено на повтор черги.");
+        } else if(args[0] === "off") {
+            voice.isLooped = "off";
+            await client.replyOrSend({content: "➡️ Програвач знято з повтору."}, message);
+            console.log("[" + message.guild.name + "] Програвач знято з повтору.");
+        } else {
+            console.log("[" + message.guild.name + "] Помилка у команді loop.js - сука, перероблюй цю команду.");
+            await client.replyOrSend({content: "Вибачте, сталася помилка. Повідомте про це раді, і він можливо пофіксить."}, message);
+        }
+
     }
 }

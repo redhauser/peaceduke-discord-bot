@@ -4,26 +4,42 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("fatban")
-    .setDescription("Довзоляє кинуть якогось дурачка в таймаут на 10 хвилин. Потребує права мутити користувачів.")
-    .addMentionableOption(option => option.setName("дурак").setDescription("Дурак, якого ви хочете кинуть в таймаут.").setRequired(true)),
+    .setDescription("Кину в таймаут якогось дурника на або 5 хвилин, або 3 години. Потребує права мутити користувачів.")
+    .addMentionableOption(option => option.setName("жертва").setDescription("Людина, яку ви хочете кинути в таймаут.").setRequired(true)),
+    aliases: ["фетбан", "timeout"],
     category: "модерація",
-    async execute(message,args,Discord,client,player,config) {
-        //if(message.type !== "APPLICATION_COMMAND") return await message.channel.send({content: "Вибачте, але спробуйте використати `/fatban` замість `" + config.botPrefix + "fatban`!"});
-        if(message.channel.id !== config.botChannel) return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true},message);
+    hidden: false,
+    botChatExclusive: false,
+    djRoleRequired: false,
+    async execute(message, args, Discord, client, voice, config) {
+        
         if(!message.member.permissions.has("MUTE_MEMBERS")) return await client.replyOrSend({content: "У вас немає прав на таку злочинність!"},message);
-        args = [message?.options?.get("дурак")?.value || message.mentions?.members?.first()?.id];
+        
+        args = [message.options?.get("жертва")?.value || message.mentions?.members?.first()?.id];
+        
         if(!args[0]) return await client.replyOrSend({content: "Ви не вказали кого заfatbanити."},message);
+        
         let isRole = false;
         await client.users.fetch(args[0]).catch( async () => {
             isRole = true;
         });
         if(isRole) return await client.replyOrSend({content: "Ви не вказали правильного користувача."},message);
+        
         let fatbanneduser = message.guild.members.cache.get(args[0]);
 
-        fatbanneduser.timeout(10*60*1000, "Fat banned по причині довбойоб!").catch( async () => {
-            return await message.channel.send({content: "Не вдалось заfatbanити! Можливо ви самі лох порівняння з користувачем, якого ви хочете кинути в таймаут?"})    
+        let timeoutTime = Math.floor(Math.random() * 1000 * 60 * 60 * 3) + 2500;
+
+        let reply = await client.replyOrSend({content: "Fatbanю..."}, message);
+        if(message.type === "APPLICATION_COMMAND") { reply = await message.fetchReply(); }
+
+        let successfulBan = true;
+        await fatbanneduser.timeout(timeoutTime, "Кинув в таймаут бо модератори вирішили що ви дурник.").catch( async () => {
+            successfulBan = false;
+            return await reply.edit({content: "Не вдалось заfatbanити (😎)! Можливо ви самі лох у порівнянні з користувачем, якого ви хочете кинути в таймаут? 🤨 🙄"}, message);    
         });
         
-        await client.replyOrSend({content: ":sunglasses: Заfatbanив " + builders.userMention(fatbanneduser) + " :sunglasses:!"}, message);
+        if (successfulBan) {
+            await reply.edit({content: "😎 Заfatbanив " + builders.userMention(fatbanneduser.id) + " 😎!"}, message);
+        }
     }
 }
