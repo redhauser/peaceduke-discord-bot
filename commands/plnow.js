@@ -113,7 +113,7 @@ module.exports = {
             if(args[0].startsWith("https://open.spotify.com/track/")) {
                 //Detect and fetch a Spotify Track.
                 isSpotifyLink="трек"
-                reply.edit({content: "Виявив, що це Spotify трек... Шукаю його ютуб альтернативу..."});
+                reply.edit({content: "Виявив, що це **Spotify** трек... Шукаю його ютуб альтернативу..."});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -130,7 +130,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/album/")) {
                 //Detect and fetch a Spotify Album
                 isSpotifyLink="альбом"
-                reply.edit({content: "Виявив, що це Spotify альбом... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: "Виявив, що це **Spotify** альбом... Генерую чергу... Це може зайняти пару хвилин..."});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -149,7 +149,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/artist/")) {
                 //Detect and fetch a Spotify artist's newest album
                 isSpotifyLink="найновіший альбом автора";
-                reply.edit({content: "Виявив, що це Spotify автор... Включаю його найновіший альбом... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: "Виявив, що це **Spotify** автор... Включаю їхній найновіший альбом... Генерую чергу... Це може зайняти пару хвилин..."});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(32, (args[0].indexOf("?"))));
@@ -169,7 +169,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/playlist/")) {
                 //Detect and fetch a user-created Spotify playlist
                 isSpotifyLink="плейлист"
-                reply.edit({content: "Виявив, що це Spotify плейлист... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: "Виявив, що це **Spotify** плейлист... Генерую чергу... Це може зайняти пару хвилин..."});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(34, (args[0].indexOf("?"))));
@@ -187,14 +187,11 @@ module.exports = {
                 spotifyPlaylistName = spotiPlaylist.owner.display_name + " - " + spotiPlaylist.name;
                 
             } else {
-                reply.edit({content: "Вибачте, але Spotify посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком!"});
+                reply.edit({content: "Вибачте, але **Spotify** посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком, ні автором!"});
                 return console.log("[" + message.guild.name + "] Вказане Spotify посилання не спрацювало - " + args[0]);
             }
             spotifyLinkToLinkBack = args[0];
             
-            //console.log(artists);
-            //console.log(trackNames);
-
             for(let i = 0; i < trackNames.length; i++) {
                 if(!i) {
                     video = await videoFinder(artists[0] + " - " + trackNames[0]);

@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("poll")
-    .setDescription("Дозволяє провести голосування!")
+    .setDescription("Дозволяє провести опитування!")
     .addStringOption(option => option.setName("питання").setDescription("Питання, на яке ви хочете щоби користувачі проголосували.").setRequired(true))
     .addStringOption(option => option.setName("варіант1").setDescription("1 варіант відповіді до вашого питання.").setRequired(false))
     .addStringOption(option => option.setName("варіант2").setDescription("2 варіант відповіді до вашого питання.").setRequired(false))
@@ -25,7 +25,7 @@ module.exports = {
         if(args.length<1) return await client.replyOrSend("Недостатньо даних для початку опитування!",message);
 
         let indexOfQstSep = args.join(" ").indexOf("?");
-        if (indexOfQstSep==-1) return await client.replyOrSend("Питання не вказане правильно! *Не забудьте поставити знак питання _?_ наприкінці питання*.",message);
+        if (indexOfQstSep==-1) return await client.replyOrSend("Питання вказане неправильно! _Не забудьте поставити знак питання (?) наприкінці питання_.",message);
     
         args = [(args.join(" ").slice(0, indexOfQstSep+1))] .concat(args.join(" ").slice(indexOfQstSep+2, (args.join(" ")).length).split(" "));
         if (!args[1]) args.pop();
@@ -50,7 +50,7 @@ module.exports = {
         if (args.length > 1) {
             for(let i = 0;i < args.length-1; i++) {
                 
-            desc+=reactIntegers[i] + " варіант: " + args[i+1] + "\n\n";
+            desc+=reactIntegers[i] + " варіант: **" + args[i+1] + "**\n\n";
             }
         }
         embedMessage.setDescription(desc);

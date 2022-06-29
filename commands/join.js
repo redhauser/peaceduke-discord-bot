@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const voiceAPI = require("@discordjs/voice");
+const builders = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("join")
-    .setDescription("Приєднує бота до вашого голосовогу каналу."),
+    .setDescription("Приєднує бота до вашого голосового каналу."),
     aliases: ["джоін", "джойн", "приєднатися", "vcrn", "j"],
     category: "музика",
     hidden: false,
@@ -23,6 +24,6 @@ module.exports = {
             adapterCreator: vc.guild.voiceAdapterCreator,
         });
 
-        await client.replyOrSend({content: "↪️ Приєднався до <#" + vc.id + ">!"}, message);
+        await client.replyOrSend({content: "↪️ Приєднався до " + builders.channelMention(vc.id) + "!"}, message);
     }
 }

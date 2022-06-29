@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.4` - updated the `ox` command. It doesn't look outdated anymore, cus it uses the great technology of Discord embeds. Slightly updated the `poll` command, and a few grammar changes here and there.
+
 `1.4.3` - `play` and `plnow` now understand artist spotify links. They will play the artist's most recent album. Slightly revised the to-do list.
 
 `1.4.2` - Another extremely small update. Made the `rolehandler` command check whether an emoji is a custom emoji. So yea, support for custom emojis in the role-trackers was added.

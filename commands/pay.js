@@ -10,6 +10,6 @@ module.exports = {
     botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config) {
-        await client.replyOrSend("З вашого балансу було знято " + (Math.random()*999).toFixed(2) + "₴. Дякуємо!",message);
+        await client.replyOrSend("З вашого балансу було знято **" + (Math.random()*999).toFixed(2) + "₴**. Дякуємо! Дякуємо за вашу співпрацю!",message);
     }
 }
