@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.5` - the `plist show` command now accepts a @user mention or a playlist name/id. I really hope it works... I mean, it seems to be working... Also! Made the `say` command funnier. Added a few things to the to-do list.
+
 `1.4.4` - updated the `ox` command. It doesn't look outdated anymore, cus it uses the great technology of Discord embeds. Slightly updated the `poll` command, and a few grammar changes here and there.
 
 `1.4.3` - `play` and `plnow` now understand artist spotify links. They will play the artist's most recent album. Slightly revised the to-do list.

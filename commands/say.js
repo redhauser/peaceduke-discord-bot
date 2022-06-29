@@ -11,10 +11,10 @@ module.exports = {
     botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config) {
-        if (!args) { args = args[0] || [message?.options?.get("повідомлення")?.value]; }
+        if (!args) { args = [message?.options?.get("повідомлення")?.value]; }
 
         if(!args[0]) {
-            return await client.replyOrSend({content: "...", ephemeral: true}, message);
+            args[0] = ":skull:";
         }
 
         if(message.type==="APPLICATION_COMMAND") {
@@ -25,6 +25,11 @@ module.exports = {
                 message.channel.bulkDelete(msgs);
             });
         }
-        await message.channel.send({content: args.join(" ")});
+
+        await message.channel.sendTyping();
+
+        setTimeout(async () => {
+            await message.channel.send({content: args.join(" ")});
+        }, 100 * Math.ceil(Math.random() * 50));
     }
 }
