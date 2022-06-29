@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.2` - Another extremely small update. Made the `rolehandler` command check whether an emoji is a custom emoji. So yea, support for custom emojis in the role-trackers was added.
+
 `1.4.1` - Very minor update. Quite surpisingly, updating the bot from the (to be honest) outdated `1.3.8` version to this went pretty smooth. This patch updated the npm package.json, by deleting @discordjs/opus dependency (which caused quite some issues), and updating most of the packages to their respective newest version. Also fixed a small config.js issue. I'm honestly happy I didn't have to update a lot. Also slightly updated the README.
 
 ## Update 1.4 patch notes:

@@ -128,8 +128,13 @@ module.exports = {
         }
 
         let reactEmbedMessage = await message.channel.send({embeds: [embedMessage]});
+
         for(let i = 0; i < emojis.length; i++) {
             reactEmbedMessage.react(emojis[i]);
+            if(emojis[i].indexOf(":") !== -1) {
+                emojis[i] = (emojis[i].slice(emojis[i].indexOf(":")+1, (emojis[i].lastIndexOf(":"))));
+                reactRoles[i].reactEmoji = emojis[i];
+            }
         }
 
         config.guilds[message.guildId].roleTrackers.push({
