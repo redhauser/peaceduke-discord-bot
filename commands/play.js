@@ -103,7 +103,8 @@ module.exports = {
                 clientSecret: config.spotifyClientSecret,
                 accessToken: config.spotifyAccessToken
             });
-    
+
+            //await spotify.getAlbumTracks((await spotify.getArtistAlbums(idOfLink)).body.items[0].id)
     
             let idOfLink;
             let artists = [];
@@ -136,12 +137,32 @@ module.exports = {
                     idOfLink = (args[0].slice(31, args[0].length));
                 }
     
-                let albumTracks = await spotify.getAlbumTracks(idOfLink)
+                let albumTracks = await spotify.getAlbumTracks(idOfLink);
                 for(let i = 0; i < albumTracks.body.items.length; i++) {
                     trackNames.push(albumTracks.body.items[i].name);
                     artists.push(albumTracks.body.items[i].artists[0].name);
                 }
                 let album = (await spotify.getAlbum(idOfLink)).body;
+                spotifyPlaylistName = album.artists[0].name + " - " + album.name;
+    
+            } else if(args[0].startsWith("https://open.spotify.com/artist/")) {
+                //Detect and fetch a Spotify artist's newest album
+                isSpotifyLink="найновіший альбом автора";
+                reply.edit({content: "Виявив, що це Spotify автор... Включаю його найновіший альбом... Генерую чергу... Це може зайняти пару хвилин..."});
+
+                if(args[0].indexOf("?") !== "-1") {
+                    idOfLink = (args[0].slice(32, (args[0].indexOf("?"))));
+                } else {
+                    idOfLink = (args[0].slice(32, args[0].length));
+                } 
+                
+                let albumTracks = await spotify.getAlbumTracks((await spotify.getArtistAlbums(idOfLink)).body.items[0].id);
+                for(let i = 0; i < albumTracks.body.items.length; i++) {
+                    trackNames.push(albumTracks.body.items[i].name);
+                    artists.push(albumTracks.body.items[i].artists[0].name);
+                }
+
+                let album = (await spotify.getAlbum(((await spotify.getArtistAlbums(idOfLink)).body.items[0].id))).body;
                 spotifyPlaylistName = album.artists[0].name + " - " + album.name;
     
             } else if(args[0].startsWith("https://open.spotify.com/playlist/")) {
