@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.6` - YES. Now both `config` command and the init script can check whether the bot has access to slash commands on a given server. This will prevent crashes when someone is trying to add slash commands to a server where the bot doesn't have the scope `application.commands`! I'm glad i found out how to fix this! Also, a few `rolehandler` and role-tracking changes (specifically, custom emojis are now saved as an ID, and `rolehandler` now verifies whether the input was en emoji or not).
+
 `1.4.5` - the `plist show` command now accepts a @user mention or a playlist name/id. I really hope it works... I mean, it seems to be working... Also! Made the `say` command funnier. Added a few things to the to-do list.
 
 `1.4.4` - updated the `ox` command. It doesn't look outdated anymore, cus it uses the great technology of Discord embeds. Slightly updated the `poll` command, and a few grammar changes here and there.

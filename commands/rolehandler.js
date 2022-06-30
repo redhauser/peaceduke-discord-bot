@@ -36,6 +36,9 @@ module.exports = {
         let roleIds = [];
         let emojis = [];
 
+        //Copy pasted this from stack overflow. this regex should detect emojis... At least, non custom ones.
+        const emojiCheck = (str) => str.match(/<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu);
+
         if(message.type === "APPLICATION_COMMAND") {
             for(let i = 0;i < message.options.data.length; i++) {
                 if(!(i%2)) {
@@ -65,7 +68,18 @@ module.exports = {
                 } else {
                     if(!message.options.data[i].name.startsWith("emoji")) return await message.client.replyOrSend({content: "Ви вказали роль коли треба було вказати емодзі.", ephemeral: true}, message);
                     let emoji = message.options.data[i].value;
-                    emojis.push(emoji);
+                    if(emoji.startsWith("<:") || emojiCheck(emoji)) {
+                        if(emoji.startsWith("<:")) {
+                            try {
+                                client.emojis.cache.find(emo => emo.id == (emoji.slice(emoji.lastIndexOf(":"), emoji.length-1)))
+                            } catch (err) {
+                                return await client.replyOrSend({content: "Одне з вказане вами емодзі не є ні стандартним ні серверним емодзі.", ephemeral: true}, message);
+                            }
+                        }
+                        emojis.push(emoji);
+                    } else {
+                        return await client.replyOrSend({content: "Одне з вказане вами емодзі не є ні стандартним ні серверним емодзі.", ephemeral: true}, message);
+                    }
                 }
             }
         } else {
@@ -94,7 +108,18 @@ module.exports = {
                     if(!roleId) { return client.replyOrSend({content: "Вибачте, але ваший " + (i+1) + "-й вказаний аргумент не є ні `ID` ролі, ні _назвою_ ролі, ні @згадуванням ролі\n", ephemeral: true}, message);}
                     roleIds.push(roleId);
                 } else {
-                    emojis.push(args[i]);
+                    if(args[i].startsWith("<:") || emojiCheck(args[i])) {
+                        if(args[i].startsWith("<:")) {
+                            try {
+                                client.emojis.cache.find(emo => emo.id == (args[i].slice(args[i].lastIndexOf(":"), args[i].length-1)))
+                            } catch (err) {
+                                return await client.replyOrSend({content: "Одне з вказане вами емодзі не є ні стандартним ні серверним емодзі.", ephemeral: true}, message);
+                            }
+                        }
+                        emojis.push(args[i]);
+                    } else {
+                        return await client.replyOrSend({content: ((i%2)+1) + "-е вказане вами емодзі не є ні стандартним ні серверним емодзі.", ephemeral: true}, message);
+                    }
                 }
             }
         }
@@ -132,7 +157,7 @@ module.exports = {
         for(let i = 0; i < emojis.length; i++) {
             reactEmbedMessage.react(emojis[i]);
             if(emojis[i].indexOf(":") !== -1) {
-                emojis[i] = (emojis[i].slice(emojis[i].indexOf(":")+1, (emojis[i].lastIndexOf(":"))));
+                emojis[i] = (emojis[i].slice(emojis[i].lastIndexOf(":")+1, emojis[i].length-1));
                 reactRoles[i].reactEmoji = emojis[i];
             }
         }

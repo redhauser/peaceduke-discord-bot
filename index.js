@@ -639,7 +639,17 @@ client.once("ready", async () => {
     
             let guildIds = Object.keys(config.guilds)
                 for(let i = 0; i<guildIds.length; i++) {
-    
+                
+                let accessOnThisGuild = true;
+                 
+                try {
+                    await rest.get(Routes.applicationGuildCommands(config.clientId, guildIds[i]));
+                } catch (err) {
+                    accessOnThisGuild = false;
+                }
+
+                if(accessOnThisGuild) {
+
                 if(Object.values(config.guilds)[i].slashCommands) {
                 //Adds slash commands to a server.
                     await rest.put(
@@ -648,26 +658,23 @@ client.once("ready", async () => {
                     );
                     console.log("Перезапустив (/) команди на сервері з ID: " + guildIds[i]);
                 } else {
-                    //console.log("Не чіпав (/) команди на сервері з ID: " + guildIds[i] + ", бо на ньому виключені слеш команди.");
-                    
                     //Deletes slash commands from a server.
-                    if(client.guilds.cache.at(i)?.commands && client.guilds.cache.at(i)?.commands?.cache?.size) {
-                        rest.get(Routes.applicationGuildCommands(config.clientId, guildIds[i])).then(data => {
-                            const promises = [];
-                            for (const command of data) {
+
+                    rest.get(Routes.applicationGuildCommands(config.clientId, guildIds[i])).then(data => {
+                        const promises = [];
+                        for (const command of data) {
                         
-                            const deleteUrl = `${Routes.applicationGuildCommands(config.clientId, guildIds[i])}/${command.id}`;
-                            promises.push(rest.delete(deleteUrl));  
+                        const deleteUrl = `${Routes.applicationGuildCommands(config.clientId, guildIds[i])}/${command.id}`;
+                        promises.push(rest.delete(deleteUrl));  
     
-                            }
-                            return Promise.all(promises);
-                        });
-                        console.log("Видалив (/) команди на сервері з ID: " + guildIds[i]);
-                    } else {
-                        console.log("На сервері з ID: " + guildIds[i] + " немаю доступу до (/) команд, тому нічого не чіпав.");
-                    }
+                        }
+                        return Promise.all(promises);
+                    });
+                    console.log("Видалив (/) команди на сервері з ID: " + guildIds[i]);
     
-                
+                }
+                } else {
+                    console.log("На сервері з ID: " + guildIds[i] + " немаю доступу до (/) команд, тому нічого не чіпав.");
                 }
                 }
                 console.log("Вдало перезапустив всі (/) команди на всіх серверах.");
@@ -972,7 +979,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
         try {
         
         for(let i = 0; i < roleTracker.reactRoles.length; i++) {
-            if(reaction.emoji.name == roleTracker.reactRoles[i].reactEmoji) {
+            if(reaction.emoji.name == roleTracker.reactRoles[i].reactEmoji || reaction.emoji.id == roleTracker.reactRoles[i].reactEmoji) {
                 let role = guild.roles.cache.find(role => role.id === roleTracker.reactRoles[i].reactRoleId);
                 await reaction.message.guild.members.cache.get(user.id).roles.add(role);
                 break;
@@ -1014,7 +1021,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
         try {
         
         for(let i = 0; i < roleTracker.reactRoles.length; i++) {
-            if(reaction.emoji.name == roleTracker.reactRoles[i].reactEmoji) {
+            if(reaction.emoji.name == roleTracker.reactRoles[i].reactEmoji || reaction.emoji.id == roleTracker.reactRoles[i].reactEmoji) {
                 let role = guild.roles.cache.find(role => role.id === roleTracker.reactRoles[i].reactRoleId);
                 await reaction.message.guild.members.cache.get(user.id).roles.remove(role);
                 break;

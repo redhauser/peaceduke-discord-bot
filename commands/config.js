@@ -297,10 +297,22 @@ module.exports = {
                 propertyToChange = m.values[0];
 
                 if(propertyToChange == "слеш команди") {
-                    if(message.guild?.commands) {
+                    
+                    const rest = new REST({ version: "9" }).setToken(config.token);
+
+                    let accessOnThisGuild = true;
+                 
+                    try {
+                        await rest.get(Routes.applicationGuildCommands(config.clientId, guildData.guildId));
+                    } catch (err) {
+                        accessOnThisGuild = false;
+                    }
+
+                    if(accessOnThisGuild) {
+
                         guildData.slashCommands = !guildData.slashCommands;
                         guildData = config.guilds[guildData.guildId];
-                        const rest = new REST({ version: "9" }).setToken(config.token);
+
                         if(guildData.slashCommands) {
                             await rest.put(
                                 Routes.applicationGuildCommands(config.clientId, guildData.guildId),
@@ -322,6 +334,7 @@ module.exports = {
                         }
 
                         return await reply.edit({content: " ", embeds: [await generateConfigEmbed(false, (guildData.slashCommands ? "**Добавив (/) слеш команди на сервер!**\n\n" : "**Видалив (/) слеш команди з серверу.**\n\n"))], components: [configSelectMenuActionRow, configActionRow]});
+                    
                     } else {
                        await message.channel.send({content: "Неможу " + (guildData.slashCommands ? " видалити" : " добавити") + " слеш команди, бо немаю доступу!\nБудь ласка, добавте мене на сервер з **scope: application.commands**!"})
                     }
