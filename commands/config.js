@@ -285,16 +285,18 @@ module.exports = {
                 getMessage = false;
             }
         });
-        configMessageCollector.on("end", async () => {
 
-        });
+        configMessageCollector.on("end", async () => {});
 
         const configButtonCollector = await message.channel.createMessageComponentCollector({filter, time: 5*60*1000 });
         configButtonCollector.on("collect", async (m) => {
             await m.deferUpdate();
+            if(m.member?.user?.id !== message.guild?.ownerId) return;
             
             if(m.isSelectMenu()) {
                 propertyToChange = m.values[0];
+                await configMessageCollector.resetTimer();
+                await configButtonCollector.resetTimer();
 
                 if(propertyToChange == "слеш команди") {
                     

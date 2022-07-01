@@ -18,8 +18,7 @@ module.exports = {
         }
 
         if(message.type==="APPLICATION_COMMAND") {
-            await message.reply({content: "."});
-            await message.deleteReply();
+            await message.reply({content: "Відправив ваше повідомлення під своїм іменем :)", ephemeral: true});
         } else {
             await message.channel.messages.fetch({limit: 1}).then(msgs =>{
                 message.channel.bulkDelete(msgs);

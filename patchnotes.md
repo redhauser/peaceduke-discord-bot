@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.7` - `say` finally doesn't feel awkward to use and feels finalised. `loop` now accepts both English and Ukrainian types of inputs (at least the ones i wrote...). Added a few more games to the random discord presence list. Fixed an issue in `config` (any member could change the settings of the server lmao, fixed that)
+
 `1.4.6` - YES. Now both `config` command and the init script can check whether the bot has access to slash commands on a given server. This will prevent crashes when someone is trying to add slash commands to a server where the bot doesn't have the scope `application.commands`! I'm glad i found out how to fix this! Also, a few `rolehandler` and role-tracking changes (specifically, custom emojis are now saved as an ID, and `rolehandler` now verifies whether the input was en emoji or not).
 
 `1.4.5` - the `plist show` command now accepts a @user mention or a playlist name/id. I really hope it works... I mean, it seems to be working... Also! Made the `say` command funnier. Added a few things to the to-do list.
