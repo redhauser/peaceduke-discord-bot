@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Дозволяє вам зберегти або грати плейлист з ваших збережених.")
     .addSubcommand(subcommand => subcommand.setName("show").setDescription("Показує ваші збережені плейлисти.").addStringOption(opt => opt.setName("user").setDescription("Користувач, чиї плейлисти ви б хотіли побачити/ ID або назва вашого плейлиста").setRequired(false)))
     .addSubcommand(subcommand => subcommand.setName("save").setDescription("Зберігає поточну чергу у ваші плейлисти.").addStringOption(option => option.setName("name").setDescription("Назва для плейлиста").setRequired(true)))
-    .addSubcommand(subcommand => subcommand.setName("play").setDescription("Добавити в музикальну чергу один з ваших плейлистів.").addStringOption(option => option.setName("playlist").setDescription("ID/назва вашого плейлиста.").setRequired(true))),
+    .addSubcommand(subcommand => subcommand.setName("play").setDescription("Добавити в музичну чергу один з ваших плейлистів.").addStringOption(option => option.setName("playlist").setDescription("ID/назва вашого плейлиста.").setRequired(true))),
     aliases: ["playlist", "плейлист", "плейліст", "pllist","плист","пліст"],
     category: "музика",
     hidden: false,
@@ -405,7 +405,7 @@ module.exports = {
         }
 
         async function playAndShow(reply, newPlaylist) {
-            let content = "Поставив у чергу ваший плейлист \"**" + newPlaylist.title + "**\":\n\n**┎(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n ❙\n ❙\n" : "\n");
+            let content = "Поставив у чергу " + (isMainUser ? "ваший" : builders.userMention(userId)) + " плейлист \"**" + newPlaylist.title + "**\":\n\n**┎(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n ❙\n ❙\n" : "\n");
             for(let i = 1;i<newPlaylist.queue.length;i++) {
                 content += "┠(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
                 if(i==15) i=newPlaylist.queue.length;
@@ -416,7 +416,7 @@ module.exports = {
 
             let embedNewPlaylist = new Discord.MessageEmbed()
             .setColor("#ac00fc")
-            .setTitle("В чергу добавлений ваший збережений плейлист!")
+            .setTitle("В чергу добавлений" + (isMainUser ? " ваший" : "") + " збережений плейлист!")
             .setAuthor({name: message.member.user.tag, iconURL: message.member.displayAvatarURL()})
             .setImage(newPlaylist.image)
             .setDescription(content+addInfo);

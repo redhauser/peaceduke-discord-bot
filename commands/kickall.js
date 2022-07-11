@@ -4,7 +4,7 @@ const voiceAPI = require("@discordjs/voice");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("kickall")
-    .setDescription("Кікає всіх учасників з усіх голосових. (Funny troll potential)"),
+    .setDescription("Кікає всіх з усіх голосових. (Funny troll potential)"),
     aliases: ["кікол","kickeveryone","disconnectall"],
     category: "модерація",
     hidden: false,

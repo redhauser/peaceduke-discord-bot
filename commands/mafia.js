@@ -11,5 +11,6 @@ module.exports = {
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config) {
         return await client.replyOrSend({content: "Ця гра ще у розробці."}, message);
+        
     }
 } 

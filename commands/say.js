@@ -11,6 +11,7 @@ module.exports = {
     botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config) {
+        //should probably make this a me-only command. its too powerful
         if (!args) { args = [message?.options?.get("повідомлення")?.value]; }
 
         if(!args[0]) {

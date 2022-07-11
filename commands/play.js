@@ -56,7 +56,7 @@ module.exports = {
                     } catch (err) {
                         video = null;
                         console.log("[" + message.guild.name + "] Сталася помилка при ytd.getBasicInfo() у команді play з посиланням " + args[0] + ". Помилка: ", err);
-                        return reply.edit({content: "⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути спричинено через те, що відео позначено на ютубі як 18+."});
+                        return reply.edit({content: "⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+."});
                     }
                     video.image = video.thumbnails[video.thumbnails.length-1].url;
                     video.timestamp = Math.floor(video.lengthSeconds/60) + ":" + (video.lengthSeconds%60<10 ? ("0" + video.lengthSeconds%60) : video.lengthSeconds%60);
@@ -235,7 +235,7 @@ module.exports = {
         }
         
         if(message.guild.id == config.correctionFluidId) {
-            embedLink.setFooter({text: "Цей музикальний бот заспонсорований сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
+            embedLink.setFooter({text: "Цей музичний бот заспонсорований сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
         }
         await reply.edit({content: " ", embeds: [embedLink]});
         connection.subscribe(voice.player);

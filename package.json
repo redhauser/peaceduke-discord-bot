@@ -1,4 +1,19 @@
 {
+  "name": "peacedukediscordbot",
+  "version": "1.4.8",
+  "description": "PeaceDuke is a Discord bot that has powerful music features, and bunch of moderation and community features.",
+  "author": "redhauser",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redhauser/peaceduke-discord-bot"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Використайте npm run startbot щоби запустити і тестити бота.\" && exit 1",
+    "startbot": "echo \"Запускаю бота...\" && node .",
+    "botinfo": "echo \"PeaceDuke створив і розроблює redhauser на GitHub\" && exit 1"
+  },
   "dependencies": {
     "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.2.0-canary.0",
@@ -21,13 +36,5 @@
     "ytdl-core-discord": "^1.1.0",
     "ytpl": "^2.3.0"
   },
-  "name": "discordbottest",
-  "version": "1.0.0",
-  "description": "Trying to make and test my own discord bot",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "redhauser",
-  "license": "ISC"
+  "private": "true"
 }

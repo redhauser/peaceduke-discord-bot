@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("pause")
-    .setDescription("Ставить/знімає паузу з програвання музики."),
+    .setDescription("Ставить/знімає паузу з відтворення музики."),
     aliases: ["пауза"],
     category: "музика",
     hidden: false,
@@ -18,10 +18,10 @@ module.exports = {
 
         if(voice.player.state.status != "paused") {
             await voice.player.pause();
-            await client.replyOrSend({content: "⏸️ Програвання музики призупинено."}, message);
+            await client.replyOrSend({content: "⏸️ Відтворення музики призупинено."}, message);
         } else {
             await voice.player.unpause();
-            await client.replyOrSend({content: "▶️ Програвання музики продовжено."}, message);
+            await client.replyOrSend({content: "▶️ Відтворення музики продовжено."}, message);
         }
     }
 }

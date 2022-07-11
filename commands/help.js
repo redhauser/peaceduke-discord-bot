@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, SlashCommandChannelOption } = require("@discordjs/builders");
+const { MessageFlags } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,15 +27,22 @@ module.exports = {
                     .setStyle("PRIMARY")
             );
 
+        let helpDesc = "";
+        helpDesc += "PeaceDuke - мультифункціональний Discord бот,який у собі \nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді, офкорс!\n\n";
+        helpDesc += "Ця команда дозволяє вам дізнатися про всі команди бота!\n\n"
+
+        helpDesc +=  "`" + config.guilds[message.guildId].botPrefix + "help`" + (config.guilds[message.guildId].slashCommands ? (" або `/help` ") : "") + " - покаже це повідомлення\n";
+        helpDesc += "`" + config.guilds[message.guildId].botPrefix + "help назваКоманди`" + (config.guilds[message.guildId].slashCommands ? (" або `/help назваКоманди` ") : "") + " - покаже більше інформації про команду\n";
+
         let pageIndex = 0;
         let page1 = new Discord.MessageEmbed()
         .setColor("55bffc")
         .setTitle("Допомога з командами, посібник")
-        .setDescription("PeaceDuke - мультифункціональний Discord бот,який у собі \nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді.\n\n\nЦя команда допоможе вам дізнатись про всі існуючі команди.\nВи також можете використовувати `"+ config.guilds[message.guildId].botPrefix +"` перед командами, замість `/`.\nВи можете прогорнути сторінки щоби дізнатися про функції кожної команди, та\nвикористати `/help назваКоманди` щоби дізнатися більше.\n\n`/help` - **показує це повідомлення**\n`/help назваКоманди` - **показує детальний опис команди**");
+        .setDescription(helpDesc);
         
         let categories = ["музика", "ігри", "інформація", "розваги", "модерація"];
         let categoriesShortDescription = [
-            "Музикальні команди дозволяють вам грати музику в голосовому каналі та контролювати музикальну чергу!",
+            "Музичні команди дозволяють вам грати музику в голосовому каналі та контролювати музичну чергу!",
             "Команди-ігри дозволяють вам зіграти певну гру з другом, друзями або з самим собою!",
             "Інформаційні команди показують інформацію про користувачів/бота/інше.",
             "Команди-розваги мають різний функціонал.",
@@ -103,7 +111,7 @@ module.exports = {
                 for(let i = 0;i < currentCommands.length;i++) {
                     let cmd = currentCommands[i];
                     if(!cmd.hidden) {
-                        desc += "`/" + cmd.data.name + "` - **" + cmd.data.description +"**\n";
+                        desc += "`" + (config.guilds[message.guildId].slashCommands ? "/" : config.guilds[message.guildId].botPrefix) + cmd.data.name + "` - **" + cmd.data.description +"**\n";
                     }
                 }
 
@@ -117,7 +125,7 @@ module.exports = {
 
 
         collector.on("end", async () => {
-            await reply.edit({content: "_Використайте /help ще раз, якщо ви хочете перегорнути на іншу сторінку посібнику!_",components: []});
+            await reply.edit({content: "_Використай `" + (message.type === "APPLICATION_COMMAND" ? "/" : config.guilds[message.guildId].botPrefix) + "help` ще раз, якщо хочеш перегорнути на іншу сторінку!_",components: []});
         });
 
 
@@ -136,7 +144,7 @@ module.exports = {
                 givenCommand = client.commands.get(foundalias);
             }
             if(!givenCommand) return await client.replyOrSend("Не зміг знайти команду з назвою **" + args[0] + "**. Спробуйте ще раз!", message);
-            let desc = "Інформація про команду:\n`/" + givenCommand.data.name + "` - **" + givenCommand.data.description + "**\n";
+            let desc = "Інформація про команду:\n`" + (config.guilds[message.guildId].slashCommands ? "/" : config.guilds[message.guildId].botPrefix) + givenCommand.data.name + "` - **" + givenCommand.data.description + "**\n";
             desc += "Категорія: **" + givenCommand.category + "**.\n\n";
             if(givenCommand.aliases) { desc+= "Інші назви цієї команди які можна використати у префікс (**" + config.guilds[message.guildId].botPrefix + "**) інтерфейсі:\n`" + givenCommand.aliases.join("`,`") + "`.\n";}
             if(givenCommand.hidden) { desc += "_Ця команда прихована/секретна._\n";}

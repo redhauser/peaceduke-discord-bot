@@ -24,7 +24,7 @@ module.exports = {
         if(args[0]==1) {
             voice.queue.shift();
             await voice.player.stop();
-            await client.replyOrSend({content: "⏭️ Прибрав першу пісню \"**" + removedItemTitle + "**\" із черги і тим самим скіпнув її."},message);
+            await client.replyOrSend({content: "⏭️ Видалив першу пісню \"**" + removedItemTitle + "**\" з черги."},message);
         } else if(args[0]==voice.queue.length) { 
             voice.queue.pop();
             await client.replyOrSend({content: "🇽 Видалив останню пісню \"**" + removedItemTitle + "**\" з черги."}, message);

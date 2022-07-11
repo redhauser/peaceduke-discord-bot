@@ -4,7 +4,7 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("queue")
-    .setDescription("Показує вам поточну музикальну чергу."),
+    .setDescription("Показує вам поточну музичну чергу."),
     aliases: ["черга", "q", "que", "qeueu", "щограє", "шограє"],
     category: "музика",
     hidden: false,
@@ -98,7 +98,7 @@ module.exports = {
             if(m.customId === "queueShuffle") {
                 if(voice.queue.length < 3) {
                     if(message.type === "APPLICATION_COMMAND") {
-                        await m.followUp({content: "❌ У черзі замало пісень для перемішування.", ephemeral: true});
+                        await m.followUp({content: "❌ У черзі замало пісень для перетасовування.", ephemeral: true});
                     }
                     return;
                 }
@@ -118,7 +118,7 @@ module.exports = {
                 voice.queue = [].concat(newQueue);
                 await voice.player.stop();
                 if(message.type === "APPLICATION_COMMAND") {
-                    await m.followUp({content: "🔀 Перемішав поточну чергу! Тепер грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
+                    await m.followUp({content: "🔀 Перетасував поточну чергу! Зараз грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
                 }
             }
             if(voice.queue[0]) {
@@ -136,7 +136,7 @@ module.exports = {
                 actionRow.components[i].setDisabled(true);
             }
             if(voice.queue[0]) {
-                await reply.edit({content: "Поточна музикальна черга: ", embeds: [await generateEmbedQueue()], components: []});
+                await reply.edit({content: "Поточна музична черга: ", embeds: [await generateEmbedQueue()], components: []});
             }
         });
         }
@@ -151,9 +151,9 @@ module.exports = {
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
             if(isTheQueueTooLong) addInfo+="**А також ще " + (voice.queue.length-16) + " пісень!**\n";
-            if(voice.isLooped === "on") addInfo+="🔂: Програвач стоїть на повторі поточної пісні!\n";
-            if(voice.isLooped === "all") addInfo+="🔄: Програвач стоїть на повторі всієї черги!\n";
-            addInfo += voice.player.state.status==="paused" ? "⏸️: Програвач стоїть на паузі.\n" : "";
+            if(voice.isLooped === "on") addInfo+="🔂: Програвач поставлений на повтор поточної пісні!\n";
+            if(voice.isLooped === "all") addInfo+="🔄: Програвач поставлений на повтор всієї черги!\n";
+            addInfo += voice.player.state.status==="paused" ? "⏸️: Програвач поставлений на паузу.\n" : "";
             let embedLink = new Discord.MessageEmbed()
         .setColor("#ac00fc")
         .setTitle("Зараз грає: " + voice.queue[0].title)

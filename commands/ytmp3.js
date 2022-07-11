@@ -5,8 +5,8 @@ const ffmpeg = require("fluent-ffmpeg");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("ytmp3")
-    .setDescription("Конвертує ютуб відео у mp3 формат. Видасть помилку якщо конвертований файл важить більше ніж 8МБ.")
-    .addStringOption(option => option.setName("url").setDescription("Посилання на відео яке ви хочете конвертувати").setRequired(true))
+    .setDescription("Конвертує ютуб відео у MP3 формат. Видасть помилку якщо конвертований файл 8МБ+")
+    .addStringOption(option => option.setName("url").setDescription("Посилання на відео, яке ви хочете конвертувати").setRequired(true))
     .addStringOption(option => option.setName("name").setDescription("Назва .mp3 файла. Ставити .mp3 не потрібно.").setRequired(false)),
     aliases: ["youtubemp3", "youtubeconvert", "ютмп3", "ютубмп3"],
     category: "музика",
@@ -16,10 +16,10 @@ module.exports = {
     async execute(message, args, Discord, client, voice, config) {
         
         if(!args) args = [message.options.get("url").value, message.options.get("name")?.value];
-        if(!args[0]) { return await client.replyOrSend({content: "Ви не задали посилання.", ephemeral: true},message)};
-        if(!ytdl.validateURL(args[0])) return await client.replyOrSend({content: "Перевірте ваше посилання.", ephemeral: true},message);
+        if(!args[0]) { return await client.replyOrSend({content: "Ви не вказали посилання на відео.", ephemeral: true},message)};
+        if(!ytdl.validateURL(args[0])) return await client.replyOrSend({content: "Перевірте ваше посилання на відео.", ephemeral: true},message);
 
-        let daReply = await message.reply({content: "Ваший файл оброблюється..."});
+        let daReply = await client.replyOrSend({content: "Ваший файл оброблюється..."}, message);
         if(message.type==="APPLICATION_COMMAND") {
             daReply = await message.fetchReply();
         }

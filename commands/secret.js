@@ -23,9 +23,11 @@ module.exports = {
                 message.channel.bulkDelete(msgs);
             });
         }
+        
         let thyrequest = await message.channel.send({content:"...Введіть секретну фразу..."});
         const trespasserId = message.member.id;
-        const trespasserCollector = message.channel.createMessageCollector({trespasserId, time: 10000, idle: 10000, dispose: true});
+        //Waits for 15 seconds + half the length of the secret passphrase in seconds.
+        const trespasserCollector = message.channel.createMessageCollector({trespasserId, time: ((15*1000) + (config.guilds[message.guildId].secretVcPassPhrase.length/2*1000)), idle: ((15*1000) + (config.guilds[message.guildId].secretVcPassPhrase.length/2*1000)), dispose: true});
         trespasserCollector.on("collect", async (msg) => {
             if(msg.content.toLowerCase().trim() == config.guilds[message.guildId].secretVcPassPhrase) {
                 args = [config.guilds[message.guildId].secretVcPassPhrase];
@@ -38,14 +40,14 @@ module.exports = {
             if(args[0].toLowerCase().trim() == config.guilds[message.guildId].secretVcPassPhrase) {
                 const guy = message.guild.members.cache.get(message.member.id);
                 const currentVc = message.member.voice?.channel;
-                if(!currentVc || !guy.voice) { thyrequest.delete();return message.channel.send("Для пізнання істини... потрібно знаходитись у голосовому каналі. Спробуй ще раз, з цим знанням.")}
+                if(!currentVc || !guy.voice) { thyrequest.delete();return message.channel.send("Для пізнання істини... потрібно бути у голосовому каналі. Спробуй ще раз, з цим знанням.")}
 
                 guy.voice.setChannel(config.guilds[message.guildId].secretVcChannel);
                 thyrequest.delete();
                 await message.channel.send(":>");
             } else {
                 thyrequest.delete();
-                await message.channel.send("Можливо, пізнання таких секретів не для вас.")
+                await message.channel.send("Можливо, розкрити такі секрети не для вас.")
             }
         });
     }

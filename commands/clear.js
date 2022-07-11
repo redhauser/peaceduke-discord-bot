@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription("Зупиняє музику і повністю очищує музикальну чергу."),
+    .setDescription("Зупиняє музику і повністю очищує музичну чергу."),
     aliases: ["стоп", "очистити", "stop", "клір", "stopmusic", "клеар", "clear", "c", "с", "emptyqueue"],
     category: "музика",
     hidden: false,
@@ -13,7 +13,7 @@ module.exports = {
         voice.queue = [];
         
         await voice.player.stop();
-        await client.replyOrSend({content: "⏹️ Зупинив програвання музики і повністю очистив чергу."}, message);
-        console.log("[" + message.guild.name +"] Зупинив програвання музики і повністю очистив чергу.");
+        await client.replyOrSend({content: "⏹️ Зупинив відтворення музики і повністю очистив чергу."}, message);
+        console.log("[" + message.guild.name +"] Зупинив відтворення музики і повністю очистив чергу.");
     }
 }

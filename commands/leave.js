@@ -4,7 +4,7 @@ const voiceAPI = require("@discordjs/voice");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("leave")
-    .setDescription("Змушує бота відключитися від голосового каналу."),
+    .setDescription("Відключає бота від голосового каналу."),
     aliases: ["лів", "лівни", "novcrn", "disconnect", "leavevc", "l"],
     category: "музика",
     hidden: false,

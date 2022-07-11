@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("skip")
-    .setDescription("Пропускає N-ну кількість пісень з музикальної черги.")
+    .setDescription("Пропускає N-ну кількість пісень з музичної черги.")
     .addIntegerOption(option => option.setName("кількість").setDescription("Кількість пісень, яку ви хочете пропустити.").setRequired(false)),
     aliases: ["скіп", "sk", "пропустити", "пропусти", "тупапісня", "gonext", "next", "некст", "ск"],
     category: "музика",

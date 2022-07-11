@@ -55,7 +55,7 @@ module.exports = {
                 },
                 {
                     label: "DJ роль",
-                    description: "Окрема роль для використання музикальних команд",
+                    description: "Окрема роль для використання музичних команд",
                     value: "DJ роль",
                 },
                 {
@@ -260,11 +260,11 @@ module.exports = {
                     if(!guildData.secretVcChannel) {
                         await message.channel.send({content: "Ви не добавили секретний голосовий канал. Спочатку добавте його, а потім добавте пароль!"});
                     } else {
-                        if(msgc.length < 32 && !msgc.startsWith(guildData.botPrefix) && !msgc.startsWith("/") && !msgc.startsWith("\\")) {
+                        if(msgc.length < 64 && !msgc.startsWith(guildData.botPrefix) && !msgc.startsWith("/") && !msgc.startsWith("\\")) {
                             config.guilds[guildData.guildId].secretVcPassPhrase = msgc;
                             guildData = config.guilds[guildData.guildId];
-                        } else if(msgc.length > 32) {
-                            await message.channel.send({content: "Пароль секретного голосового каналу не може бути довшим за 32 символів."});
+                        } else if(msgc.length > 64) {
+                            await message.channel.send({content: "Пароль секретного голосового каналу не може бути довшим за 64 символи."});
                         } else if(msgc.startsWith(guildData.botPrefix)) {
                             await message.channel.send({content: "Пароль секретного голосового каналу не може починатися з префікса бота."});
                         } else {
@@ -342,9 +342,26 @@ module.exports = {
                     }
                 } else {
 
+                // Property specific tips
+                let selectingValueDescription = "Відправте повідомлення, з новим значенням, для **" + propertyToChange + "**...\n";
+                if(propertyToChange == "бот-чат" || propertyToChange == "секретний гс канал") {
+                    selectingValueDescription+="(_Введіть назву, ID або #згадування чату._)\n";
+                }
+                if(propertyToChange == "DJ роль" || propertyToChange == "роль учасника") {
+                    selectingValueDescription+="(_Введіть назву, ID або @згадування ролі._)\n";
+                }
+                if(propertyToChange == "префікс бота") {
+                    selectingValueDescription+="(_Введіть новий префікс бота: наприклад `!`,`.`,`-`, тощо._)\n";
+                }
+                if(propertyToChange == "секретний гс пароль") {
+                    selectingValueDescription+="(_Введіть пароль для секретного голосового каналу._)\n";
+                }
+                if(propertyToChange != "префікс бота" && propertyToChange != "секретний гс пароль") {
+                    selectingValueDescription+="(_Напишіть false, або -, або ні, щоби виключити цю опцію._)";
+                }
                 let selectingValueEmbed = new Discord.MessageEmbed()
                 .setTitle("Конфігурація бота!")
-                .setDescription("Відправте повідомлення, з новим значенням, для **" + propertyToChange + "**...\n" + ((propertyToChange != "префікс бота" && propertyToChange != "секретний гс пароль") ? "(_Напишіть false, або -, або ні, щоби відключити цю опцію._)" : ""))
+                .setDescription(selectingValueDescription)
                 .setColor("#fc8414");
                 
                 await reply.edit({content: " ", embeds: [selectingValueEmbed], components: []});

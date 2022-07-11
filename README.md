@@ -83,13 +83,13 @@ cat ~/.pm2/logs/index-error.log
 
 ## Configuration files:
 
-The bot requires three files to function: a **config.json** file, a **guildsconfig.json** file, and a **userdata.json**.
+The bot requires three files to function: a **config.json** file, a **guildsconfig.json** file, and a **userdata.json** file.
 
 If you already have filled out files from bot's runtime, use them. If not, here you go:
 
 ### config.json
 
-**config.json** is the most important file. You NEED to fill it out completely to function. Here is its template:
+**config.json** is the most important file. You **NEED** to fill it out completely to function. Here is its template:
 
 ```json
 {
@@ -100,6 +100,7 @@ If you already have filled out files from bot's runtime, use them. If not, here 
     "spotifyAccessToken": null,
     "redhauserId": "redhauser's id",
     "correctionFluidId": "correction fluid id",
+    "correctionFluidMainChannelId": "correction fluid's main channel id",
     "botUniversalPrefix": "the bot's goto prefix",
     "specialuserID1": "a4k",
     "specialuserID2": "art",
@@ -109,20 +110,28 @@ If you already have filled out files from bot's runtime, use them. If not, here 
 
 The _spotifyAccessToken_ value must be null. The bot figures it out on runtime.
 
+If _correctionFluidMainChannelId_ is set to null or false, the bot won't send out any random quotes to the server Correction Fluid.
+
+Every other value is **required** for the bot to work properly.
+
 ### guildsconfig.json
 
-**guildsconfig.json** is quite important, but it's not required, since i have implemented the `config` command, available for all server owners. The only exception - changing the mainChannel property for Correction Fluid. Anyways, here is its template: 
+**guildsconfig.json** is quite important, but the bot figures out most values on runtime, and can dynamically change its server configuration via the `config` command. so, just make a **guildsconfig.json** file with this in it:
+
+```json
+{}
+```
+
+Still, if you would like to tinker with any of the values manually, here is this file's template
 
 ```json
 {
     "templateGuildId": {
-        "randomQuotes": false,
         "guildId": "templateGuildId",
         "slashCommands": true,
         "botPrefix": "",
         "djRole": "",
         "memberRole": "",
-        "mainChannel": "",
         "secretVcChannel": "",
         "secretVcPassPhrase": "",
         "botChannel": "",
@@ -140,24 +149,15 @@ The _spotifyAccessToken_ value must be null. The bot figures it out on runtime.
 }
 ```
 
-If you want it to be uncofigured, you still need to create a **guildsconfig.json** file, but instead, just put this in it:
-
-```json
-{}
-```
-
-The bot will not crash, and figure out everything else by itself.
-
 ### userdata.json
 
-**userdata.json** is not the third most important file. You can almost completely abandon this one, but if you do, you'll still need to create a **userdata.json**
-file with this in it:
+**userdata.json** stores users' data - like their saved playlists, their message count, xp and level on servers. Most of these values are figured out on runtime and are pretty accurate, with the exception of _messageCount_. I recommend just making a **userdata.json** file with this in it:
 
 ```json
 {}
 ```
 
-However, if you want to tinker with some of its contents, as an example, write accurate message count values, here is its template: 
+However, if you want to tinker with some of its contents, as an example, change the previously mentioned _messageCount_ values, here is its template: 
 
 ```json
 {

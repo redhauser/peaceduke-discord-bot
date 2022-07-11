@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+//Specifiec intents of the application. i should probably remove the intents that are not being used...
 const client = new Discord.Client({intents: [Discord.Intents.FLAGS.DIRECT_MESSAGES,
     Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
     Discord.Intents.FLAGS.GUILDS,
@@ -13,6 +14,7 @@ const config = require("./config.json");
 //Loading configuration from each server.
 config.guilds = require("./guildsconfig.json");
 
+//Might wanna move these two to where they are being actually used, instead of being global variables
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const voiceAPI = require("@discordjs/voice");
@@ -27,9 +29,12 @@ voice.defaultAudioPlayerSettings = {
     }
 };
 voice.guilds = {};
+//Should probably make the voice.pf function to be here
 
+//For saving guildsconfig.json and userdata.json
 const fs = require("fs");
 
+//Command shenanigans
 const commands = [];
 client.commandsAliases = [];
 client.commands = new Discord.Collection();
@@ -56,6 +61,9 @@ client.stats = JSON.parse(fs.readFileSync("userdata.json", "utf8"));
 
 //Just a "convenience function".
 client.replyOrSend = async (message, interaction) => {
+    if(!message || !interaction) {
+        throw new Error("client.replyOrSend - недостатньо аргументів:");
+    }
     try {
     if(interaction.type === "APPLICATION_COMMAND") {
         return await interaction.reply(message);
@@ -137,7 +145,7 @@ client.once("ready", async () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
-                        "Authorization": "Basic " + btoa(config.spotifyClientId + ":" + config.spotifyClientSecret)
+                        "Authorization": "Basic " + Buffer.from(config.spotifyClientId + ":" + config.spotifyClientSecret, "binary").toString("base64")
                     },
                     body: "grant_type=client_credentials"
                 });
@@ -181,13 +189,11 @@ client.once("ready", async () => {
         config.guilds = {};
         for(let i = 0; i<guilds.size; i++) {
             config.guilds[guilds.at(i).id] = {
-                randomQuotes: false,
                 guildId: guilds.at(i).id,
                 slashCommands: false,
                 botPrefix: config.botUniversalPrefix,
                 djRole: false,
                 memberRole: false,
-                mainChannel: false,
                 secretVcChannel: false,
                 secretVcPassPhrase: false,
                 botChannel: false,
@@ -210,22 +216,17 @@ client.once("ready", async () => {
 
             if(!config.guilds[guildId]) {
                 config.guilds[guilds.at(i).id] = {
-                    randomQuotes: false,
                     guildId: guilds.at(i).id,
                     slashCommands: false,
                     botPrefix: config.botUniversalPrefix,
                     djRole: false,
                     memberRole: false,
-                    mainChannel: false,
                     secretVcChannel: false,
                     secretVcPassPhrase: false,
                     botChannel: false,
                     roleTrackers: []
                 };
             } else {
-                if(config.guilds[guildId].randomQuotes == null) {
-                    config.guilds[guildId].randomQuotes = false;
-                }
                 if(!config.guilds[guildId].guildId) {
                     config.guilds[guildId].guildId = guilds.at(i).id;
                 }
@@ -243,9 +244,6 @@ client.once("ready", async () => {
                 }
                 if(config.guilds[guildId].memberRole == null) {
                     config.guilds[guildId].memberRole = false;
-                }
-                if(config.guilds[guildId].mainChannel == null) {
-                    config.guilds[guildId].mainChannel = false;
                 }
                 if(config.guilds[guildId].secretVcChannel == null) {
                     config.guilds[guildId].secretVcChannel = false;
@@ -309,7 +307,7 @@ client.once("ready", async () => {
                         } else {
                             botChannelToNotifyUsers = voice.guilds[guilds.at(i).id].tc;
                         }
-                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при програванні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
+                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
                         voice.guilds[guilds.at(i).id].queue.shift();
                         if(voice.guilds[guilds.at(i).id].queue.length) {
                             await voice.guilds[guilds.at(i).id].pf();
@@ -600,8 +598,8 @@ client.once("ready", async () => {
     ];
     let randomWallsOfText = allWallsOfText.map((x)=> x);
     function dailyWallOfText() {
-        if(config.guilds[config.correctionFluidId]?.mainChannel) {
-        let channel = client.channels.cache.get(config.guilds[config.correctionFluidId].mainChannel);
+        if(config.correctionFluidMainChannelId) {
+        let channel = client.channels.cache.get(config.correctionFluidMainChannelId);
         channel.sendTyping();
         let rng = Math.floor(Math.random()*randomWallsOfText.length);
         if(!randomWallsOfText.length) {
@@ -619,28 +617,29 @@ client.once("ready", async () => {
     }
     setTimeout(dailyWallOfText, 1000*60*5);
 
-    //File saving interval is 6 hours.
+    //File saving interval is 4 hours.
     client.automaticFileSaveIntervalID = setInterval(() => {
         fs.writeFile("userdata.json", JSON.stringify(client.stats, null, "\t"),"utf-8", (err) => {
             if(err)  { 
                 console.log("УВАГА: ВІДБУЛАСЬ ПОМИЛКА ПРИ ЗБЕРІГАННІ client.stats У ФАЙЛ userdata.json: ",err);
             } else {
-                console.log("Автосейв: зберіг всі дані з client.stats у userdata.json. Наступній автосейв через 6 годин.");
+                console.log("Автосейв: зберіг всі дані з client.stats у userdata.json. Наступній автосейв через 4 години.");
             }
         });
         fs.writeFile("guildsconfig.json", JSON.stringify(config.guilds, null, "\t"),"utf-8", (err) => {
             if(err)  { 
                 console.log("УВАГА: ВІДБУЛАСЬ ПОМИЛКА ПРИ ЗБЕРІГАННІ config.guilds У ФАЙЛ guildsconfig.json: ",err);
             } else {
-                console.log("Автосейв: зберіг всі дані з config.guilds у guildsconfig.json. Наступній автосейв через 6 годин.");
+                console.log("Автосейв: зберіг всі дані з config.guilds у guildsconfig.json. Наступній автосейв через 4 години.");
             }
         });
-    }, 1000*60*60*6);
+    }, 1000*60*60*4);
 
 
     const rest = new REST({ version: "9" }).setToken(config.token);
 
     (async () => {
+
         try {
             console.log("Почав перезапускати (/) команди на всіх серверах.");
             
@@ -713,13 +712,11 @@ client.on("guildCreate", async (guild) => {
     console.log("Мене добавили на новий сервер - " + guild.name + " ! Добавляю сервер у client.stats і config.guilds...");
 
     config.guilds[guild.id] = {
-        randomQuotes: false,
         guildId: guild.id,
         slashCommands: false,
         botPrefix: config.botUniversalPrefix,
         djRole: false,
         memberRole: false,
-        mainChannel: false,
         secretVcChannel: false,
         secretVcPassPhrase: false,
         botChannel: false,
@@ -766,7 +763,7 @@ client.on("guildCreate", async (guild) => {
                     } else {
                         botChannelToNotifyUsers = voice.guilds[guild.id].tc;
                     }
-                    botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при програванні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
+                    botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
                     voice.guilds[guild.id].queue.shift();
                     if(voice.guilds[guild.id].queue.length) {
                         await voice.guilds[guild.id].pf();
@@ -839,7 +836,7 @@ client.on("messageCreate", async message => {
     //While cross-server messages are supported, DM messages should not be responded to.
     if(!message.guild) { return; }
 
-    //Level up shenanigans. This is completely fucking unreadable, even to me.
+    //Level up shenanigans. This is completely fucking unreadable, even to me. Probably should rewrite this as a separate (and readable) function; might be handy if i wanna expand on the lvl system.
     client.stats[message.member.id].guilds[message.guildId].xp+=Math.ceil(Math.random()*5)*client.stats[message.member.id].guilds[message.guildId].lvl;
     if(client.stats[message.member.id].guilds[message.guildId].xp >= 13**client.stats[message.member.id].guilds[message.guildId].lvl && !message.author.bot) {
         client.stats[message.member.id].guilds[message.guildId].lvl++;
@@ -920,7 +917,7 @@ client.on("messageCreate", async message => {
 
     if(!message.content.startsWith(config.guilds[message.guildId].botPrefix) || message.author.bot) { return; }
     
-    const args = message.content.slice(config.guilds[message.guildId].botPrefix.length).split(/ +/);
+    const args = message.content.slice(config.guilds[message.guildId].botPrefix.length).trim().split(" ");
     let command = args.shift().toLowerCase();
 
     if(client.commands.get(command)) {
