@@ -340,7 +340,7 @@ module.exports = {
             }
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
-            if(isTheQueueTooLong) addInfo+="**А також ще " + (compressedQueue.length-16) + " пісень!**\n";
+            if(isTheQueueTooLong) addInfo+="**⏩ А також ще " + (compressedQueue.length-16) + " пісень!**\n";
             let embedPreviewPlaylist = new Discord.MessageEmbed()
             .setColor("#25fc62")
             .setTitle("Показую плейлист \"" + args[1] + "\":")
@@ -412,7 +412,7 @@ module.exports = {
             }
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
-            if(newPlaylist.queue.length > 16) addInfo+="**А також ще " + (newPlaylist.queue.length-16) + " пісень!**\n";
+            if(newPlaylist.queue.length > 16) addInfo+="**⏩ А також ще " + (newPlaylist.queue.length-16) + " пісень!**\n";
 
             let embedNewPlaylist = new Discord.MessageEmbed()
             .setColor("#ac00fc")
@@ -485,7 +485,7 @@ module.exports = {
             }
             content += "┕-----------------------------------------------\n";
             addInfo = "";
-            if(newPlaylist.queue.length > 16) addInfo+="**А також ще " + (newPlaylist.queue.length-16) + " пісень!**\n";
+            if(newPlaylist.queue.length > 16) addInfo+="**⏩ А також ще " + (newPlaylist.queue.length-16) + " пісень!**\n";
 
             let embedPlaylistShow = new Discord.MessageEmbed()
             .setColor("#25a3fc")

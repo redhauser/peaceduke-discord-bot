@@ -14,7 +14,7 @@ module.exports = {
     async execute(message,args, Discord, client, voice, config) {
         
         const vc = message.member.voice.channel;
-        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true}, message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [new Discord.MessageEmbed().setColor("#55bffc").setDescription("Ви повинні бути у голосовому каналі!")], ephemeral: true}, message);
         voice.vc = vc; 
         voice.tc = message.channel;
 
@@ -24,6 +24,6 @@ module.exports = {
             adapterCreator: vc.guild.voiceAdapterCreator,
         });
 
-        await client.replyOrSend({content: "↪️ Приєднався до " + builders.channelMention(vc.id) + "!"}, message);
+        await client.replyOrSend({content: " ", embeds: [new Discord.MessageEmbed().setColor("#55bffc").setDescription(`↪️ Приєднався до ${builders.channelMention(vc.id)} !`)]}, message);
     }
 }

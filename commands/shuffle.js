@@ -11,9 +11,11 @@ module.exports = {
     djRoleRequired: true,
     async execute(message, args, Discord, client, voice, config) {
 
-        if(!voice.queue.length) return await client.replyOrSend({content: "❌ Черга пуста, немає що перетасувати."},message);
-        if(voice.queue.length==1) return await client.replyOrSend({content: "❌ В черзі всього лиш 1 пісня, неможливо перетасувати."},message);
-        if(voice.queue.length==2) return await client.replyOrSend({content: "❌ В черзі всього лиш 2 пісні, немає сенсу перетасовувати."},message);
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
+
+        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ Черга пуста, немає що перетасувати.")]},message);
+        if(voice.queue.length==1) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 1 пісня, неможливо перетасувати.")]},message);
+        if(voice.queue.length==2) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 2 пісні, немає сенсу перетасовувати.")]},message);
         
         let newQueue = new Array(voice.queue.length);
         let originalLength = voice.queue.length;
@@ -30,7 +32,7 @@ module.exports = {
         voice.queue = [].concat(newQueue);
         await voice.player.stop();
         await voice.pf();
-        await client.replyOrSend({content: "🔀 Перетасував поточну чергу! Зараз грає: \"**_" + voice.queue[0].title + "_**\"!"},message);
+        await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔀 Перетасував поточну чергу! Зараз грає: \"**_" + voice.queue[0].title + "_**\"!")]},message);
         console.log("[" + message.guild.name + "] Перетасував поточну чергу.");
         
     }

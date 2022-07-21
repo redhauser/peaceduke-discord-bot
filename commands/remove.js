@@ -13,7 +13,9 @@ module.exports = {
     djRoleRequired: true,
     async execute(message, args, Discord, client, voice, config) {
 
-        if(!voice.queue.length) return await client.replyOrSend("В черзі немає жодних пісень.",message);
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
+
+        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("В черзі немає жодних пісень.")]},message);
         
         args = args || [message?.options?.get("індекс")?.value];
         
@@ -24,13 +26,13 @@ module.exports = {
         if(args[0]==1) {
             voice.queue.shift();
             await voice.player.stop();
-            await client.replyOrSend({content: "⏭️ Видалив першу пісню \"**" + removedItemTitle + "**\" з черги."},message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Видалив першу пісню \"**" + removedItemTitle + "**\" з черги.")]},message);
         } else if(args[0]==voice.queue.length) { 
             voice.queue.pop();
-            await client.replyOrSend({content: "🇽 Видалив останню пісню \"**" + removedItemTitle + "**\" з черги."}, message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("🇽 Видалив останню пісню \"**" + removedItemTitle + "**\" з черги.")]}, message);
         } else {
             voice.queue.splice(args[0]-1, 1);
-            await client.replyOrSend({content: "🇽 Видалив " + args[0] + "-у пісню \"**" + removedItemTitle + "**\" з черги."},message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("🇽 Видалив " + args[0] + "-у пісню \"**" + removedItemTitle + "**\" з черги.")]},message);
         }
     }
 }

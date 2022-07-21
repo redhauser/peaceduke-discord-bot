@@ -13,7 +13,7 @@ module.exports = {
         voice.queue = [];
         
         await voice.player.stop();
-        await client.replyOrSend({content: "⏹️ Зупинив відтворення музики і повністю очистив чергу."}, message);
+        await client.replyOrSend({content: " ", embeds: [new Discord.MessageEmbed().setColor("#55bffc").setDescription("⏹️ Зупинив відтворення музики і повністю очистив чергу.")]}, message);
         console.log("[" + message.guild.name +"] Зупинив відтворення музики і повністю очистив чергу.");
     }
 }

@@ -19,14 +19,15 @@ module.exports = {
     async execute(message, args, Discord, client, voice, config) {
 
        let vc = message.member.voice.channel;
-        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true},message);
+       let callbackEmbed = new Discord.MessageEmbed().setColor("#FF0000");
+
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
         if(!args) args = [message.options.get("пісня").value];
-        if(!args.length) return await client.replyOrSend({content: "Ви повинні ввести посилання/назву пісні!", ephemeral: true},message);
+        if(!args.length) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Ви повинні вказати посилання/назву пісні!")], ephemeral: true},message);
         voice.vc = vc;
         voice.tc = message.channel;
         
         let reply;
-
 
         const videoFinder = async (query) => {
             const videoResult = await ytSearch(query);
@@ -34,7 +35,7 @@ module.exports = {
             return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
         }
 
-        let isItAnURL = ytdl.validateURL(args[0]);
+        let isItAnURL = ytdl.validateURL(args[0]) || ytpl.validateID(args[0]);
         let isSpotifyLink = false;
         let spotifyPlaylistName = false;
         let spotifyLinkToLinkBack = false;
@@ -42,12 +43,14 @@ module.exports = {
         let video = false;
         let plid = false;
         let playlist = false;
+
+        try {
+
         if (isItAnURL) {
+            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Перевіряю ваше посилання, щоби його зіграти...")]}, message);
             if(message.type!="APPLICATION_COMMAND") { 
                 await message.suppressEmbeds(true); 
-                reply = await message.channel.send("Перевіряю ваше посилання щоби його зіграти...")
             } else {
-                reply = await message.reply({content: "Перевіряю ваше посилання щоби його зіграти..."});
                 reply = (await message.fetchReply());
             }
             try {
@@ -58,7 +61,7 @@ module.exports = {
                     } catch (err) {
                         video = null;
                         console.log("[" + message.guild.name + "] Сталася помилка при ytd.getBasicInfo() у команді plnow з посиланням " + args[0] + ". Помилка: ", err);
-                        return reply.edit({content: "⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+."});
+                        return reply.edit({content: " ", embeds: [callbackEmbed.setDescription("⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+.")]});
                     }
                     video.image = video.thumbnails[video.thumbnails.length-1].url;
                     video.timestamp = Math.floor(video.lengthSeconds/60) + ":" + (video.lengthSeconds%60<10 ? ("0" + video.lengthSeconds%60) : video.lengthSeconds%60);
@@ -72,7 +75,7 @@ module.exports = {
                     playlist.items[i].image = playlist.items[i].bestThumbnail.url;
                     playlist.items[i].timestamp = Math.floor(playlist.items[i].durationSec/60) + ":" + (playlist.items[i].durationSec%60<10 ? ("0" + playlist.items[i].durationSec%60) : playlist.items[i].durationSec%60);;
                     //Checks if the timestamp is more than an hour long, and formats it accordingly.
-                    if(playlist.items[i].timestamp.indexOf(":") == 3) {
+                    if(playlist.items[i].timestamp.indexOf(":") > 2) {
                         let newTimestamp = "";
                         newTimestamp += Math.floor((+(playlist.items[i].timestamp.slice(0, 3)/60)));
                         newTimestamp += ":";
@@ -94,7 +97,7 @@ module.exports = {
         } else if(args[0].startsWith("https://open.spotify.com/")) {
             isSpotifyLink = true;
 
-            reply = await client.replyOrSend({content: "Аналізую ваше Spotify посилання..."}, message);
+            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Аналізую ваше Spotify посилання...")]}, message);
 
             if(message.type == "APPLICATION_COMMAND") {
                 reply = await message.fetchReply();
@@ -113,7 +116,7 @@ module.exports = {
             if(args[0].startsWith("https://open.spotify.com/track/")) {
                 //Detect and fetch a Spotify Track.
                 isSpotifyLink="трек"
-                reply.edit({content: "Виявив, що це **Spotify** трек... Шукаю його ютуб альтернативу..."});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** трек... Шукаю його ютуб альтернативу...")]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -130,7 +133,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/album/")) {
                 //Detect and fetch a Spotify Album
                 isSpotifyLink="альбом"
-                reply.edit({content: "Виявив, що це **Spotify** альбом... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** альбом... Генерую чергу... Це може зайняти пару хвилин...")]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -149,7 +152,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/artist/")) {
                 //Detect and fetch a Spotify artist's newest album
                 isSpotifyLink="найновіший альбом автора";
-                reply.edit({content: "Виявив, що це **Spotify** автор... Включаю їхній найновіший альбом... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** автор... Шукаю їхній найновіший альбом... Генерую чергу... Це може зайняти пару хвилин...")]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(32, (args[0].indexOf("?"))));
@@ -169,7 +172,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/playlist/")) {
                 //Detect and fetch a user-created Spotify playlist
                 isSpotifyLink="плейлист"
-                reply.edit({content: "Виявив, що це **Spotify** плейлист... Генерую чергу... Це може зайняти пару хвилин..."});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** плейлист... Генерую чергу... Це може зайняти пару хвилин...")]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(34, (args[0].indexOf("?"))));
@@ -187,7 +190,7 @@ module.exports = {
                 spotifyPlaylistName = spotiPlaylist.owner.display_name + " - " + spotiPlaylist.name;
                 
             } else {
-                reply.edit({content: "Вибачте, але **Spotify** посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком, ні автором!"});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Вибачте, але **Spotify** посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком, ні автором!")]});
                 return console.log("[" + message.guild.name + "] Вказане Spotify посилання не спрацювало - " + args[0]);
             }
             spotifyLinkToLinkBack = args[0];
@@ -202,10 +205,19 @@ module.exports = {
             }
 
         } else {
-            reply = await client.replyOrSend({content: "Шукаю ваше відео..."}, message);
+            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Шукаю ваше відео...")]}, message);
+
+            if(message.type === "APPLICATION_COMMAND") {
+                reply = await message.fetchReply();
+            }
 
             video = await videoFinder(args.join(" "));
         }
+
+        } catch(err) {
+            return await reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Сталася помилка при перевірці вашого посилання :(")], components: []}, message);
+        }
+
         if(video) {
         if(message.type === "APPLICATION_COMMAND") {
             reply = await message.fetchReply();
@@ -252,7 +264,10 @@ module.exports = {
         await voice.player.unpause();
         await voice.pf();
         } else {
-            reply.edit({content: "Не зміг найти вказане відео :(", ephemeral: true});
+            if(message.type == "APPLICATION_COMMAND") {
+                reply = await message.fetchReply();
+            }
+            reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Не зміг знайти вказане відео :(")], ephemeral: true});
         }
     }
 }

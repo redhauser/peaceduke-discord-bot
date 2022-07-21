@@ -136,7 +136,7 @@ module.exports = {
                 actionRow.components[i].setDisabled(true);
             }
             if(voice.queue[0]) {
-                await reply.edit({content: "Поточна музична черга: ", embeds: [await generateEmbedQueue()], components: []});
+                await reply.edit({content: " ", embeds: [await generateEmbedQueue()], components: []});
             }
         });
         }
@@ -150,10 +150,10 @@ module.exports = {
             }
             content += "┕-----------------------------------------------\n";
             let addInfo = "";
-            if(isTheQueueTooLong) addInfo+="**А також ще " + (voice.queue.length-16) + " пісень!**\n";
-            if(voice.isLooped === "on") addInfo+="🔂: Програвач поставлений на повтор поточної пісні!\n";
-            if(voice.isLooped === "all") addInfo+="🔄: Програвач поставлений на повтор всієї черги!\n";
-            addInfo += voice.player.state.status==="paused" ? "⏸️: Програвач поставлений на паузу.\n" : "";
+            if(isTheQueueTooLong) addInfo+="**⏩ А також ще " + (voice.queue.length-16) + " пісень!**\n";
+            if(voice.isLooped === "on") addInfo+="**🔂 Програвач повторює поточну пісню!**\n";
+            if(voice.isLooped === "all") addInfo+="**🔄 Програвач повторює всю чергу!**\n";
+            addInfo += voice.player.state.status==="paused" ? "**⏸️: Програвач поставлений на паузу.**\n" : "";
             let embedLink = new Discord.MessageEmbed()
         .setColor("#ac00fc")
         .setTitle("Зараз грає: " + voice.queue[0].title)

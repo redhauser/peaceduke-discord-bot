@@ -3,15 +3,15 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("loop")
-    .setDescription("Включає/виключає повтор поточної пісні або повтор всієї черги.")
+    .setDescription("Вмикає/вимикає повторення поточної пісні або повторення всієї черги.")
 	.addStringOption(option =>
 		option.setName("type")
-			.setDescription("Тип повтору який ви б хотіли поставити.")
+			.setDescription("Тип повторення, який ви б хотіли поставити.")
 			.setRequired(false)
-			.addChoice("Повтор поточної пісні", "on")
-			.addChoice("Повтор всієї черги", "all")
-			.addChoice("Вимкнути повтор", "off")),
-    aliases: ["луп", "повтор", "repeat", "replay"],
+			.addChoice("Повторення поточної пісні", "on")
+			.addChoice("Повторення всієї черги", "all")
+			.addChoice("Вимкнути повторення", "off")),
+    aliases: ["луп", "повтор", "повторення", "repeat", "replay"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
@@ -39,26 +39,28 @@ module.exports = {
             }
         }
 
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
+
         //This is not amazing, either.
         if(args[0] == "on" || args[0] == "вкл" || args[0] == "включити" || args[0] == "вмк" || args[0] == "ввімкнути") {
 
             voice.isLooped = "on";
-            await client.replyOrSend({content: "🔂 Програвач поставлено на повтор поточної пісні."}, message);
-            console.log("[" + message.guild.name + "] Програвач поставлено на повтор поточної пісні.");
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔂 Програвач тепер повторює поточну пісню.")]}, message);
+            console.log("[" + message.guild.name + "] Програвач тепер повторює поточну пісню.");
         } else if(args[0] == "all" || args[0] == "всі") {
 
             voice.isLooped = "all";
-            await client.replyOrSend({content: "🔄 Програвач поставлено на повтор всієї черги."}, message);
-            console.log("[" + message.guild.name + "] Програвач поставлено на повтор черги.");
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔄 Програвач тепер повторює всю чергу.")]}, message);
+            console.log("[" + message.guild.name + "] Програвач тепер повторює всю чергу.");
         } else if(args[0] == "off" || args[0] == "викл" || args[0] == "виключити" || args[0] == "вимкнути" || args[0] == "вимк") {
 
             voice.isLooped = "off";
-            await client.replyOrSend({content: "➡️ Програвач знято з повтору."}, message);
-            console.log("[" + message.guild.name + "] Програвач знято з повтору.");
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("➡️ Програвач знято з повторення.")]}, message);
+            console.log("[" + message.guild.name + "] Програвач знято з повторення.");
         } else {
 
             console.log("[" + message.guild.name + "] Помилка у команді loop.js - сука, перероблюй цю команду.");
-            await client.replyOrSend({content: "Вибачте, сталася помилка. Повідомте про це раді, і він можливо пофіксить."}, message);
+            return await client.replyOrSend({content: " ", embeds: [embed.setDescription("Вибачте, сталася помилка. Повідомте про це раді, і він можливо пофіксить.")]}, message);
         }
 
     }

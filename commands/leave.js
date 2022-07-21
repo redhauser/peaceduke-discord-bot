@@ -13,8 +13,10 @@ module.exports = {
     async execute(message,args, Discord, client, voice, config) {
         const vc = message.member.voice.channel;
 
-        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі, щоби використати цю команду!", ephemeral: true},message);
-        if(!(await client.voice.adapters.get(message.guild.id))) return await client.replyOrSend({content: "Не був у голосовому каналі."},message);
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
+
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
+        if(!(await client.voice.adapters.get(message.guild.id))) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("↩️ ❌ Не був у голосовому каналі.")], ephemeral: true},message);
         voice.vc = false;
         voice.tc = message.channel;
 
@@ -25,7 +27,7 @@ module.exports = {
         connection?.destroy();
         voice.isLooped = "off";
 
-        await client.replyOrSend({content: "↩️ Покинув голосовий канал."}, message);
+        await client.replyOrSend({content: " ", embeds: [embed.setDescription("↩️ Покинув голосовий канал.")]}, message);
         console.log("[" + message.guild.name + "] Покинув голосовий канал.");
     }
 }

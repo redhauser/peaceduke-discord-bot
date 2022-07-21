@@ -11,8 +11,10 @@ module.exports = {
     botChatExclusive: true,
     djRoleRequired: true,
     async execute(message, args, Discord, client, voice, config) {
+
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
         
-        if(!voice.queue.length) return await client.replyOrSend("В черзі немає жодних пісень.",message);
+        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("В черзі немає жодних пісень.")]},message);
         
         args = args || [message?.options?.get("кількість")?.value];
 
@@ -21,9 +23,9 @@ module.exports = {
         if(args[0] <= 5) {
             for (let i = 0; i<args[0]; i++) {
                 if(!i) {
-                    await client.replyOrSend("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .",message);
+                    await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]},message);
                 } else {
-                    await message.channel.send("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .");
+                    await message.channel.send({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]});
                 }
                 if (voice.isLooped != "all") {
                     voice.queue.shift();
@@ -34,7 +36,7 @@ module.exports = {
         
             }
         } else {
-            await client.replyOrSend("⏭️ Пропустив " + args[0] + " пісень.", message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив **" + args[0] + "** пісень.")]}, message);
             for(let i = 0; i<args[0]; i++) {
                 if(voice.isLooped != "all") {
                     voice.queue.shift();

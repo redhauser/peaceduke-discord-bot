@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, SlashCommandChannelOption } = require("@discordjs/builders");
-const { MessageFlags } = require("discord.js");
+const { SlashCommandBuilder} = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,7 +35,7 @@ module.exports = {
 
         let pageIndex = 0;
         let page1 = new Discord.MessageEmbed()
-        .setColor("55bffc")
+        .setColor("#40e224")
         .setTitle("Допомога з командами, посібник")
         .setDescription(helpDesc);
         
@@ -116,7 +115,7 @@ module.exports = {
                 }
 
                 let newEmbed = new Discord.MessageEmbed()
-                .setColor("55bffc")
+                .setColor("#40e224")
                 .setTitle("Допомога з командами, категорія **_" + categories[pageIndex-1] + "_**")
                 .setDescription(desc);
                 await reply.edit({embeds: [newEmbed], components: [actionRow]});
@@ -159,7 +158,7 @@ module.exports = {
             }
 
             let helppage = new Discord.MessageEmbed()
-            .setColor("55bffc")
+            .setColor("#40e224")
             .setTitle("Допомога з командами - " + givenCommand.data.name)
             .setDescription(desc)
             await client.replyOrSend({embeds: [helppage]}, message);

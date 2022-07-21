@@ -10,18 +10,20 @@ module.exports = {
     botChatExclusive: true,
     djRoleRequired: true,
     async execute(message, args, Discord, client, voice, config) {
+
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
        
         const vc = message.member.voice.channel;
-        if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true}, message);
-        if(voice.player.state.status === "idle") return await client.replyOrSend({content: "На даний момент нічого не грає."},message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("Ви повинні бути у голосовому каналі!")], ephemeral: true}, message);
+        if(voice.player.state.status === "idle") return await client.replyOrSend({content: " ", embeds: [embed.setDescription("На даний момент нічого не грає.")]},message);
 
 
         if(voice.player.state.status != "paused") {
             await voice.player.pause();
-            await client.replyOrSend({content: "⏸️ Відтворення музики призупинено."}, message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏸️ Відтворення музики призупинено.")]}, message);
         } else {
             await voice.player.unpause();
-            await client.replyOrSend({content: "▶️ Відтворення музики продовжено."}, message);
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("▶️ Відтворення музики продовжено.")]}, message);
         }
     }
 }

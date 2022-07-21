@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.9` - grammar changes. `play` and `plnow` now properly validate youtube playlist links. a few aesthetic changes. added pseudo error handlers to `play` and `plnow`. slight changes to `about`. remade `ytmp3` visually, now also supports spoti links. most music commands now use embeds. updated dependencies. no progress on anything from the todolist. :)
+
 `1.4.8` - `rpg` and `mafia` are still not here. They are both pretty tricky to implement and require quite some work. And while i think i can make them, i currently don't have time to work on them, and they are not really something that needs to be done ASAP. So, `rpg`, `mafia`, and a few other things are being moved to the next patch. i'll just be committing these changes: grammar corrections and general adjustments in most commands. `help`'s info tab changed, also shows prefixes if the server doesn't have slash commands. `ytmp3` prefix interface bug fixed. `guildsconfig.json` removed values like _randomQuotes_ and _mainChannel_ since one of them was completely useless, and the other was only used for a single server - it's now replaced by `correctionFluidMainChannelId` in `config.json`. File-saving interval is now 4 hours. Removed the deprecated btoa() calls. Updated `package.json` to make it have actual information about PeaceDuke, and to make it prettier. Renamed `media` files.
 
 `1.4.7` - `say` finally doesn't feel awkward to use and feels finalised. `loop` now accepts both English and Ukrainian types of inputs (at least the ones i wrote...). Added a few more games to the random discord presence list. Fixed an issue in `config` (any member could change the settings of the server lmao, fixed that)
