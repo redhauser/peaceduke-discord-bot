@@ -20,7 +20,7 @@ module.exports = {
         `⠀Якщо маєте ідею як покращити бота, зверніться до раді.\nВикористайте **${config.guilds[message.guildId].botPrefix}help**, щоби дізнатися про існуючі команди.\n` + 
         (message.member.user.id === message.guild.ownerId ? `Використайте **${config.guilds[message.guildId].botPrefix}config** щоби змінити конфігурацію серверу.\n` : "") +
         //Bot version and some update bs
-        "\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Поточна версія бота - **" + "1.4.9" + "**\n" +
+        "\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Поточна версія бота - **" + "1.4.10" + "**\n" +
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀_Головні нові фічи та зміни:_ \n" +
         "_Підтримка посилань на Spotify пісні, альбоми, та плейлисти._\n" +
         "⠀⠀_Нові команди: `plist`,`rpg`,`mafia`,`config`,`suggest`._\n" +

@@ -825,8 +825,13 @@ client.on("interactionCreate", async (interaction) => {
         return await client.replyOrSend({content: "Цю команду можна використовувати тільки у бот-чаті!", ephemeral: true}, interaction);
     }
 
-    await command.execute(interaction, args, Discord, client, voice.guilds[interaction.guildId], config).catch((err)=>{
+    await command.execute(interaction, args, Discord, client, voice.guilds[interaction.guildId], config).catch(async (err)=>{
         console.log("[" + interaction.guild.name + "] Не вдалось виконати (/) slash команду " + command.data.name + ". Сталась помилка: ", err);
+        if(interaction.replied) {
+            await interaction.channel.send(`Відбулась невідома помилка при виконанні команди **${command.data.name}**. Повідомте про це повідомлення раді!`);
+        } else {
+            await interaction.reply(`Відбулась невідома помилка при виконанні команди **${command.data.name}**. Повідомте про це повідомлення раді!`);
+        }
     });
     console.log("[" + interaction.guild.name + "] Виконав (/) slash команду " + interaction.commandName + ".");
 });
@@ -931,7 +936,7 @@ client.on("messageCreate", async message => {
 
         client.commands.get(command).execute(message, args, Discord, client, voice.guilds[message.guildId], config).catch((err) => {
         console.log("[" + message.guild.name + "] Не вдалось виконати (!) префікс команду " + command + ". Помилка:", err);
-        message.channel.send("\n\nВідбулась невідома помилка при виконанні команди **" + command + "**. Повідомте про це повідомлення раді!")
+        message.channel.send(`Відбулась невідома помилка при виконанні команди **${command}**. Повідомте про це повідомлення раді!`);
     });
         console.log("[" + message.guild.name + "] Виконав (!) префікс команду " + command + ".");
     } else {
@@ -955,7 +960,7 @@ client.on("messageCreate", async message => {
 
             client.commands.get(command).execute(message, args, Discord, client, voice.guilds[message.guildId], config).catch((err) => {
                 console.log("[" + message.guild.name + "] Не вдалось виконати (!) префікс команду " + command + ". Помилка:", err);
-                message.channel.send("\n\nВідбулась невідома помилка при виконанні команди **" + command + "**. Повідомте про це повідомлення раді!")
+                message.channel.send(`Відбулась невідома помилка при виконанні команди **${command}**. Повідомте про це повідомлення раді!`);
             });
                 console.log("[" + message.guild.name + "] Виконав (!) префікс команду " + command + " via alias.");
         } else {
@@ -1062,7 +1067,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
                 } else {
                     reportChannel = voice.guilds[oldState.guild.id].tc;
                 }
-                await reportChannel.send({content: "↩️ Покинув голосовий канал бо всі інші вийшли."});
+                await reportChannel.send({content: " ", embeds: [new Discord.MessageEmbed().setColor("#55bffc").setDescription("↩️ Покинув голосовий канал бо всі інші вийшли.")]});
             }
 
             voice.guilds[oldState.guild.id].queue = [];
