@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("skip")
-    .setDescription("Пропускає N-ну кількість пісень з музичної черги.")
+    .setDescription("Пропускає першу пісню з музичної черги або N-ну кількість пісень з початку черги.")
     .addIntegerOption(option => option.setName("кількість").setDescription("Кількість пісень, яку ви хочете пропустити.").setRequired(false)),
     aliases: ["скіп", "sk", "пропустити", "пропусти", "тупапісня", "gonext", "next", "некст", "ск"],
     category: "музика",
@@ -22,21 +22,20 @@ module.exports = {
 
         if(args[0] <= 5) {
             for (let i = 0; i<args[0]; i++) {
-                if(!i) {
-                    await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]},message);
-                } else {
-                    await message.channel.send({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]});
-                }
                 if (voice.isLooped != "all") {
                     voice.queue.shift();
                 } else {
                     voice.queue.push(voice.queue[0]);
                     voice.queue.shift();
                 }
-        
+
+                if(!i) {
+                    await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]},message);
+                } else {
+                    await message.channel.send({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]});
+                }
             }
         } else {
-            await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив **" + args[0] + "** пісень.")]}, message);
             for(let i = 0; i<args[0]; i++) {
                 if(voice.isLooped != "all") {
                     voice.queue.shift();
@@ -45,6 +44,9 @@ module.exports = {
                     voice.queue.shift();
                 }
             }
+
+            let songPlayingNow = (voice.queue.length ? `Тепер грає: \"**${voice.queue[0].title}**\"` : "");
+            await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив **" + args[0] + "** пісень. " + songPlayingNow)]}, message);
         }
         await voice.player.stop();
     }

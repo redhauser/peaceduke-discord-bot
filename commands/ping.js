@@ -12,7 +12,11 @@ module.exports = {
     djRoleRequired: false,
     async execute(message, args, Discord, client, voice, config){
 
-        const sent = await client.replyOrSend({ content: 'Пінгую...', fetchReply: true },message);
+        let pingEmbed = new Discord.MessageEmbed()
+        .setDescription("Пінгую...")
+        .setColor("#40e224");
+
+        const sent = await client.replyOrSend({ content: ' ', embeds: [pingEmbed], fetchReply: true },message);
 
         let uptime = sent.createdTimestamp-client.readyAt;
         let embyd = new Discord.MessageEmbed()

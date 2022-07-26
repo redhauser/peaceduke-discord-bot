@@ -125,7 +125,7 @@ module.exports = {
         }
 
         if(args.length<2) return await client.replyOrSend({content: "Ви не дали достатньо аргументів. Для видання ролі, я повинен отримати хочаби одну роль і хочаби одне емодзі.", ephemeral: true}, message);
-        if(roleIds.length !== emojis.length) return await client.replyOrSend({content: "Вибачте, але ви не вказали більше ролей ніж емодзі. Ви повинні вказати емодзі на кожну роль!", ephemeral: true}, message);
+        if(roleIds.length !== emojis.length) return await client.replyOrSend({content: "Вибачте, але ви вказали більше ролей ніж емодзі. Ви повинні вказати емодзі на кожну роль!", ephemeral: true}, message);
 
         let roleContent = "";
 

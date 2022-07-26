@@ -3,7 +3,7 @@ const { SlashCommandBuilder} = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Ця команда дозволе вам дізнатися про використання всіх існуючих команд!")
+    .setDescription("Дізнайтеся про всі команди бота та їхнє використання.")
     .addStringOption(option => option.setName("name").setDescription("Назва команди, про яку ви б хотіли більше дізнатись.")),
     aliases: ["хелп","commandinfo","commands","команди", "допомога"],
     category: "інформація",
@@ -27,8 +27,8 @@ module.exports = {
             );
 
         let helpDesc = "";
-        helpDesc += "PeaceDuke - мультифункціональний Discord бот,який у собі \nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді, офкорс!\n\n";
-        helpDesc += "Ця команда дозволяє вам дізнатися про всі команди бота!\n\n"
+        helpDesc += "PeaceDuke - мультифункціональний Discord бот, який\nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді, офкорс!\n\n";
+        helpDesc += "Дізнайтеся більше про команди бота, перегорнувши на наступню сторінку!\n\n"
 
         helpDesc +=  "`" + config.guilds[message.guildId].botPrefix + "help`" + (config.guilds[message.guildId].slashCommands ? (" або `/help` ") : "") + " - покаже це повідомлення\n";
         helpDesc += "`" + config.guilds[message.guildId].botPrefix + "help назваКоманди`" + (config.guilds[message.guildId].slashCommands ? (" або `/help назваКоманди` ") : "") + " - покаже більше інформації про команду\n";

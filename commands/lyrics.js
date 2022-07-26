@@ -5,9 +5,9 @@ const getArtistTitle = require("get-artist-title");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("lyrics")
-    .setDescription("Показує слова до поточної пісні або вказаної пісні!")
-    .addStringOption(opt=>opt.setName("пісня").setDescription("Замість слів поточно граючою пісні, найде слова вказаної вами пісні (формат: Співак - Пісня).").setRequired(false)),
-    aliases: ["слова", "lyric"],
+    .setDescription("Находить текст пісні, яка зараз грає або текст пісні, назву якої ви вказали.")
+    .addStringOption(opt=>opt.setName("пісня").setDescription("Замість тексту поточно граючою пісні, найде текст вказаної вами пісні (формат: Співак - Пісня).").setRequired(false)),
+    aliases: ["текст", "слова", "lyric"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
@@ -26,7 +26,7 @@ module.exports = {
 
         let briefdata = getArtistTitle(args[0] || voice.queue[0].title);
         if(!briefdata) return await client.replyOrSend("Співака/пісню не знайдено.",message);
-        let reply = await client.replyOrSend("📃🎙️ Слова пісні **\"" + (args[0] || voice.queue[0].title) + "\"**:", message);
+        let reply = await client.replyOrSend("📃🎙️ Текст пісні **\"" + (args[0] || voice.queue[0].title) + "\"**:", message);
 
         if(message.type==="APPLICATION_COMMAND") {
             reply = await message.fetchReply();
@@ -36,7 +36,7 @@ module.exports = {
             let lyrics = await lyricsFinder(artist, title) || false;
             
             if(!lyrics) {
-                reply.edit({content: "📃🎙️ Слова пісні **\"" + (args[0] || voice.queue[0].title) + "\"**:\nВибачте, але в мене не вдалось знайти слів для цієї пісні. 😔"})
+                reply.edit({content: "📃🎙️ Текст пісні **\"" + (args[0] || voice.queue[0].title) + "\"**:\nВибачте, але в мене не вдалось знайти текст цієї пісні. 😔"})
             } else {
                 for(let i = 0; i*2000<lyrics.length; i++) {
                     await message.channel.send(lyrics.slice(i*2000, (2000>lyrics.length ? lyrics.length : (i+1)*2000) ));

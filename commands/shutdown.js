@@ -22,7 +22,7 @@ module.exports = {
         voice.queue = [];
         voice.isLooped = false;
         
-        //This is done not to accidentally corrupt userdata.json. That's why I think I put this here. I mean, i'm not sure what the chances are, but i don't wanna risk it...
+        //This is done not to accidentally corrupt any files.
         clearInterval(client.automaticFileSaveIntervalID);
 
         

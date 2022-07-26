@@ -260,11 +260,11 @@ module.exports = {
                     if(!guildData.secretVcChannel) {
                         await message.channel.send({content: "Ви не добавили секретний голосовий канал. Спочатку добавте його, а потім добавте пароль!"});
                     } else {
-                        if(msgc.length < 64 && !msgc.startsWith(guildData.botPrefix) && !msgc.startsWith("/") && !msgc.startsWith("\\")) {
+                        if(msgc.length < 128 && !msgc.startsWith(guildData.botPrefix) && !msgc.startsWith("/") && !msgc.startsWith("\\")) {
                             config.guilds[guildData.guildId].secretVcPassPhrase = msgc;
                             guildData = config.guilds[guildData.guildId];
-                        } else if(msgc.length > 64) {
-                            await message.channel.send({content: "Пароль секретного голосового каналу не може бути довшим за 64 символи."});
+                        } else if(msgc.length > 128) {
+                            await message.channel.send({content: "Пароль секретного голосового каналу не може бути довшим за 128 символів."});
                         } else if(msgc.startsWith(guildData.botPrefix)) {
                             await message.channel.send({content: "Пароль секретного голосового каналу не може починатися з префікса бота."});
                         } else {

@@ -2,6 +2,8 @@
 
 ## Post 1.4 Update Patches patch notes:
 
+`1.4.11` - Subtle changes. config.json and README no longer use spotifyAccessToken value. And, oh well. Changed the `about` command to not include `rpg` and `mafia`. I'm thinking of starting to work on the 1.5 update! I want it to include: more mini-games, including `rpg` and `mafia`, with likely even more mini-games, more polished `config` command, with more config options to edit, more secret commands, possibly (?) server-specific commands, do my to-do list, and more. 
+
 `1.4.10` - updated voicestateupdate to match all other music related commands and them using embeds. also, if a command used in a (/) interface returns an unexpected error, it will notify the users. not sure why it wasn't there previously, because prefix (=) interface had this for a while. probably because prefix interface used to be much buggier than the slash one.
 
 `1.4.9` - grammar changes. `play` and `plnow` now properly validate youtube playlist links. a few aesthetic changes. added pseudo error handlers to `play` and `plnow`. slight changes to `about`. remade `ytmp3` visually, now also supports spoti links. most music commands now use embeds. updated dependencies. no progress on anything from the todolist. :)

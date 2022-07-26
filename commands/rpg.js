@@ -4,7 +4,7 @@ const { ClientPresence } = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("rpg")
-    .setDescription("Зіграйте у маленьку RPG гру!"),
+    .setDescription("Зіграй у невеличку RPG гру!"),
     aliases: ["рпггра", "rpggame", "рпг", "rpgame", "рпгра", "jrpg"],
     category: "ігри",
     hidden: false,

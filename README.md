@@ -1,7 +1,7 @@
 # peaceduke-discord-bot
 ## This is the repository representing the code of PeaceDuke the Discord bot.
 
-PeaceDuke - is a Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
+PeaceDuke is a Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
 
 PeaceDuke is developed by me, **redhauser** (_redhauser#8140_ on Discord).
 
@@ -39,16 +39,10 @@ Then, do:
 git pull
 ```
 
-Don't forget to update all the npm packages, and to install any new packages that the bot now uses:
+Don't forget to install any new packages that the bot now uses:
 
 ```sh
 npm install
-```
-
-and
-
-```sh
-npm update
 ```
 
 From here, go to any server and do `=shutdown` (or `!shutdown` or `/shutdown`). The bot shutdowns and also saves all important data (guildsconfig.json and userdata.json).
@@ -63,7 +57,7 @@ env YTDL_NO_UPDATE=1 pm2 restart 0 --update-env
 
 It will ensure that ytdl-core package won't cause any issues.
 
-Conrgats! You've successfuly updated the bot to the latest build and restarted it.
+Congrats! You've successfuly updated the bot to the latest build and restarted it.
 
 If you want to see the current log do:
 
@@ -97,7 +91,6 @@ If you already have filled out files from bot's runtime, use them. If not, here 
     "token": "the bot's token",
     "spotifyClientId": " spotify app's client id",
     "spotifyClientSecret": "spotify app's client secret",
-    "spotifyAccessToken": null,
     "redhauserId": "redhauser's id",
     "correctionFluidId": "correction fluid id",
     "correctionFluidMainChannelId": "correction fluid's main channel id",
@@ -107,8 +100,6 @@ If you already have filled out files from bot's runtime, use them. If not, here 
     "specialuserID3": "niki"
 }
 ```
-
-The _spotifyAccessToken_ value must be null. The bot figures it out on runtime.
 
 If _correctionFluidMainChannelId_ is set to null or false, the bot won't send out any random quotes to the server Correction Fluid.
 

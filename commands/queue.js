@@ -118,7 +118,7 @@ module.exports = {
                 voice.queue = [].concat(newQueue);
                 await voice.player.stop();
                 if(message.type === "APPLICATION_COMMAND") {
-                    await m.followUp({content: "🔀 Перетасував поточну чергу! Зараз грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
+                    await m.followUp({content: "🔀 Перетасував поточну чергу! Тепер грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
                 }
             }
             if(voice.queue[0]) {
@@ -161,7 +161,7 @@ module.exports = {
         .setImage(voice.queue[0].image)
         .setDescription(content+addInfo);
         if(message.guild.id == config.correctionFluidId) {
-            embedLink.setFooter({text: "Цей музикальний бот заспонсорований сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
+            embedLink.setFooter({text: "Цей музичний бот заспонсорований сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
         }
 
         return embedLink;

@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("zxc1000-7")
     .setDescription("Го zxc на мід, якщо не позер?"),
-    aliases: ["zxc", "1000-7"],
+    aliases: ["zxc", "1000-7", "nikistrike"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

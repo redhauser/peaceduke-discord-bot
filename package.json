@@ -1,6 +1,6 @@
 {
   "name": "peacedukediscordbot",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "description": "PeaceDuke is a Discord bot that has powerful music features, and bunch of moderation and community features.",
   "author": "redhauser",
   "license": "ISC",
@@ -11,8 +11,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Використайте npm run startbot щоби запустити і тестити бота.\" && exit 1",
-    "startbot": "echo \"Запускаю бота...\" && node .",
-    "botinfo": "echo \"PeaceDuke створив і розроблює redhauser на GitHub\" && exit 1"
+    "start": "echo \"Запускаю бота...\" && node .",
+    "info": "echo \"PeaceDuke створив і розроблює redhauser на GitHub (redhauser#8140 DiscordTag)\" && exit 1"
   },
   "dependencies": {
     "@discordjs/builders": "^0.11.0",

@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("shuffle")
-    .setDescription("Перетасовує музичну чергу!"),
+    .setDescription("Перетасовує музичну чергу."),
     aliases: ["перетасувати", "шафел", "mix", "mixup"],
     category: "музика",
     hidden: false,
@@ -32,7 +32,7 @@ module.exports = {
         voice.queue = [].concat(newQueue);
         await voice.player.stop();
         await voice.pf();
-        await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔀 Перетасував поточну чергу! Зараз грає: \"**_" + voice.queue[0].title + "_**\"!")]},message);
+        await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔀 Перетасував поточну чергу! Тепер грає: \"**_" + voice.queue[0].title + "_**\"!")]},message);
         console.log("[" + message.guild.name + "] Перетасував поточну чергу.");
         
     }

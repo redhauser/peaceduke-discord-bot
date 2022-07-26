@@ -19,7 +19,7 @@ module.exports = {
             isRole = true;
         });
 
-        if(isRole) return await client.replyOrSend("Дане згадування не є користувачем!",message);
+        if(isRole) return await client.replyOrSend({content: " ", embeds: [new Discord.MessageEmbed().setColor("#fcd514").setDescription("Дане згадування не є користувачем!")], ephemeral: true},message);
         
         let statguilduser = (await message.guild?.members?.cache?.get(userid));
         

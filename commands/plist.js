@@ -5,10 +5,10 @@ const builders = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("plist")
-    .setDescription("Дозволяє вам зберегти або грати плейлист з ваших збережених.")
-    .addSubcommand(subcommand => subcommand.setName("show").setDescription("Показує ваші збережені плейлисти.").addStringOption(opt => opt.setName("user").setDescription("Користувач, чиї плейлисти ви б хотіли побачити/ ID або назва вашого плейлиста").setRequired(false)))
+    .setDescription("Дозволяє вам зберегти чергу як плейлист або грати плейлист з ваших збережених.")
+    .addSubcommand(subcommand => subcommand.setName("show").setDescription("Показує ваші збережені плейлисти.").addStringOption(opt => opt.setName("user").setDescription("Користувач, чиї плейлисти ви б хотіли побачити/ID або назва вашого плейлиста").setRequired(false)))
     .addSubcommand(subcommand => subcommand.setName("save").setDescription("Зберігає поточну чергу у ваші плейлисти.").addStringOption(option => option.setName("name").setDescription("Назва для плейлиста").setRequired(true)))
-    .addSubcommand(subcommand => subcommand.setName("play").setDescription("Добавити в музичну чергу один з ваших плейлистів.").addStringOption(option => option.setName("playlist").setDescription("ID/назва вашого плейлиста.").setRequired(true))),
+    .addSubcommand(subcommand => subcommand.setName("play").setDescription("Грає один з ваших плейлистів.").addStringOption(option => option.setName("playlist").setDescription("ID/назва вашого плейлиста.").setRequired(true))),
     aliases: ["playlist", "плейлист", "плейліст", "pllist","плист","пліст"],
     category: "музика",
     hidden: false,
@@ -309,10 +309,13 @@ module.exports = {
             }
 
         } else if(args[0] == "save" || args[0] == "сейв" || args[0] == "зберегти") {
+
+            let anErrorOccuredEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557");
             
-            if(!voice.queue[0]) return await client.replyOrSend({content: "Зараз нічого не грає, неможу зберегти."}, message);
-            if(voice.queue.length < 3) return await client.replyOrSend({content: "Неможу зберегти чергу з менше чим трьома піснями."},message);
-            if(client.stats[userId].playlists.length >= 30) return await client.replyOrSend({content: "Вибачте, але не можна мати більше ніж 30 збережених плейлистів."});
+            if(!voice.queue[0]) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Зараз нічого немає в черзі, неможу зберегти плейлист. \nДобавте пару пісень в чергу, і тоді я зможу зберегти її як плейлист!")], ephemeral: true}, message);
+            if(voice.queue.length < 3) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Неможу зберегти плейлист з менше чим трьома піснями.")], ephemeral: true},message);
+            if(client.stats[userId].playlists.length >= 30) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Вибачте, але ви не можете мати більше ніж 30 збережених плейлистів.")] ,ephemeral: true});
             if(message.type === "APPLICATION_COMMAND") { 
                 args[1] = [message.options.get("name").value];
             } else {
@@ -350,9 +353,13 @@ module.exports = {
             await client.replyOrSend({embeds: [embedPreviewPlaylist]}, message);
         
         } else if(args[0] == "play" || args[0] == "плей" || args[0] == "грай" || args[0] == "зіграй") {
+
+
+            let anErrorOccuredEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557");
         
             const vc = message.member.voice.channel;
-            if(!vc) return await client.replyOrSend({content: "Ви повинні бути у голосовому каналі!", ephemeral: true}, message);
+            if(!vc) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Ви повинні бути у голосовому каналі!")], ephemeral: true}, message);
 
             if(!client.stats[userId].playlists || !client.stats[userId].playlists[0]) { 
                 let embedDeletedAllPlaylists = new Discord.MessageEmbed()
@@ -363,7 +370,7 @@ module.exports = {
             
             let playlists = client.stats[userId].playlists;
 
-            let reply = await client.replyOrSend({content: "Шукаю ваший плейлист і добавляю його в чергу..."}, message);
+            let reply = await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Шукаю ваший плейлист і добавляю його в чергу...")]}, message);
             if(message.type === "APPLICATION_COMMAND") {
                 reply = await message.fetchReply();
                 args[1] = message.options.get("playlist").value;
@@ -401,7 +408,9 @@ module.exports = {
             await playAndShow(reply, newPlaylist);
 
         } else {
-            await client.replyOrSend({content: "Вибачте, але ви вказали неправильну сабкоманду. Спробуйте: `" + config.guilds[message.guildId].botPrefix + "plist show`, `" + config.guilds[message.guildId].botPrefix + "plist save`, `" + config.guilds[message.guildId].botPrefix + "plist play`."}, message);
+            let anErrorOccuredEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557");
+            await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Вибачте, але ви вказали неправильну сабкоманду. Спробуйте: `" + config.guilds[message.guildId].botPrefix + "plist show`, `" + config.guilds[message.guildId].botPrefix + "plist save`, `" + config.guilds[message.guildId].botPrefix + "plist play`.")]}, message);
         }
 
         async function playAndShow(reply, newPlaylist) {
@@ -467,7 +476,7 @@ module.exports = {
             
             //Playlist preview embed.
             let embedPreviewAll = new Discord.MessageEmbed()
-            .setTitle("Показую " + (isMainUser ? "ваші" : "") + "плейлисти:")
+            .setTitle("Показую " + (isMainUser ? "ваші " : "") + "плейлисти:")
             .setImage(client.stats[userId].playlists[selectedPlaylistIndex].queue[0].image)
             .setColor("#20eafc")
             .setFooter({text: "Сторінка списку плейлистів " + Math.floor((selectedPlaylistIndex/3)+1) + "/" + Math.floor(((playlists.length-1)/3)+1)})

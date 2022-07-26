@@ -11,6 +11,7 @@ const client = new Discord.Client({intents: [Discord.Intents.FLAGS.DIRECT_MESSAG
     Discord.Intents.FLAGS.GUILD_VOICE_STATES,
     Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS], partials: ["MESSAGE","CHANNEL","REACTION","USER","GUILD_SCHEDULED_EVENT","GUILD_MEMBER"]});
 const config = require("./config.json");
+config.spotifyAccessToken = null;
 //Loading configuration from each server.
 config.guilds = require("./guildsconfig.json");
 
@@ -307,7 +308,7 @@ client.once("ready", async () => {
                         } else {
                             botChannelToNotifyUsers = voice.guilds[guilds.at(i).id].tc;
                         }
-                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
+                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0]?.title + "**\". Пропускаю цю пісню..."});
                         voice.guilds[guilds.at(i).id].queue.shift();
                         if(voice.guilds[guilds.at(i).id].queue.length) {
                             await voice.guilds[guilds.at(i).id].pf();
