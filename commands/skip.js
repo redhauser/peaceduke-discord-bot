@@ -22,6 +22,11 @@ module.exports = {
 
         if(args[0] <= 5) {
             for (let i = 0; i<args[0]; i++) {
+                if(!i) {
+                    await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]},message);
+                } else {
+                    await message.channel.send({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]});
+                }
                 if (voice.isLooped != "all") {
                     voice.queue.shift();
                 } else {
@@ -29,11 +34,6 @@ module.exports = {
                     voice.queue.shift();
                 }
 
-                if(!i) {
-                    await client.replyOrSend({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]},message);
-                } else {
-                    await message.channel.send({content: " ", embeds: [embed.setDescription("⏭️ Пропустив \"**" + voice.queue[0].title + "**\" .")]});
-                }
             }
         } else {
             for(let i = 0; i<args[0]; i++) {
