@@ -118,7 +118,7 @@ module.exports = {
                 voice.queue = [].concat(newQueue);
                 await voice.player.stop();
                 if(message.type === "APPLICATION_COMMAND") {
-                    await m.followUp({content: "🔀 Перетасував поточну чергу! Тепер грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
+                    await m.followUp({content: "🔀 Перетасував чергу! Тепер грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
                 }
             }
             if(voice.queue[0]) {

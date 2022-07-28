@@ -1,7 +1,8 @@
 {
-  "name": "peacedukediscordbot",
-  "version": "1.4.11",
+  "name": "peaceduke-discord-bot",
+  "version": "1.4.12",
   "description": "PeaceDuke is a Discord bot that has powerful music features, and bunch of moderation and community features.",
+  "keywords": ["discord","bot","music","dj","minigames","fun","moderation","ukrainian"],
   "author": "redhauser",
   "license": "ISC",
   "repository": {

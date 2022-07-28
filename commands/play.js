@@ -58,6 +58,7 @@ module.exports = {
                     try {
                         video = (await ytdl.getBasicInfo(args[0])).videoDetails;
                     } catch (err) {
+                        //console.log(err.statusCode);
                         video = null;
                         console.log("[" + message.guild.name + "] Сталася помилка при ytd.getBasicInfo() у команді play з посиланням " + args[0] + ". Помилка: ", err);
                         return reply.edit({content: " ", embeds: [callbackEmbed.setDescription("⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+.")]});

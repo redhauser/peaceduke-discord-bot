@@ -18,10 +18,10 @@ module.exports = {
         .setDescription("⠀⠀⠀⠀**PeaceDuke** - мультифункціональний Discord бот\n" + 
         "⠀⠀⠀у нього є функції DJ бота, модерації, мініігри, та інші.\n" + 
         "⠀Якщо маєте ідею як покращити бота, зверніться до раді.\n" + 
-        `Використайте **${config.guilds[message.guildId].botPrefix}help**, щоби дізнатися про існуючі команди.\n` + 
-        (message.member.user.id === message.guild.ownerId ? `Використайте **${config.guilds[message.guildId].botPrefix}config** щоби змінити конфігурацію серверу.\n` : "") +
+        `Використайте **${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}help**, щоби дізнатися про існуючі команди.\n` + 
+        (message.member.user.id === message.guild.ownerId ? `Використайте **${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}config** щоби змінити конфігурацію серверу.\n` : "") +
         //Bot version and some update bs
-        "\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Поточна версія бота - **" + "1.4.11" + "**\n" +
+        "\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Поточна версія бота - **" + client.botVersion + "**\n" +
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀_Головні нові фічи та зміни:_ \n" +
         "⠀⠀⠀_Підтримка Spotify посилань у `play`, `plnow`, `ytmp3`._\n" +
         "⠀⠀⠀⠀⠀_Нові команди: `plist`, `config`, `suggest`._\n" +

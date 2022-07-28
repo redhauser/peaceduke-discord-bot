@@ -14,6 +14,8 @@ const config = require("./config.json");
 config.spotifyAccessToken = null;
 //Loading configuration from each server.
 config.guilds = require("./guildsconfig.json");
+//Stores the version of the bot.
+client.botVersion = ((require("./package.json")).version);
 
 //Might wanna move these two to where they are being actually used, instead of being global variables
 const { REST } = require("@discordjs/rest");
@@ -57,7 +59,6 @@ for(let file of commandFiles) {
 
 client.commandsForREST = [].concat(commands);
 
-client.queue = [];
 client.stats = JSON.parse(fs.readFileSync("userdata.json", "utf8"));
 
 //Just a "convenience function".
@@ -308,7 +309,10 @@ client.once("ready", async () => {
                         } else {
                             botChannelToNotifyUsers = voice.guilds[guilds.at(i).id].tc;
                         }
-                        botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0]?.title + "**\". Пропускаю цю пісню..."});
+                        let warnEmbed = new Discord.MessageEmbed()
+                        .setColor("#FF0000")
+                        .setDescription(`⚠️ Вибачте! Відбулася помилка при відтворенні \"**${voice.guilds[guilds.at(i).id].queue[0].title}**\". Це може бути через те, що відео позначене на ютубі як 18+.`)
+                        botChannelToNotifyUsers.send({content: " ", embeds: [warnEmbed]});
                         voice.guilds[guilds.at(i).id].queue.shift();
                         if(voice.guilds[guilds.at(i).id].queue.length) {
                             await voice.guilds[guilds.at(i).id].pf();
@@ -764,7 +768,10 @@ client.on("guildCreate", async (guild) => {
                     } else {
                         botChannelToNotifyUsers = voice.guilds[guild.id].tc;
                     }
-                    botChannelToNotifyUsers.send({content: "⚠️ Вибачте! Відбулася помилка при відтворенні відео \"**" + client.queue[0].title + "**\". Пропускаю цю пісню..."});
+                    let warnEmbed = new Discord.MessageEmbed()
+                    .setColor("#FF0000")
+                    .setDescription(`⚠️ Вибачте! Відбулася помилка при відтворенні \"**${voice.guilds[guild.id].queue[0].title}**\". Це може бути через те, що відео позначене на ютубі як 18+.`)
+                    botChannelToNotifyUsers.send({content: " ", embeds: [warnEmbed]});
                     voice.guilds[guild.id].queue.shift();
                     if(voice.guilds[guild.id].queue.length) {
                         await voice.guilds[guild.id].pf();
