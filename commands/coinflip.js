@@ -9,7 +9,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         await client.replyOrSend({content: "Кинув монетку, і в мене випав: " + ((Math.round(Math.random())) ? "🪙 Аверс" : "🔱 Реверс"), ephemeral: false}, message);
     }
 }

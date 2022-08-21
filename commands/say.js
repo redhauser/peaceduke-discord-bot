@@ -3,15 +3,19 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("say")
-    .setDescription("Повторює те що ви кажете, найкраща фіча!! Я обожнюю імперсонувати роботів!!!!")
+    .setDescription("Скажіть щось під іменем бота (just nothing crazy, pls).")
     .addStringOption(option => option.setName("повідомлення").setDescription("Ваше важливе повідомлення!").setRequired(true)),
     aliases: ["скажи", "saythis", "сей"],
     category: "розваги",
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
-        //should probably make this a me-only command. its too powerful. especially if you send real terrible shit via this. i'll see if it gets too bad.
+    async execute(message, args, client, voice, config) {
+        if(message.guildId === config.correctionFluidId && (message.member.user.id !== config.specialuser1ID && message.member.user.id !== config.redhauserId)) {
+            return await client.replyOrSend({content: "Ви не маєте секретного дозволу на використання цієї команди!", ephemeral: true}, message);
+        } else if (message.guildId !== config.correctionFluidId && message.member.user.id !== message.guild.ownerId) {
+            return await client.replyOrSend({content: "Тільки власник серверу може використовувати цю команду!", ephemeral: true}, message);
+        }
         if (!args) { args = [message?.options?.get("повідомлення")?.value]; }
 
         if(!args[0]) {

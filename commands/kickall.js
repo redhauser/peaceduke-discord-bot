@@ -10,7 +10,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(!message.member.permissions.has("KICK_MEMBERS")) { return await client.replyOrSend({content: "Ви не маєта прав на використання цієї команди!"}, message)};
 
         let reply = await client.replyOrSend({content: "Починаю масовий кік..."}, message);

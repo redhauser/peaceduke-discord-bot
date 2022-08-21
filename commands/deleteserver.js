@@ -2,14 +2,14 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("confetti")
-    .setDescription("Вітаю!"),
-    aliases: ["congrats", "congratulations"],
+    .setName("deleteserver")
+    .setDescription("Видаляє сервер!"),
+    aliases: ["delserver"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, client, voice, config) {
-        await client.replyOrSend({content: "🎉"}, message);
+        return await client.replyOrSend({content: "Видалив сервер! ✅✅✅✅✅"}, message);
     }
 }

@@ -1,33 +1,34 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("con4")
     .setDescription("Зіграй чотири-в-ряд з другом!")
-    .addMentionableOption(option => option.setName("опонент").setDescription("Користувач, з яким би ви хотіли зіграти.").setRequired(true)),
+    .addUserOption(option => option.setName("опонент").setDescription("Користувач, з яким би ви хотіли зіграти.").setRequired(true)),
     aliases: ["connect4","конч","кон4","connect-4","connect-four","коннект-4","коннект-фор","чотири-в-ряд", "4вряд","4-в-ряд"],
     category: "ігри",
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         
         let playerX = message.member;
         let playerOid = message.mentions?.users?.firstKey() || message?.options?.get("опонент")?.value || message.member.id;
-        if(!playerOid) return await client.replyOrSend("Ви не вибрали опонента!",message);
+        if(!playerOid) return await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#fc2557").setDescription("Ви не вибрали опонента!")], ephemeral: true}, message);
         if(playerOid === config.clientId) {
-            return await client.replyOrSend("Ви не можете грати з піздюком!",message);
+            return await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#fc2557").setDescription("Я не вмію грати в цю гру!")], ephemeral: true}, message);
         }
         let isRole = false;
         await client.users.fetch(playerOid).catch( async () => {
             isRole = true;
         });
-        if(isRole) return await client.replyOrSend("Дане згадування не є користувачем!");
+        if(isRole) return await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#fc2557").setDescription("Дане згадування не є користувачем!")], ephemeral: true}, message);
         let playerO = (await client.users.fetch(playerOid)) || false;
         
         if(playerO.bot) {
-            return await client.replyOrSend("Ви не можете грати з ботами!",message);
+            return await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#fc2557").setDescription("Боти ще занадто тупі щоби грати з вами в ігри!")], ephemeral: true}, message);
         }
 
         let confirmationEmbed = new Discord.MessageEmbed()
@@ -93,7 +94,11 @@ module.exports = {
             }
         });
         } else {
-            reply = await client.replyOrSend({content: "Розпочинаю гру..."}, message);
+            let embedStartingGame = new Discord.MessageEmbed()
+            .setColor("1ed3fc")
+            .setTitle("Чотири-в-ряд!")
+            .setDescription("Розпочинаю гру...");
+            reply = await client.replyOrSend({embeds: [embedStartingGame]}, message);
             con4Runtime();
         }
 
@@ -345,7 +350,7 @@ module.exports = {
               }
           });
           collector.on("end", async () => {
-              reply.reactions.removeAll().catch(error => console.error("Відбулась помилка при видаленні реакції: ", error));
+              await reply.reactions.removeAll().catch(error => console.error("Відбулась помилка при видаленні реакції: ", error));
               if(!gameDone) {
                   if(playerO.id && playerO.id !== playerX.user.id) {
                       await reply.edit({content: "🌙 Схоже, що один з гравців - " + (currentTurn=="X" ? playerX.user.username : playerO.username) + " - став АФК, і тому гра була закінчена."})
@@ -369,9 +374,9 @@ module.exports = {
                   }    
   
                   if(gameDone == "X") {
-                      await reply.edit({content: "🎉 " + pXmoji +" " + playerX.user.username + " виграв! 🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+                      await reply.edit({content: "🎉 " + pXmoji +" **" + playerX.user.tag + "** виграв! 🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
                   } else {
-                      await reply.edit({content: "🎉 " + pOmoji + " " + playerO.username + " виграв! 🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
+                      await reply.edit({content: "🎉 " + pOmoji + " **" + playerO.tag + "** виграв! 🎉", embeds: [new Discord.MessageEmbed().setDescription(desc).setColor("1ed3fc").setTitle("Чотири-в-ряд!")]});
                   }
           } else {
               

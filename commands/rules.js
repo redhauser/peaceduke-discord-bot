@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,7 +10,7 @@ module.exports = {
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         let embed = new Discord.MessageEmbed()
         .setColor("#40e224")
         .setTitle("Правила серверу!")

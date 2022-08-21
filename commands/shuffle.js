@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,13 +10,13 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: true,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
+        
+        let embed = new Discord.MessageEmbed().setColor("#fc2557");
 
-        let embed = new Discord.MessageEmbed().setColor("#55bffc");
-
-        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ Черга пуста, немає що перетасувати.")]},message);
-        if(voice.queue.length==1) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 1 пісня, неможливо перетасувати.")]},message);
-        if(voice.queue.length==2) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 2 пісні, немає сенсу перетасовувати.")]},message);
+        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ Черга пуста, немає що перетасувати.")], ephemeral: true},message);
+        if(voice.queue.length==1) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 1 пісня, неможливо перетасувати.")], ephemeral: true},message);
+        if(voice.queue.length==2) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("❌ В черзі всього лиш 2 пісні, немає сенсу перетасовувати.")], ephemeral: true},message);
         
         let newQueue = new Array(voice.queue.length);
         let originalLength = voice.queue.length;
@@ -32,7 +33,7 @@ module.exports = {
         voice.queue = [].concat(newQueue);
         await voice.player.stop();
         await voice.pf();
-        await client.replyOrSend({content: " ", embeds: [embed.setDescription("🔀 Перетасував чергу! Тепер грає: \"**_" + voice.queue[0].title + "_**\"!")]},message);
+        await client.replyOrSend({content: " ", embeds: [embed.setColor("#55bffc").setDescription("🔀 Перетасував чергу! Тепер грає: \"**_" + voice.queue[0].title + "_**\"!")]},message);
         console.log("[" + message.guild.name + "] Перетасував музичну чергу.");
         
     }

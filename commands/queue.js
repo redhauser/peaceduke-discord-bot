@@ -1,22 +1,21 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const voiceAPI = require("@discordjs/voice");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("queue")
     .setDescription("Показує вам поточну музичну чергу."),
-    aliases: ["черга", "q", "que", "qeueu", "щограє", "шограє"],
+    aliases: ["черга", "q", "que", "qeueu", "щограє", "шограє", "nowplaying", "заразграє", "wtfsong", "wtfmusic", "ч"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
 
         if(!voice.queue[0]) {
-            let embedNothingPlaying = new Discord.MessageEmbed()
-            .setColor("#ac00fc")
-            .setDescription("Зараз нічого не грає.");
-            await message.client.replyOrSend({content: " ", embeds: [embedNothingPlaying]},message);
+            return await client.replyOrSend({content: " ", embeds: [await generateEmbedQueue()]},message);
         } else {
             
         let actionRow = new Discord.MessageActionRow()
@@ -44,6 +43,7 @@ module.exports = {
         );
 
         let reply = await client.replyOrSend({embeds: [await generateEmbedQueue()], components: [actionRow]}, message);
+        
         let filter;
         
         if(message.type === "APPLICATION_COMMAND") {
@@ -117,6 +117,7 @@ module.exports = {
                 
                 voice.queue = [].concat(newQueue);
                 await voice.player.stop();
+                console.log(`[${message.guild.name}] Перетасував музичну чергу.`)
                 if(message.type === "APPLICATION_COMMAND") {
                     await m.followUp({content: "🔀 Перетасував чергу! Тепер грає: \"**" + voice.queue[0].title + "**\"!", ephemeral: true});
                 }
@@ -139,22 +140,49 @@ module.exports = {
                 await reply.edit({content: " ", embeds: [await generateEmbedQueue()], components: []});
             }
         });
+        
+        //voice.player.once(voiceAPI.AudioPlayerStatus.Idle, () => { refreshQueueEmbed(reply, actionRow, voice, collector)});
         }
 
         async function generateEmbedQueue() {
-            let isTheQueueTooLong = voice.queue.length>16;
-            let content = "Поточна черга: \n**┎(1)"+(voice.player.state.status==="paused" ? "⏸️" : "▶") +" " + " [_" + voice.queue[0].timestamp + "_] " + builders.hyperlink(voice.queue[0].title, voice.queue[0].url) + "**" + (voice.queue.length>1 ? "\n ❙\n ❙\n" : "\n");
-            for(let i = 1;i<voice.queue.length;i++) {
-                content += "┠(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
-                if(i==15) i=voice.queue.length;
+
+            if(!voice.queue.length) { 
+                let embedNothingPlaying = new Discord.MessageEmbed()
+                .setColor("#ac00fc")
+                .setDescription("Зараз нічого не грає.");
+                return embedNothingPlaying;
             }
-            content += "┕-----------------------------------------------\n";
+
+            let queueSecondsLength = 0;
+            let queueMaxSongsShown = 12;
+            for(let i = 0; i < voice.queue.length; i++) {
+                queueSecondsLength += getLengthFromTimestamp(voice.queue[i].timestamp);
+            }
+
+            let content = "🎶 **Поточна черга: " + (voice.queue.length>=2 ? "[_" + generateTimestampFromLength(queueSecondsLength) + "_]" : "") + "**\n\n**┏(1)"+(voice.player.state.status==="paused" ? "⏸️" : "▶") +" " + " [_" + voice.queue[0].timestamp + "_] " + builders.hyperlink(voice.queue[0].title, voice.queue[0].url) + "**" + (voice.queue.length>1 ? "\n┃\n" : "\n┃\n");
+            if(voice.queue.length < queueMaxSongsShown) {
+                for(let i = 1;i<(voice.queue.length < queueMaxSongsShown ? voice.queue.length : queueMaxSongsShown);i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
+            } else {
+                for(let i = 1; i<8; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
+                content += "┣ {...}\n";
+                for (let i = voice.queue.length-3; i<voice.queue.length; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
+            }
+            
+            content += "┗━━━━━━━━━━━━━━━━━━━━━━━\n";
+            
             let addInfo = "";
-            if(isTheQueueTooLong) addInfo+="**⏩ А також ще " + (voice.queue.length-16) + " пісень!**\n";
+            //let isTheQueueTooLong = voice.queue.length>15;
+            //if(isTheQueueTooLong) addInfo+="**⏩ Всього у черзі " + voice.queue.length + " пісень!**\n";
             if(voice.isLooped === "on") addInfo+="**🔂 Програвач повторює поточну пісню!**\n";
             if(voice.isLooped === "all") addInfo+="**🔄 Програвач повторює всю чергу!**\n";
-            addInfo += voice.player.state.status==="paused" ? "**⏸️: Програвач поставлений на паузу.**\n" : "";
-            let embedLink = new Discord.MessageEmbed()
+            addInfo += voice.player.state.status==="paused" ? "**⏸️ Програвач поставлений на паузу.**\n" : "";
+            let embedLink = await new Discord.MessageEmbed()
         .setColor("#ac00fc")
         .setTitle("Зараз грає: " + voice.queue[0].title)
         .setURL(voice.queue[0].url)
@@ -166,5 +194,41 @@ module.exports = {
 
         return embedLink;
         }
+        
+        function generateTimestampFromLength(seconds) {
+            seconds = +seconds;
+            
+            outputTimestamp = "";
+            if(seconds > 60*60) {
+                outputTimestamp += (seconds/60/60<10) ? ("0" + Math.floor(seconds/60/60)) : Math.floor(seconds/60/60);
+                outputTimestamp += ":";
+            }
+            outputTimestamp += (seconds/60%60<10) ? ("0" + Math.floor(seconds/60%60)) : Math.floor(seconds/60%60);
+            outputTimestamp += ":";
+            outputTimestamp += (seconds%60<10) ? ("0" + seconds%60) : seconds%60;
+
+            return outputTimestamp;
+        }
+
+        function getLengthFromTimestamp(timestamp) {
+            let outputSeconds = 0;
+            if(timestamp.lastIndexOf(":") != timestamp.indexOf(":")) {
+                outputSeconds += +(timestamp.slice(0, timestamp.indexOf(":"))) * 60 * 60;
+                timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+            }
+            
+            outputSeconds += +(timestamp.slice(0, timestamp.lastIndexOf(":"))) * 60;
+            timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+
+            outputSeconds += +timestamp;
+            return +outputSeconds;
+        }
+
+        /* maybe if you find a better working system than redo this.
+        async function refreshQueueEmbed (reply, actionRow, voice, collector) {
+            reply.edit({embeds: [await generateEmbedQueue()], components: [actionRow]});
+            collector.resetTimer();
+            voice.player.once(voiceAPI.AudioPlayerStatus.Idle, () => { refreshQueueEmbed(reply, actionRow, voice, collector) });
+        }*/
     }
 }

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { ClientPresence } = require("discord.js");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,8 +10,8 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
-        return await client.replyOrSend({message: "Ця гра ще у розробці."}, message);
+    async execute(message, args, client, voice, config) {
+        return await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#4dc1bb").setDescription("Ця гра ще в розробці, і скоро стане доступною.")]}, message);
         //in-game fight ideas: enemies have and show attack patterns, have unique debuffs and buffs,
     
         //<startMenu | characterSelect | mapSelect | shopOpen | fightBegin | fightPlayerTurn | fightEnemyTurn | fightGameOver | fightWin | prizeSelect || endScreen>

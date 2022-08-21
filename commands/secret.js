@@ -9,7 +9,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(!config.guilds[message.guildId].secretVcChannel || !config.guilds[message.guildId].secretVcPassPhrase) {
             return await client.replyOrSend({content: "Хм... схоже, що дізнатися про секрет неможливо на цьому сервері. Спитайте власника сервера або розробника бота!"}, message);
         }

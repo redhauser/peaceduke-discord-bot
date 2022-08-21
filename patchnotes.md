@@ -1,125 +1,24 @@
 # Patch notes (for self)
 
-## Post 1.4 Update Patches patch notes:
+## 1.5 patch notes:
 
-`1.4.13` - quick fix of a `skip` command's bug.
+`1.5.0` - not a really grand update as the 1.4, but still, not a pushover. this update mostly is yet another polish of existing commands and features, with a lot of vanity and aesthetic changes, a few tweaks and optimizations. STILL DOESNT INCLUDE `mafia` LMAO NOR `rpg`... maybe i'll do them one day. i don't know.
 
-`1.4.12` - i discovered you can just just get the statuscode from the error via err.statuscode..... anyways, this patch had a few subtle changes, the bot version is now extracted from package.json and stored as client.botVersion; fixed a really dumb bug that occured inside of audio streaming error handlers; updated the package.json name to match with the git repo's name. slightly updated the todolist
-
-`1.4.11` - Subtle changes. config.json and README no longer use spotifyAccessToken value. And, oh well. Changed the `about` command to not include `rpg` and `mafia`. I'm thinking of starting to work on the 1.5 update! I want it to include: more mini-games, including `rpg` and `mafia`, with likely even more mini-games, more polished `config` command, with more config options to edit, more secret commands, possibly (?) server-specific commands, do my to-do list, and more. 
-
-`1.4.10` - updated voicestateupdate to match all other music related commands and them using embeds. also, if a command used in a (/) interface returns an unexpected error, it will notify the users. not sure why it wasn't there previously, because prefix (=) interface had this for a while. probably because prefix interface used to be much buggier than the slash one.
-
-`1.4.9` - grammar changes. `play` and `plnow` now properly validate youtube playlist links. a few aesthetic changes. added pseudo error handlers to `play` and `plnow`. slight changes to `about`. remade `ytmp3` visually, now also supports spoti links. most music commands now use embeds. updated dependencies. no progress on anything from the todolist. :)
-
-`1.4.8` - `rpg` and `mafia` are still not here. They are both pretty tricky to implement and require quite some work. And while i think i can make them, i currently don't have time to work on them, and they are not really something that needs to be done ASAP. So, `rpg`, `mafia`, and a few other things are being moved to the next patch. i'll just be committing these changes: grammar corrections and general adjustments in most commands. `help`'s info tab changed, also shows prefixes if the server doesn't have slash commands. `ytmp3` prefix interface bug fixed. `guildsconfig.json` removed values like _randomQuotes_ and _mainChannel_ since one of them was completely useless, and the other was only used for a single server - it's now replaced by `correctionFluidMainChannelId` in `config.json`. File-saving interval is now 4 hours. Removed the deprecated btoa() calls. Updated `package.json` to make it have actual information about PeaceDuke, and to make it prettier. Renamed `media` files.
-
-`1.4.7` - `say` finally doesn't feel awkward to use and feels finalised. `loop` now accepts both English and Ukrainian types of inputs (at least the ones i wrote...). Added a few more games to the random discord presence list. Fixed an issue in `config` (any member could change the settings of the server lmao, fixed that)
-
-`1.4.6` - YES. Now both `config` command and the init script can check whether the bot has access to slash commands on a given server. This will prevent crashes when someone is trying to add slash commands to a server where the bot doesn't have the scope `application.commands`! I'm glad i found out how to fix this! Also, a few `rolehandler` and role-tracking changes (specifically, custom emojis are now saved as an ID, and `rolehandler` now verifies whether the input was en emoji or not).
-
-`1.4.5` - the `plist show` command now accepts a @user mention or a playlist name/id. I really hope it works... I mean, it seems to be working... Also! Made the `say` command funnier. Added a few things to the to-do list.
-
-`1.4.4` - updated the `ox` command. It doesn't look outdated anymore, cus it uses the great technology of Discord embeds. Slightly updated the `poll` command, and a few grammar changes here and there.
-
-`1.4.3` - `play` and `plnow` now understand artist spotify links. They will play the artist's most recent album. Slightly revised the to-do list.
-
-`1.4.2` - Another extremely small update. Made the `rolehandler` command check whether an emoji is a custom emoji. So yea, support for custom emojis in the role-trackers was added.
-
-`1.4.1` - Very minor update. Quite surpisingly, updating the bot from the (to be honest) outdated `1.3.8` version to this went pretty smooth. This patch updated the npm package.json, by deleting @discordjs/opus dependency (which caused quite some issues), and updating most of the packages to their respective newest version. Also fixed a small config.js issue. I'm honestly happy I didn't have to update a lot. Also slightly updated the README.
-
-## Update 1.4 patch notes:
-
-As of 31.05 i'm starting to write the new patch notes. Doing a few small but imho qol changes as of right now :D
-
-28.06. I think i'm done! Everything _seems_ to be working... and i sure hope it will stay that way. There a few things i have not done - i have not _really_ made /mafia nor /rpg. I will definitely work on them! But they are gonna come in the next 1.4.+ patches. I'm pretty happy with this update, I think so...
-
-### CROSS-SERVER SUPPORT:
-
-Finally. I'm. Working. On. This.
-
-Sooooo now config.json only has VITAL paramaters only about the application itself (PeaceDuke).
-
-All of the config properties that were about a single guild - now go to guildsconfig.json.
-
-guildsconfig.json contains all guilds' configuration settings.
-
-On init, bot now reloads slash commands for all servers.
-
-All commands now report back on which server the command was executed on.
-
-I have _mostly_ reworked all commands to work on all servers. Because i still need to rework client.queue and player. And then! The bot! Might! Truly! Be! Cross! Server! Supported!
-
-Yeahh, that's pretty much it. For now.
-
-userdata.json now takes into account other servers. added client events like guildmemberadd and guildcreate to account for both userdata.json and guildsconfig.json.
-
-added a /config command. it's cool.
-
-EVERYTHING WORKS CROSS-SERVER NOW!!!
-
-### QOL prefix interface changes.
-
-All commands now have ALIASES. These aliases can only be used via the prefix interface (since using them with the slash interface would be a fucking catastrophe due to how unusable and clunked up it would become.)
-
-Commands now can be HIDDEN. This means that this command will not show up in the (/) command menu nor in the /help command.
-
-However, if you do discover a hidden command, you should know its name, so I think doing something like /help pay and it telling you about that commands seems fair.
-
-/help now shows a commands' aliases and whether its hidden if used with /help commandName. If just browsing /help, hidden commands will not show up.
-
-Commands being hidden opens up the possibility of adding joke and secret commands.
-
-This also makes it so i can bring back older commands that i intentionally got rid of since they were so jokey. Nice!
-
-Because of that, im bringing back these commands: pay, brawl, clashroyale, confetti, epic, rules. F*ck you soundpad. Ain't coming back. And so is troll. What a dumb command.
-
-When using the queue command in the prefix interface it now actually has all those buttons. Soo I guess NOW (i think) all commands truly work with the prefix interface. Somehow forgot about that previously lmfao.
-
-Commands now have properties of botChannelExclusive and djRoleRequired. These are now checked at interactionCreate and messageCreate instead of the command itself.
-
-### Role handling
-
-I remade the /rolehandler command entirely and the role tracking system!! It now works so smooth! No brainfuckery needed! So cool!
-
-### Other changes.
-
-YO I FINISHED THE NEW SYSTEM OF PLAYER AND CLIENT QUEUE YOOOO EVERYTHING SEEMS TO BE WOKRING NOW?!?!?
-
-i am "almost" finished with making the bot cross-server... the only things left are client.queue and player. I was thinking of making a single variable like "voice", and it would be an object that contains guild id's as properties, and inside these there would be a queue, player, etc. so for example smth like this: voice["guildid"].queue and voice["guildid"].player. I'm not sure...
-
-/suck and /zxc1000-7 are now hidden commands. I'm doing this, cuz... idk...
-
-/config now exists.
-
-A lot of changes have been made, and at this point im barely writing all of them. 
-
-/plist is completely done! I'm happy with it!
-
-Changed a lot of commands' descriptions, to just sound better.
-
-/plist is going amazing. The only thing left - to make all those buttons in /plist show usable.
-
-The output of userdata.json actually looks so damn good now. Wow. I just misunderstood the `space` argument previously.lol.
-
-FINALLY WORKING ON /plist ! Going good so far, thousand times better than it was before.
-
-/stop has been renamed to /clear. lmfao.
-
-/remove - a few changes. Now without any arguments, deletes the last song from the queue. Makes more sense like that tbh.
-
-/con4 - fixed a really dumb oversight, new game confirmation, a few aesthetic and code changes.
-
-NOW I FINALLY DONE DID IT! The bot now checks client.stats on missing values and adds them if needed. THIS IS DONE SO I DONT HAVE TO PUT A MILLION BAJILLION CHECKS in other parts of code. Also it does the same on guildMemberAdd event.
-
-The to-be-completely-honest-kind-of-intrusive-and-annoying message from the bot whenever you level up now deletes itself after several seconds, giving you enough time to read it.
-
-/lyrics now can also show lyrics of a specified song. Also minor changes.
-
-Minor /help improvements. Slight changes to the roll command.
-
-/clear has been renamed to /stop.
-
-/play and /plnow now first say wtf they're doing and then if successfully find a video, show it in an embed. This was done cause reply time was on average ~4 seconds and if it was higher than 5 seconds, using it in slash interface would say "Application is not responding" or some bs like that.
-
-The bot now logs when it gets kicked from a vc. This is done so it clears up the queue and player.vc.
+here are some details:
+`index.js` - optimised some stuff here and there, made some parts more readable. 
+`shutdown` command is now a hidden command.
+`plnow` now properly adds playlists and albums to the queue. `plnow`, `play` now properly calculate and display timestamps.
+`queue` and `plist` show entire queue/playlist summed up timestamp. `plist` added a button to save others' playlists to your own.
+`queue` now "compresses" the embed if it has more than 15 songs in the queue, and shows only the first 8 songs and last 3 songs. This is done so 
+that if you use `remove` command you can actually see what you're removing, and not just blindly guess.
+`say` now only works for me and special user 1 on correction fluid and only for server owners on other servers. 
+`loop` now notifies if nothing is currently playing.
+`ytmp3` is now even more appealing to the eye!!!! fixed spotify download bug in ytmp3 too
+`lyrics` now uses embeds. still terrible at detecting song titles (it should be a little better), though.
+when voice.pf encounters an error it should give a better explanation than previously of _why_ did the error occur.
+you can now add a `config` option to show "now playing" message. fixed an ancient bug that would clog up the console with "now playing - song"
+mostly aesthetic changes thrown in everywhere. few minor changes thrown in everywhere. nothing major. just polishes of existing commands.
+added a few stupid secret commands (adminpanel, bait, skullemoji, deleteserver). not like anyone's gonna find them either - so they are there for fun.
+added a debugMode option into config that isnt very useful tbh. whatever.
+installed a few packages that _should_ improve performance without me updating any code... not sure how, but if it works, it works; though adding too much packages is kinda scary. added a few more error "handlers" (all they do is just notify users xd) when getting metadata, piping and playing songs.
+removed bunch of useless packages. now using `ytsr` instead of `yt-search` for searching. soo this version should significantly boost performance; and it feels like it did in testing. fixed a few bugs and slightly redesigned the `play` and `plnow` commands.

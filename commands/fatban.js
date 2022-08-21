@@ -1,17 +1,18 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("fatban")
-    .setDescription("Кину в таймаут якогось дурника на або 5 хвилин, або 3 години. Потребує права мутити користувачів.")
-    .addMentionableOption(option => option.setName("жертва").setDescription("Людина, яку ви хочете кинути в таймаут.").setRequired(true)),
+    .setDescription("Кину в таймаут якусь нечему від 5 хвилин до 4 днів. Потребує права мутити користувачів.")
+    .addUserOption(option => option.setName("жертва").setDescription("Person, яку ви хочете кинути в таймаут.").setRequired(true)),
     aliases: ["фетбан", "timeout"],
     category: "модерація",
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         
         if(!message.member.permissions.has("MUTE_MEMBERS")) return await client.replyOrSend({content: "У вас немає прав на таку злочинність!"},message);
         
@@ -27,10 +28,21 @@ module.exports = {
         
         let fatbanneduser = message.guild.members.cache.get(args[0]);
 
-        let timeoutTime = Math.floor(Math.random() * 1000 * 60 * 60 * 3) + 2500;
-
         let reply = await client.replyOrSend({content: "Fatbanю..."}, message);
         if(message.type === "APPLICATION_COMMAND") { reply = await message.fetchReply(); }
+
+        //just some "funny" and "clever" responses to spice things up a lil bit
+        if(fatbanneduser.user.id == message.member.user.id) {
+            return await reply.edit({content: "Що ти блять робиш? Себе хотів забанити? 🤨"});
+        } else if(fatbanneduser.user.id == message.guild.ownerId) {
+            return await reply.edit({content: "Ти тіки що попробував кинути в таймаут власника серверу. Fucking genius. 🙄"});
+        } else if(fatbanneduser.user.id == config.clientId) {
+            return await reply.edit({content: "..? 🤨 я тебе за таке в таймаут зараз кину"});
+        } else if(fatbanneduser.permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR)) {
+            return await reply.edit({content: "......ти тіки що спробував забанити адміна серверу. genius. 🙄"});
+        }
+
+        let timeoutTime = Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 7) + 2500;
 
         let successfulBan = true;
         await fatbanneduser.timeout(timeoutTime, "Кинув в таймаут бо модератори вирішили що ви дурник.").catch( async () => {

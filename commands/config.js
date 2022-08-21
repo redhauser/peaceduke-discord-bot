@@ -2,17 +2,18 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("config")
     .setDescription("Настройте конфігурацію бота на цьому сервері. Тільки для власника серверу."),
-    aliases: ["конфіг","settings","налаштування","конфігурація","configuration"],
+    aliases: ["конфіг","settings","налаштування","конфігурація","configuration", "cfg", "кфг", "кнфг", "cnfg"],
     category: "модерація",
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
 
         if(message.member.user.id !== message.guild.ownerId) {
             return await client.replyOrSend({content: "Вибачте, але ця команда тільки для власника серверу!", ephemeral: true}, message);
@@ -64,6 +65,11 @@ module.exports = {
                     value: "роль учасника",
                 },
                 {
+                    label: "\"Зараз грає\" повідомлення",
+                    description: "При зміні пісні, бот напише яка пісня тепер грає",
+                    value: "зараз грає",
+                },
+                {
                     label: "Секретний голосовий канал",
                     description: "У секретний голосовий можна попасти тільки з паролем",
                     value: "секретний гс канал",
@@ -102,6 +108,7 @@ module.exports = {
 
         const configMessageCollector = await message.channel.createMessageCollector({messageFilter, time:5*60*1000});
         configMessageCollector.on("collect", async (msg) => {
+            if(msg.member?.user?.id !== message.guild?.ownerId) return;
             if(getMessage && msg.member.user.id != config.clientId) {
                 let msgc = msg.content;
                 if(propertyToChange == "префікс бота") {
@@ -250,8 +257,8 @@ module.exports = {
                     } else {
                         config.guilds[guildData.guildId].secretVcChannel = extractedChannel.id;
                         if(!guildData.secretVcPassPhrase) {
-                            config.guilds[guildData.guildId].secretVcPassPhrase = "пароль";
-                            await message.channel.send({content: "Не забудьте добавити пароль для секретного гс!"});
+                            config.guilds[guildData.guildId].secretVcPassPhrase = Math.floor(Math.random()*999999).toString("16").toUpperCase();
+                            //await message.channel.send({content: "Не забудьте добавити пароль для секретного гс!"});
                         }
                         guildData = config.guilds[guildData.guildId];
                     }
@@ -278,7 +285,7 @@ module.exports = {
                     configActionRow.components[0].style = "DANGER";
                 }
 
-                await reply.edit({content: " ", embeds: [await generateConfigEmbed(false, "**Вдало оновив конфігурацію!**\n\n")], components: [configSelectMenuActionRow, configActionRow]});
+                await reply.edit({content: " ", embeds: [await generateConfigEmbed(false, ((propertyToChange=="секретний гс канал" && guildData.secretVcChannel) ? "**Не забудьте змінити секретний пароль!**\n\n" : "**Вдало оновив конфігурацію!**\n\n"))], components: [configSelectMenuActionRow, configActionRow]});
 
                 await msg.delete();
 
@@ -340,24 +347,33 @@ module.exports = {
                     } else {
                        await message.channel.send({content: "Неможу " + (guildData.slashCommands ? " видалити" : " добавити") + " слеш команди, бо немаю доступу!\nБудь ласка, добавте мене на сервер з **scope: application.commands**!"})
                     }
+                } else if(propertyToChange == "зараз грає") {
+                    guildData.nowPlayingUpdate = !guildData.nowPlayingUpdate;
+                    guildData = config.guilds[guildData.guildId];
+
+                    return await reply.edit({embeds: [await generateConfigEmbed(false, false)], components: [configSelectMenuActionRow, configActionRow]});
                 } else {
 
-                // Property specific tips
-                let selectingValueDescription = "Відправте повідомлення, з новим значенням, для **" + propertyToChange + "**...\n";
-                if(propertyToChange == "бот-чат" || propertyToChange == "секретний гс канал") {
-                    selectingValueDescription+="(_Введіть назву, ID або #згадування чату._)\n";
+                // Property specific descriptions
+                let selectingValueDescription = "";
+                //selectingValueDescription = "Відправте повідомлення, з новим значенням, для **" + propertyToChange + "**...\n";
+                if(propertyToChange == "бот-чат") {
+                    selectingValueDescription = "Введіть назву/ID/#згадування чату, якого ви хочете зробити бот-чатом.\n_Якщо ви не хочете мати бот-чат на сервері, напишіть `false`, або `ні`, або `-`._\n";
                 }
-                if(propertyToChange == "DJ роль" || propertyToChange == "роль учасника") {
-                    selectingValueDescription+="(_Введіть назву, ID або @згадування ролі._)\n";
+                if(propertyToChange == "секретний гс канал") {
+                    selectingValueDescription = "Введіть назву/ID/#згадування голосового каналу, якого ви хочете зробити секретним голосовоим.\n_Якщо ви не хочете мати секретний голосовий на сервері, напишіть `false`, або `ні`, або `-`._\n_Щоби попасти до секретного голосового, використайте команду `" + (message.type==="APPLICATION_COMMAND" ? "/" : config.guilds[message.guildId].botPrefix) + "secret`, і потім відправте повідомлення з секретним паролем._";
+                }
+                if(propertyToChange == "DJ роль") {
+                    selectingValueDescription = "Введіть назву/ID/@згадування ролі, яку ви хочете зробити DJ роллю.\n_Якщо ви не хочете мати DJ роль на сервері, напишіть `false`, або `ні`, або `-`._\n";
+                }
+                if(propertyToChange == "роль учасника") {
+                    selectingValueDescription = "Введіть назву/ID/@згадування ролі, яку ви хочете зробити роллю учасника серверу.\n_Якщо ви не хочете мати роль учасника серверу на сервері, напишіть `false`, або `ні`, або `-`._\n";
                 }
                 if(propertyToChange == "префікс бота") {
-                    selectingValueDescription+="(_Введіть новий префікс бота: наприклад `!`,`.`,`-`, тощо._)\n";
+                    selectingValueDescription = "Введіть новий префікс бота: наприклад `!`,`.`,`-`, тощо.\n_Префікс бота - це символ(и), який використовується для позначення команди бота, наприклад: `=help`, `=play`, `=queue`, тощо._";
                 }
                 if(propertyToChange == "секретний гс пароль") {
-                    selectingValueDescription+="(_Введіть пароль для секретного голосового каналу._)\n";
-                }
-                if(propertyToChange != "префікс бота" && propertyToChange != "секретний гс пароль") {
-                    selectingValueDescription+="(_Напишіть false, або -, або ні, щоби виключити цю опцію._)";
+                    selectingValueDescription = "Введіть пароль для секретного голосового каналу!\n_Щоби попасти до секретного голосового, використайте команду `" + (message.type==="APPLICATION_COMMAND" ? "/" : config.guilds[message.guildId].botPrefix) + "secret`, і потім відправте повідомлення з цим паролем._";
                 }
                 let selectingValueEmbed = new Discord.MessageEmbed()
                 .setTitle("Конфігурація бота!")
@@ -420,8 +436,9 @@ module.exports = {
             content+="Бот-чат: " + (guildData.botChannel ? builders.channelMention(guildData.botChannel) : "❌") + "\n";
             content+="DJ роль: " + (guildData.djRole ? builders.roleMention(guildData.djRole) : "❌") + "\n";
             content+="Роль учасника серверу: " + (guildData.memberRole ? builders.roleMention(guildData.memberRole) : "❌") + "\n";
+            content+="\"Зараз грає\" повідомлення: " + (guildData.nowPlayingUpdate ? "✅" : "❌") + "\n";
             content+="Секретний голосовий: " + (guildData.secretVcChannel ? (builders.channelMention(guildData.secretVcChannel) + "\nСекретний голосовий пароль: " + builders.spoiler(guildData.secretVcPassPhrase)) : "❌") + "\n"; 
-            content+="Роль-трекери: " + (guildData.roleTrackers.length ? (" на цьому сервері є **" + guildData.roleTrackers.length + "** роль-трекерів.") : "❌");
+            content+="Роль-трекери: " + (guildData.roleTrackers.length ? (" на цьому сервері є **" + guildData.roleTrackers.length + "** " + (guildData.roleTrackers.length > 1 ? "роль-трекерів" : "роль-трекер")) : "❌");
     
             let embedConfig = new Discord.MessageEmbed()
             .setTitle("Конфігурація бота!")

@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("loop")
-    .setDescription("Вмикає/вимикає повторення поточної пісні або повторення всієї черги.")
+    .setDescription("Вмикає/вимикає повторення пісні або повторення всієї черги.")
 	.addStringOption(option =>
 		option.setName("type")
 			.setDescription("Тип повторення, який ви б хотіли поставити.")
@@ -16,7 +17,11 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: true,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
+
+        let embed = new Discord.MessageEmbed().setColor("#55bffc");
+
+        if(!voice.queue.length) return await client.replyOrSend({embeds: [embed.setColor("#fc2557").setDescription("🔄❌ Зараз нічого не грає.")], ephemeral: true}, message);
 
         if(message.type === "APPLICATION_COMMAND") {
             args = [message.options.get("type")?.value];
@@ -38,8 +43,6 @@ module.exports = {
                     break;
             }
         }
-
-        let embed = new Discord.MessageEmbed().setColor("#55bffc");
 
         //This is not amazing, either.
         if(args[0] == "on" || args[0] == "вкл" || args[0] == "включити" || args[0] == "вмк" || args[0] == "ввімкнути") {

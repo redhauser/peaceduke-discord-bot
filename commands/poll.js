@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("poll")
-    .setDescription("Дозволяє провести опитування!")
+    .setDescription("Проведіть опитування!")
     .addStringOption(option => option.setName("питання").setDescription("Питання, на яке ви хочете щоби користувачі проголосували.").setRequired(true))
     .addStringOption(option => option.setName("варіант1").setDescription("1 варіант відповіді до вашого питання.").setRequired(false))
     .addStringOption(option => option.setName("варіант2").setDescription("2 варіант відповіді до вашого питання.").setRequired(false))
@@ -20,7 +21,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(message.type !== "APPLICATION_COMMAND") {
         if(args.length<1) return await client.replyOrSend("Недостатньо даних для початку опитування!",message);
 
@@ -42,9 +43,9 @@ module.exports = {
         let desc = "**" + args[0] + "**";
         desc+="\n\n\n";
         const embedMessage = new Discord.MessageEmbed()
-        .setColor( "#"+ (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)) + (Math.ceil(Math.random()*255).toString(16)))
+        .setColor((await message.member.user.fetch()).hexAccentColor)
         .setTitle("Опитування від " + message.member.displayName)
-        .setAuthor({name: message.member.user.tag, iconURL: message.member.displayAvatarURL()})
+        .setAuthor({name: message.member.user.tag, iconURL: await message.member.displayAvatarURL()})
         .setURL("https://youtu.be/dQw4w9WgXcQ");
 
         if (args.length > 1) {

@@ -1,38 +1,54 @@
 const { SlashCommandBuilder} = require("@discordjs/builders");
-const ytSearch = require("yt-search");
+const ytsr = require("ytsr");
 const ytdl = require("ytdl-core");
 const voiceAPI = require("@discordjs/voice");
 const ytpl = require("ytpl");
 const spotifyAPI = require("spotify-web-api-node");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("plnow")
-    .setDescription("Зміщує чергу і грає пісню зразу ж.")
-    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в YT/посилання на YT пісню/Spotify посилання").setRequired(true)),
-    aliases: ["pn", "pl", "playnow", "плейнов", "плейнау", "пн", "pnow", "++"],
+    .setDescription("Грає пісню вже, змістивши чергу.")
+    .addStringOption(option => option.setName("пісня").setDescription("Може бути ключовими слова для пошуку в YT або посилання на YT пісню/Spotify трек/альбом/плейлист").setRequired(true)),
+    aliases: [
+        "pn", "pl", "playnow", 
+        "плейнов", "плейнау", "пн", 
+        "pnow", "++", "гз", 
+        "грайзараз", "грайвже", "зіграйвже",
+        "зіграйзараз"
+    ],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: true,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
 
        let vc = message.member.voice.channel;
        let callbackEmbed = new Discord.MessageEmbed().setColor("#FF0000");
 
-        if(!vc) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
         if(!args) args = [message.options.get("пісня").value];
-        if(!args.length) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Ви повинні вказати посилання/назву пісні!")], ephemeral: true},message);
+        if(!args.length) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("❌ Ви повинні вказати посилання/назву пісні!")], ephemeral: true},message);
         voice.vc = vc;
         voice.tc = message.channel;
         
         let reply;
 
         const videoFinder = async (query) => {
-            const videoResult = await ytSearch(query);
+            const ytsrResult = await ytsr(query, {safeSearch: false, limit: 1, pages: 1});
+            
+            if(ytsrResult.items.length >= 1) {
+                let result =  ytsrResult.items[0];
+                result.timestamp = generateTimestampFromLength(getLengthFromTimestamp(result.duration));
+                result.image = result.bestThumbnail.url;
+                result.thumbnail = result.bestThumbnail.url;
+                result.sender = message.member.user.tag;
 
-            return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
+                return result;
+            }
+            return null;
         }
 
         let isItAnURL = ytdl.validateURL(args[0]) || ytpl.validateID(args[0]);
@@ -61,43 +77,31 @@ module.exports = {
                     } catch (err) {
                         video = null;
                         console.log("[" + message.guild.name + "] Сталася помилка при ytd.getBasicInfo() у команді plnow з посиланням " + args[0] + ". Помилка: ", err);
-                        return reply.edit({content: " ", embeds: [callbackEmbed.setDescription("⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+.")]});
+                        return reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("⚠️ Вибачте! Відбулася помилка при перевірці вашого посилання! Це може бути через те, що відео позначено на ютубі як 18+.")]});
                     }
                     video.image = video.thumbnails[video.thumbnails.length-1].url;
-                    video.timestamp = Math.floor(video.lengthSeconds/60) + ":" + (video.lengthSeconds%60<10 ? ("0" + video.lengthSeconds%60) : video.lengthSeconds%60);
+                    video.timestamp = generateTimestampFromLength(video.lengthSeconds);
                 }
                 if(plid) {
                 playlist = (await ytpl(plid, {limit: Infinity}));
                 video = playlist.items[0];
                 video.image = playlist.items[0].bestThumbnail.url;
-                video.timestamp = Math.floor(playlist.items[0].durationSec/60) + ":" + (playlist.items[0].durationSec%60<10 ? ("0" + playlist.items[0].durationSec%60) : playlist.items[0].durationSec%60);
+                video.timestamp = generateTimestampFromLength(playlist.items[0].durationSec);
+                let tempQueue = [];
                 for(let i = 0; i<playlist.items.length;i++) {
                     playlist.items[i].image = playlist.items[i].bestThumbnail.url;
-                    playlist.items[i].timestamp = Math.floor(playlist.items[i].durationSec/60) + ":" + (playlist.items[i].durationSec%60<10 ? ("0" + playlist.items[i].durationSec%60) : playlist.items[i].durationSec%60);;
-                    //Checks if the timestamp is more than an hour long, and formats it accordingly.
-                    if(playlist.items[i].timestamp.indexOf(":") > 2) {
-                        let newTimestamp = "";
-                        newTimestamp += Math.floor((+(playlist.items[i].timestamp.slice(0, 3)/60)));
-                        newTimestamp += ":";
-                        let seconddigits = +(playlist.items[i].timestamp.slice(0,3)%60)
-                        if(seconddigits < 10) {
-                            seconddigits = "0" + seconddigits.toString();
-                        }
-                        newTimestamp += seconddigits;
-                        newTimestamp += ":";
-                        newTimestamp += playlist.items[i].timestamp.slice(4);
-                        playlist.items[i].timestamp = newTimestamp;
-                    }
+                    playlist.items[i].timestamp = generateTimestampFromLength(playlist.items[i].durationSec);
                     playlist.items[i].url = playlist.items[i].shortUrl;
-                    playlist.items[i].interaction = message;
+                    //playlist.items[i].interaction = message;
                     playlist.items[i].sender = message.member.user.tag;
-                    voice.queue.unshift(playlist.items[i]);
+                    tempQueue.push(playlist.items[i]);
                 }
+                voice.queue = tempQueue.concat(voice.queue);
             }
         } else if(args[0].startsWith("https://open.spotify.com/")) {
             isSpotifyLink = true;
 
-            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Аналізую ваше Spotify посилання...")]}, message);
+            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription(`Аналізую ваше ${client.botEmojis.spotify} Spotify посилання...`)]}, message);
 
             if(message.type == "APPLICATION_COMMAND") {
                 reply = await message.fetchReply();
@@ -116,7 +120,7 @@ module.exports = {
             if(args[0].startsWith("https://open.spotify.com/track/")) {
                 //Detect and fetch a Spotify Track.
                 isSpotifyLink="трек"
-                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** трек... Шукаю його ютуб альтернативу...")]});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription(`Виявив, що це ${client.botEmojis.spotify} **Spotify** трек... Шукаю його ${client.botEmojis.youtube} YT альтернативу...`)]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -133,7 +137,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/album/")) {
                 //Detect and fetch a Spotify Album
                 isSpotifyLink="альбом"
-                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** альбом... Генерую чергу... Це може зайняти пару хвилин...")]});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription(`Виявив, що це ${client.botEmojis.spotify} **Spotify** альбом... Генерую чергу... Це може зайняти пару хвилин...`)]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(31, (args[0].indexOf("?"))));
@@ -152,7 +156,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/artist/")) {
                 //Detect and fetch a Spotify artist's newest album
                 isSpotifyLink="найновіший альбом автора";
-                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** автор... Шукаю їхній найновіший альбом... Генерую чергу... Це може зайняти пару хвилин...")]});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription(`Виявив, що це ${client.botEmojis.spotify} **Spotify** автор... Шукаю їхній найновіший альбом... Генерую чергу... Це може зайняти пару хвилин...`)]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(32, (args[0].indexOf("?"))));
@@ -172,7 +176,7 @@ module.exports = {
             } else if(args[0].startsWith("https://open.spotify.com/playlist/")) {
                 //Detect and fetch a user-created Spotify playlist
                 isSpotifyLink="плейлист"
-                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Виявив, що це **Spotify** плейлист... Генерую чергу... Це може зайняти пару хвилин...")]});
+                reply.edit({content: " ", embeds: [callbackEmbed.setDescription(`Виявив, що це ${client.botEmojis.spotify} **Spotify** плейлист... Генерую чергу... Це може зайняти пару хвилин...`)]});
 
                 if(args[0].indexOf("?") !== "-1") {
                     idOfLink = (args[0].slice(34, (args[0].indexOf("?"))));
@@ -190,19 +194,22 @@ module.exports = {
                 spotifyPlaylistName = spotiPlaylist.owner.display_name + " - " + spotiPlaylist.name;
                 
             } else {
-                reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Вибачте, але **Spotify** посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком, ні автором!")]});
-                return console.log("[" + message.guild.name + "] Вказане Spotify посилання не спрацювало - " + args[0]);
+                reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription(`❌ Вибачте, але ${client.botEmojis.spotify} **Spotify** посилання яке ви вказали не є ні плейлистом, ні альбомом, ні треком, ні автором!`)]});
+                return console.log("[" + message.guild.name + "] Spotify посилання не вдалося перевірити.");
             }
             spotifyLinkToLinkBack = args[0];
             
+            let songs = []
             for(let i = 0; i < trackNames.length; i++) {
                 if(!i) {
                     video = await videoFinder(artists[0] + " - " + trackNames[0]);
                 }
 
                 let song = await videoFinder(artists[i] + " - " + trackNames[i]);
-                voice.queue.unshift(song);
+                song.sender = message.member.user.tag;
+                songs.push(song);
             }
+            voice.queue = songs.concat(voice.queue);
 
         } else {
             reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Шукаю ваше відео...")]}, message);
@@ -215,7 +222,7 @@ module.exports = {
         }
 
         } catch(err) {
-            return await reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Сталася помилка при перевірці вашого посилання :(")], components: []}, message);
+            return await reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("Сталася помилка при перевірці вашого посилання :(")], components: []}, message);
         }
 
         if(video) {
@@ -227,7 +234,7 @@ module.exports = {
         //Why did this check exist..?
         //if(!urltovid) return await client.replyOrSend({content: "Сталась надзвичайна помилка. Якщо ви бачете цю помилку, повідомте редхаузеру!"},message);
         video.sender = message.member.user.tag;
-        video.interaction = message;
+        //video.interaction = message;
         let connection = await voiceAPI.joinVoiceChannel({
             channelId: vc.id,
             guildId: vc.guild.id,
@@ -236,26 +243,25 @@ module.exports = {
         connection.subscribe(voice.player);
         let embedLink = new Discord.MessageEmbed()
         .setColor("#FF0000")
-        .setTitle((!plid) ? ("Зараз грає: " + video.title) : ("Зараз грає плейліст: " + playlist.title))
+        .setTitle(plid ? "Зараз грає плейлист: " : (isSpotifyLink ? ("Зараз грає " + isSpotifyLink + ":") : "Зараз грає: "))
         .setAuthor({name: message.member.user.tag, iconURL: message.member.displayAvatarURL()})
         .setURL(video.url)
         .setImage(video.image);
-        //.setDescription("Граю " + (plid ? (builders.hyperlink(`**_плейлист ${playlist.title}_**`,args[0])) : (" " + builders.hyperlink(`**_${video.title}_**`, video.url) + ` **[${video.timestamp}]**`)) + (!isItAnURL ? (" за замовленням `" + args.join(" ") + "`") : (" за посиланням ")) + " від **" + message.member.displayName + "**!");
-        
-                
+                   
         if(plid && isItAnURL) {
-            embedLink.setDescription("Граю " + (builders.hyperlink(`**_плейлист ${playlist.title}_**`,args[0])) + " за посиланням від **" + message.member.displayName + "**!"); 
+            embedLink.setDescription("Граю " + (builders.hyperlink(`**_плейлист ${playlist.title}_**`,args[0])) + " \nза замовленим посиланням!"); 
         } else if(isItAnURL) {
-            embedLink.setDescription("Граю " + (builders.hyperlink(`**_${video.title}_**`, video.url) + ` **[${video.timestamp}]**`) + " за посиланням від **" + message.member.displayName + "**!"); 
+            embedLink.setDescription("Граю " + (builders.hyperlink(`**_${video.title}_**`, video.url) + ` **[${video.timestamp}]**`) + " \nза замовленим посиланням!"); 
         } else if(isSpotifyLink){
-            embedLink.setDescription("Граю " + "**Spotify** " + isSpotifyLink + " " + (!spotifyPlaylistName ? (builders.hyperlink(`**_${spotifyTrackName}_**`, spotifyLinkToLinkBack) + ` **[${video.timestamp}]**`) : ("**" + builders.hyperlink(spotifyPlaylistName, spotifyLinkToLinkBack) + "**")) + " за посиланням від **" + message.member.displayName + "**!"); 
+            embedLink.setDescription("Граю " + `${client.botEmojis.spotify} **Spotify** ` + isSpotifyLink + " " + (!spotifyPlaylistName ? (builders.hyperlink(`**_${spotifyTrackName}_**`, spotifyLinkToLinkBack) + ` **[${video.timestamp}]**`) : ("**" + builders.hyperlink(spotifyPlaylistName, spotifyLinkToLinkBack) + "**")) + " \nза замовленим посиланням!"); 
         } else {
-            embedLink.setDescription("Граю " + (builders.hyperlink(`**_${video.title}_**`, video.url) + ` **[${video.timestamp}]**`) + (" за замовленням `" + args.join(" ") + "`") +  "від **" + message.member.displayName + "**!");
+            embedLink.setDescription("Граю " + (builders.hyperlink(`**_${video.title}_**`, video.url) + ` **[${video.timestamp}]**`) + (" \nза замовленням `" + args.join(" ") + "`") +  "!");
         }
         
         if(message.guild.id == config.correctionFluidId) {
             embedLink.setFooter({text: "Цей музичний бот заспонсорований сервером Correction Fluid", iconURL: "https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png"});
         }
+        
         await reply.edit({content: " ",embeds: [embedLink]});
         if(!plid && !isSpotifyLink) {
         voice.queue.unshift(video);
@@ -267,7 +273,36 @@ module.exports = {
             if(message.type == "APPLICATION_COMMAND") {
                 reply = await message.fetchReply();
             }
-            reply.edit({content: " ", embeds: [callbackEmbed.setDescription("Не зміг знайти вказане відео :(")], ephemeral: true});
+            reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("Не зміг знайти вказане відео :(")], ephemeral: true});
+        }
+
+        function generateTimestampFromLength(seconds) {
+            seconds = +seconds;
+            
+            outputTimestamp = "";
+            if(seconds > 60*60) {
+                outputTimestamp += (seconds/60/60<10) ? ("0" + Math.floor(seconds/60/60)) : Math.floor(seconds/60/60);
+                outputTimestamp += ":";
+            }
+            outputTimestamp += (seconds/60%60<10) ? ("0" + Math.floor(seconds/60%60)) : Math.floor(seconds/60%60);
+            outputTimestamp += ":";
+            outputTimestamp += (seconds%60<10) ? ("0" + seconds%60) : seconds%60;
+
+            return outputTimestamp;
+        }
+
+        function getLengthFromTimestamp(timestamp) {
+            let outputSeconds = 0;
+            if(timestamp.lastIndexOf(":") != timestamp.indexOf(":")) {
+                outputSeconds += +(timestamp.slice(0, timestamp.indexOf(":"))) * 60 * 60;
+                timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+            }
+            
+            outputSeconds += +(timestamp.slice(0, timestamp.lastIndexOf(":"))) * 60;
+            timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+
+            outputSeconds += +timestamp;
+            return +outputSeconds;
         }
     }
 }

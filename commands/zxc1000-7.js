@@ -9,7 +9,7 @@ module.exports = {
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(message.member.id !== config.specialuser3ID) return await client.replyOrSend({content: "Цю команду можна використовувати тільки о великому Niki Strike!", ephemeral: true},message);
         await client.replyOrSend({content:"1000-7"},message);
         for(let i = 993;i>0;i-=7) {

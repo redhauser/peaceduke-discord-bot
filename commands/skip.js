@@ -1,20 +1,21 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("skip")
-    .setDescription("Пропускає першу пісню з музичної черги або N-ну кількість пісень з початку черги.")
+    .setDescription("Пропускає першу пісню черги або N-ну кількість пісень з початку черги.")
     .addIntegerOption(option => option.setName("кількість").setDescription("Кількість пісень, яку ви хочете пропустити.").setRequired(false)),
-    aliases: ["скіп", "sk", "пропустити", "пропусти", "тупапісня", "gonext", "next", "некст", "ск"],
+    aliases: ["скіп", "sk", "пропустити", "пропусти", "тупапісня", "gonext", "next", "некст", "ск", "наст", "наступня", "наступню", "пропуск"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: true,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
 
         let embed = new Discord.MessageEmbed().setColor("#55bffc");
         
-        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("В черзі немає жодних пісень.")]},message);
+        if(!voice.queue.length) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("⏭️❌ В черзі немає жодних пісень.")]},message);
         
         args = args || [message?.options?.get("кількість")?.value];
 

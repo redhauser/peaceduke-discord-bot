@@ -1,4 +1,5 @@
 const { SlashCommandBuilder} = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
 
         args = args || [message?.options?.get("name")?.value];
         if(!args[0]) {
@@ -27,8 +28,9 @@ module.exports = {
             );
 
         let helpDesc = "";
-        helpDesc += "PeaceDuke - мультифункціональний Discord бот, який\nмає фічи DJ бота, модерації, мініігор, та інші функції.\nЯкщо є якісь проблеми - всі матюки до раді, офкорс!\n\n";
-        helpDesc += "Дізнайтеся більше про команди бота, перегорнувши на наступню сторінку!\n\n"
+        helpDesc += "Це простий посібник по командам PeaceDuke'а.\nЯкщо є якісь проблеми з ботом - всі матюки до раді, офкорс!\n";
+        if(message.member.user.id === message.guild.ownerId) helpDesc += "Використайте команду `config`, щоби зконфігурувати бота!\n";
+        helpDesc += "\nДізнайтеся більше про команди бота, перегорнувши на наступню сторінку!\n\n"
 
         helpDesc +=  "`" + config.guilds[message.guildId].botPrefix + "help`" + (config.guilds[message.guildId].slashCommands ? (" або `/help` ") : "") + " - покаже це повідомлення\n";
         helpDesc += "`" + config.guilds[message.guildId].botPrefix + "help назваКоманди`" + (config.guilds[message.guildId].slashCommands ? (" або `/help назваКоманди` ") : "") + " - покаже більше інформації про команду\n";
@@ -39,22 +41,22 @@ module.exports = {
         .setTitle("Допомога з командами, посібник")
         .setDescription(helpDesc);
         
-        let categories = ["музика", "ігри", "інформація", "розваги", "модерація"];
+        let categories = ["музика", "ігри", "розваги", "інформація", "модерація"];
         let categoriesShortDescription = [
             "Музичні команди дозволяють вам грати музику в голосовому каналі та контролювати музичну чергу!",
             "Команди-ігри дозволяють вам зіграти певну гру з другом, друзями або з самим собою!",
-            "Інформаційні команди показують інформацію про користувачів/бота/інше.",
             "Команди-розваги мають різний функціонал.",
+            "Інформаційні команди показують інформацію про користувачів/бота/інше.",
             "Модераційні команди полегшують модерацію серверу."
         ];
 
         /*
         КАТЕГОРІЇ:
                 музика
-                розваги
                 ігри
-                модерація
+                розваги
                 інформація
+                модерація
         */
 
         let musiccommands = [];
@@ -145,7 +147,7 @@ module.exports = {
             if(!givenCommand) return await client.replyOrSend("Не зміг знайти команду з назвою **" + args[0] + "**. Спробуйте ще раз!", message);
             let desc = "Інформація про команду:\n`" + (config.guilds[message.guildId].slashCommands ? "/" : config.guilds[message.guildId].botPrefix) + givenCommand.data.name + "` - **" + givenCommand.data.description + "**\n";
             desc += "Категорія: **" + givenCommand.category + "**.\n\n";
-            if(givenCommand.aliases) { desc+= "Інші назви цієї команди які можна використати у префікс (**" + config.guilds[message.guildId].botPrefix + "**) інтерфейсі:\n`" + givenCommand.aliases.join("`,`") + "`.\n";}
+            if(givenCommand.aliases) { desc+= "Інші назви цієї команди які можна використати у префікс (**" + config.guilds[message.guildId].botPrefix + "**) інтерфейсі: \n`" + givenCommand.aliases.join("`, `") + "`.\n";}
             if(givenCommand.hidden) { desc += "_Ця команда прихована/секретна._\n";}
             desc+="\n";
             if(givenCommand.data.options[0]) {

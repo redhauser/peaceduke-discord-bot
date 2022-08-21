@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,7 +10,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(message.type !== "APPLICATION_COMMAND") {
             //For now, this command will be the only one that can't be used via prefix interface. And, unless i redesign this command for the prefix interface, it probably will remain like this.
             return await message.channel.send({content: "Вибачте, але цю команду можна використовувати тільки через `/suggest` :("});

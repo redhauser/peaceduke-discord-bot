@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,27 +9,26 @@ module.exports = {
     aliases: ["абоут","botinfo", "faq", "пробота", "ебаут", "peaceduke", "aboutbot", "whyisbotsofuckingshit"],
     category: "інформація",
     hidden: false,
-    botChatExclusive: false,
+    botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         // special space character - "⠀"
         let about = new Discord.MessageEmbed()
         .setColor("#40e224")
         .setTitle("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Про PeaceDuke:")
-        .setDescription("⠀⠀⠀⠀**PeaceDuke** - мультифункціональний Discord бот\n" + 
-        "⠀⠀⠀у нього є функції DJ бота, модерації, мініігри, та інші.\n" + 
-        "⠀Якщо маєте ідею як покращити бота, зверніться до раді.\n" + 
-        `Використайте **${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}help**, щоби дізнатися про існуючі команди.\n` + 
-        (message.member.user.id === message.guild.ownerId ? `Використайте **${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}config** щоби змінити конфігурацію серверу.\n` : "") +
+        .setDescription("⠀⠀⠀⠀⠀⠀**PeaceDuke** - невеличкий Discord бот, який\n" + 
+        "вміє грати пісні, модерувати сервер, грати в міні-ігри, тощо.\n" + 
+        "⠀Якщо хочете покращити бота і маєте ідею як, скажіть раді.\n" + 
+        `\n⠀Використайте \`${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}help\`, щоби побачити команди бота.\n` + 
+        (message.member.user.id === message.guild.ownerId ? `⠀Використайте \`${((message.type==="APPLICATION_COMMAND") ? "/" : config.guilds[message.guildId].botPrefix)}config\`, щоби змінити конфігурацію бота.\n` : "") +
         //Bot version and some update bs
-        "\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Поточна версія бота - **" + client.botVersion + "**\n" +
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀_Головні нові фічи та зміни:_ \n" +
-        "⠀⠀⠀_Підтримка Spotify посилань у `play`, `plnow`, `ytmp3`._\n" +
-        "⠀⠀⠀⠀⠀_Нові команди: `plist`, `config`, `suggest`._\n" +
-        "⠀_Загальні покращення, оптимізація, кросс-сервер підтримка_\n" + 
-        "\n\n\n⠀⠀Перезапущений востаннє :" + builders.time((new Date(client.readyTimestamp))) +
+        "\n\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Версія бота - **" + client.botVersion + "**\n" +
+        "⠀⠀⠀⠀⠀⠀⠀Головні нові фічи та зміни цієї версії: \n" +
+        "⠀⠀⠀⠀⠀_Нові команди (які непрацюють): `mafia`, `rpg`._\n" +
+        "⠀⠀⠀⠀⠀⠀⠀_Невеличкі покращення, оптимізація._\n" + 
+        "\n\n⠀⠀Перезапущений востаннє :" + builders.time((new Date(client.readyTimestamp))) +
         "\n⠀⠀⠀⠀⠀⠀Розроблюється з: " + builders.time((new Date(client.user.createdTimestamp))) + 
-        "\n\n" + 
+        "\n" +
         "\n⠀⠀⠀⠀⠀⠀**⊙** " + builders.hyperlink("GitHub", "https://github.com/redhauser") + " **⊙** **redhauser#8140** **⊙** " + builders.hyperlink("osu!", "https://osu.ppy.sh/users/26200992") + " **⊙**");
 
         await client.replyOrSend({embeds: [about]}, message);

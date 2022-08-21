@@ -10,7 +10,7 @@ module.exports = {
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute (message, args, Discord, client, voice, config) {
+    async execute (message, args, client, voice, config) {
         args = args || [message?.options?.get("питання")?.value];
         if(!args[0]) return await client.replyOrSend({content: "Ви не задали жодного питання!", ephemeral: true},message);
         await client.replyOrSend({content: "Ви задали мені питання: \"**" + args.join(" ") + "**\"\nі я думаю, що " + (Math.round(Math.random()) ? "так." : "ні.")},message);

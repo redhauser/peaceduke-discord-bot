@@ -9,7 +9,7 @@ module.exports = {
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         
         if(message.member.id === config.specialuser1ID) {
             let user = message.guild.members.cache.get(config.specialuser2ID);

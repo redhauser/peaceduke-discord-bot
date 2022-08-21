@@ -9,7 +9,7 @@ module.exports = {
     hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         let epic = "./media/peaceduke.png";
         await client.replyOrSend({files: [{attachment: epic, name: "epic.png"}]}, message);
     }

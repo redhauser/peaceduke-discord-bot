@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,9 +9,9 @@ module.exports = {
     aliases: ["пінг", "живий", "ботчек", "botcheck", "botalive", "alive", "pulse", "пульс", "pong"],
     category: "інформація",
     hidden: false,
-    botChatExclusive: false,
+    botChatExclusive: true,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config){
+    async execute(message, args, client, voice, config){
 
         let pingEmbed = new Discord.MessageEmbed()
         .setDescription("Пінгую...")

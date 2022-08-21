@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const voiceAPI = require("@discordjs/voice");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,13 +11,14 @@ module.exports = {
     hidden: false,
     botChatExclusive: true,
     djRoleRequired: true,
-    async execute(message,args, Discord, client, voice, config) {
+    async execute(message,args, client, voice, config) {
         const vc = message.member.voice.channel;
 
         let embed = new Discord.MessageEmbed().setColor("#55bffc");
 
-        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
-        if(!(await client.voice.adapters.get(message.guild.id))) return await client.replyOrSend({content: " ", embeds: [embed.setDescription("↩️ ❌ Не був у голосовому каналі.")], ephemeral: true},message);
+        if(!message.guild.me.voice?.channelId) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("↩️❌ Не був у голосовому каналі.")], ephemeral: true},message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
+        
         voice.vc = false;
         voice.tc = message.channel;
 

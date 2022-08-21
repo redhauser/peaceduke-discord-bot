@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,7 +31,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(!message.member.id === message.guild.ownerId) return await client.replyOrSend({content: "Тільки власник серверу може використовувати цю команду!", ephemeral: true}, message);
 
         let roleIds = [];

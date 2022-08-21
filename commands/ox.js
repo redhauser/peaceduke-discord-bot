@@ -1,17 +1,53 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const builders = require("@discordjs/builders");
+const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("ox")
     .setDescription("Зіграй хрестики-нолики з другом!")
-    .addMentionableOption(option => option.setName("опонент").setDescription("Користувач, з яким ви хочете зіграти.")),
+    .addUserOption(option => option.setName("опонент").setDescription("Користувач, з яким ви хочете зіграти.")),
     aliases: ["tictactoe","tic-tac-toe","хрестикинолики","хрестики-нолики","xo","ох","хо"],
     category: "ігри",
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
+        let playerX = message.member;
+        let playerOid = message.mentions?.users?.firstKey() || message?.options?.get("опонент")?.value || "Немає";
+        if(playerOid === playerX.id) {
+            let oxDenyEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557")
+            .setDescription("Ви не можете грати з самим собою!");
+            return await client.replyOrSend({embeds: [oxDenyEmbed], ephemeral: true},message);
+        } else if(playerOid === config.clientId) {
+            let oxDenyEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557")
+            .setDescription("Ви не можете грати з піздюком!");
+            return await client.replyOrSend({embeds: [oxDenyEmbed], ephemeral: true},message);
+        }
+        let isRole = false;
+
+        await client.users.fetch(playerOid).catch( async () => {
+            isRole = true;
+        });
+
+        let playerO = message.guild.members.cache?.get(playerOid) || false;
+        if(isRole && playerOid !== "Немає") { 
+            let oxDenyEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557")
+            .setDescription("Дане згадування не є користувачем!");
+            return await client.replyOrSend({embeds: [oxDenyEmbed], ephemeral: true},message);
+            
+        }
+
+        if(playerO?.user?.bot) {
+            let oxDenyEmbed = new Discord.MessageEmbed()
+            .setColor("#fc2557")
+            .setDescription("Ви не можете грати з ботами!");
+            return await client.replyOrSend({embeds: [oxDenyEmbed], ephemeral: true},message);
+        }
+
         let rows = [];
         rows.push(new Discord.MessageActionRow()
         .addComponents(
@@ -58,44 +94,6 @@ module.exports = {
                 .setLabel('-')
                 .setStyle('SECONDARY'),
         ));
-        let playerX = message.member;
-        let playerOid = message.mentions?.users?.firstKey() || message?.options?.get("опонент")?.value || "Немає";
-        if(playerOid === playerX.id) {
-            let oxDenyEmbed = new Discord.MessageEmbed()
-            .setTitle("Хрестики нолики:")
-            .setColor("#1ed3fc")
-            .setDescription("Ви не можете грати з самим собою!");
-            return await client.replyOrSend({content: " ", embeds: [oxDenyEmbed]},message);
-        } else if(playerOid === config.clientId) {
-            let oxDenyEmbed = new Discord.MessageEmbed()
-            .setTitle("Хрестики нолики:")
-            .setColor("#1ed3fc")
-            .setDescription("Ви не можете грати з піздюком!");
-            return await client.replyOrSend({content: " ", embeds: [oxDenyEmbed]},message);
-        }
-        let isRole = false;
-
-        await client.users.fetch(playerOid).catch( async () => {
-            isRole = true;
-        });
-
-        let playerO = message.guild.members.cache?.get(playerOid) || false;
-        if(isRole && playerOid !== "Немає") { 
-            let oxDenyEmbed = new Discord.MessageEmbed()
-            .setTitle("Хрестики нолики:")
-            .setColor("#1ed3fc")
-            .setDescription("Дане згадування не є користувачем!");
-            return await client.replyOrSend({content: " ", embeds: [oxDenyEmbed]},message);
-            
-        }
-
-        if(playerO?.user?.bot) {
-            let oxDenyEmbed = new Discord.MessageEmbed()
-            .setTitle("Хрестики нолики:")
-            .setColor("#1ed3fc")
-            .setDescription("Ви не можете грати з ботами!");
-            return await client.replyOrSend({content: " ", embeds: [oxDenyEmbed]},message);
-        }
 
 
         let currentPlayer = "X";
@@ -119,7 +117,7 @@ module.exports = {
         if(playerO) {
             oxPlayEmbed.setDescription(builders.userMention(playerX.id) + " грає з " + builders.userMention(playerO.id) + " !");    
         } else {
-            oxPlayEmbed.setDescription(builders.userMention(playerX.id) + " грає!");
+            oxPlayEmbed.setDescription(builders.userMention(playerX.id) + " грає покищо сам!");
         }
 
         reply = await client.replyOrSend({content: " ", embeds: [oxPlayEmbed], components: [rows[0], rows[1], rows[2]]},message);  
@@ -191,7 +189,7 @@ module.exports = {
             if(playerO) {
                 oxUpdatePlayEmbed.setDescription(builders.userMention(playerX.id) + " грає з " + builders.userMention(playerO.id) + " !");    
             } else {
-                oxUpdatePlayEmbed.setDescription(builders.userMention(playerX.id) + " грає!");
+                oxUpdatePlayEmbed.setDescription(builders.userMention(playerX.id) + " грає покищо сам!");
             }
 
             currentPlayer = currentPlayer === "X" ? "O" : "X"; 

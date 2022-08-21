@@ -10,7 +10,7 @@ module.exports = {
     hidden: false,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
+    async execute(message, args, client, voice, config) {
         if(!message.member.permissions.has("MANAGE_MESSAGES")) return await client.replyOrSend({content: "Ви не маєте прав на використання цієї команди.", ephemeral: true}, message);
 
         args = [args[0] || message?.options?.get("число")?.value || 1];

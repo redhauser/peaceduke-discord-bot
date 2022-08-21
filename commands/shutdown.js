@@ -7,11 +7,11 @@ module.exports = {
     .setDescription("Скаже боту іти спатоньки... А точніше вирубить його нахуй. Тіки для раді."),
     aliases: ["вируби", "вирубись", "нахуйвирубись", "halt"],
     category: "модерація",
-    hidden: false,
+    hidden: true,
     botChatExclusive: false,
     djRoleRequired: false,
-    async execute(message, args, Discord, client, voice, config) {
-        if(!(message.member?.id === config.redhauserId)) { return await client.replyOrSend({content: "Нєа. Мене так просто не вирубиш."},message)};
+    async execute(message, args, client, voice, config) {
+        if(message.member.id !== config.redhauserId) { return await client.replyOrSend({content: "Навіть не пробуй. Мене так просто не позбудешся :)"},message)};
         
         await client.replyOrSend({content: "Прощавайте, людоньки!"},message);
         console.log("Виключаю всі системи, за ініціативою команди shutdown.");
