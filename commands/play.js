@@ -225,6 +225,7 @@ module.exports = {
         }
 
         } catch(err) {
+            console.log(`[${message.guild.name}] Сталася помилка при перевірці посилання. Помилка: ${err}`);
             return await reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("Сталася помилка при перевірці вашого посилання :(")], components: []}, message);
         }
 
