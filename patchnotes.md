@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.2` - a fucking tiny change again. added `ffmpeg` dependency.
+
 `1.5.1` - small grammar changes.
 
 ## 1.5 patch notes:
