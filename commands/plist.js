@@ -458,7 +458,7 @@ module.exports = {
                 newPlaylist.queueTimestamp = generateTimestampFromLength(queueTotalLength);
             }
 
-            let content = "Поставив у чергу " + (isMainUser ? "ваший плейлист" : ("плейлист " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_" + newPlaylist.queueTimestamp + "_]\n\n**┏(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n┃\n┃\n" : "\n┃\n");
+            let content = "Поставив у чергу " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_" + newPlaylist.queueTimestamp + "_]\n\n**┏(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n┃\n┃\n" : "\n┃\n");
             for(let i = 1;i<newPlaylist.queue.length;i++) {
                 content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
                 if(i==12) i=newPlaylist.queue.length;

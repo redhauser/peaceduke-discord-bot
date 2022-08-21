@@ -1,5 +1,9 @@
 # Patch notes (for self)
 
+## post 1.5 patch notes:
+
+`1.5.1` - small grammar changes.
+
 ## 1.5 patch notes:
 
 `1.5.0` - not a really grand update as the 1.4, but still, not a pushover. this update mostly is yet another polish of existing commands and features, with a lot of vanity and aesthetic changes, a few tweaks and optimizations. STILL DOESNT INCLUDE `mafia` LMAO NOR `rpg`... maybe i'll do them one day. i don't know.
