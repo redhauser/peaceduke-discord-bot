@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.3` - finally ytdl-core issue has been solved so playback errors should not occur. fixed a bug with `play` and `plnow`. added `reason` option for `lock` and `unlock` commands.
+
 `1.5.2` - a fucking tiny change again. added `ffmpeg` dependency.
 
 `1.5.1` - small grammar changes.

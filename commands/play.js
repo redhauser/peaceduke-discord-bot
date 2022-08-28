@@ -40,13 +40,18 @@ module.exports = {
             const ytsrResult = await ytsr(query, {safeSearch: false, limit: 1, pages: 1});
             
             if(ytsrResult.items.length >= 1) {
-                let result =  ytsrResult.items[0];
-                result.timestamp = generateTimestampFromLength(getLengthFromTimestamp(result.duration));
-                result.image = result.bestThumbnail.url;
-                result.thumbnail = result.bestThumbnail.url;
-                result.sender = message.member.user.tag;
+                for(let i = 0; i < ytsrResult.items.length; i++) {
+                    if(ytsrResult.items[i].type === "video") {
+                    let result =  ytsrResult.items[i];
+                    result.timestamp = generateTimestampFromLength(getLengthFromTimestamp(result.duration));
+                    result.image = result.bestThumbnail.url;
+                    result.thumbnail = result.bestThumbnail.url;
+                    result.sender = message.member.user.tag;
 
-                return result;
+                    return result;
+                    }
+                }
+                return null;
             }
             return null;
         }
@@ -215,13 +220,18 @@ module.exports = {
             voice.queue = voice.queue.concat(songs);
 
         } else {
-            reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Шукаю ваше відео...")]}, message);
+            try {
+                reply = await client.replyOrSend({content: " ", embeds: [callbackEmbed.setDescription("Шукаю ваше відео...")]}, message);
 
-            if(message.type === "APPLICATION_COMMAND") {
-                reply = await message.fetchReply();
+                if(message.type === "APPLICATION_COMMAND") {
+                    reply = await message.fetchReply();
+                }
+                
+                video = await videoFinder(args.join(" "));
+            } catch (err) {
+                console.log(`[${message.guild.name}] Сталася помилка при пошуці відео Помилка: ${err}`);
+                return await reply.edit({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("Сталася помилка при пошуці відео :(")], components: []}, message);
             }
-            
-            video = await videoFinder(args.join(" "));
         }
 
         } catch(err) {

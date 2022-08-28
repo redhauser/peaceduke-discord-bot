@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("fatban")
-    .setDescription("Кину в таймаут якусь нечему від 5 хвилин до 4 днів. Потребує права мутити користувачів.")
+    .setDescription("Кину нуба в таймаут від 5 хвилин до 4 днів. Потребує права мутити користувачів.")
     .addUserOption(option => option.setName("жертва").setDescription("Person, яку ви хочете кинути в таймаут.").setRequired(true)),
     aliases: ["фетбан", "timeout"],
     category: "модерація",

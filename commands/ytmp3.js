@@ -105,7 +105,7 @@ module.exports = {
         .toFormat("mp3")
         .on("end", async () => {
             try {
-                await daReply.edit({content: " ", embeds: [new Discord.MessageEmbed(previewSongEmbed).setDescription(`**Ось ваший MP3!**\n\n✅ 🔀 Вдало конвертував відео \n\"**${songdata.videoDetails.title}**\" **[${generateTimestampFromLength(songdata.videoDetails.lengthSeconds)}]**\nз каналу **${songdata.videoDetails.ownerChannelName}** у MP3 файл.`).setFooter({text: `Зконвертував пісню від ${message.member.user.tag}`, iconURL: await message.member.user.avatarURL()})], files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
+                await daReply.edit({content: " ", embeds: [new Discord.MessageEmbed(previewSongEmbed).setDescription(`**Ось ваший MP3!**\n\n✅ 🔀 Зконвертував відео \n\"**${songdata.videoDetails.title}**\" **[${generateTimestampFromLength(songdata.videoDetails.lengthSeconds)}]**\nз каналу **${songdata.videoDetails.ownerChannelName}** у MP3 файл.`).setFooter({text: `Зконвертував пісню від ${message.member.user.tag}`, iconURL: await message.member.user.avatarURL()})], files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
                 console.log("[" + message.guild.name + "] Вдало конвертував \"" + songdata.videoDetails.title +  "\" відео у mp3.");
             } catch (err) {
                 console.log("[" + message.guild.name + "] Відбулась помилка при конвертуванні в mp3:", err);

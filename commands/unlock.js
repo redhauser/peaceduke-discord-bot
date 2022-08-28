@@ -4,7 +4,8 @@ const Discord = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("unlock")
-    .setDescription("Розблоковує доступ до чату, якщо він був заблокований. Потребує права керування каналами."),
+    .setDescription("Розблоковує доступ до чату, якщо він був заблокований. Потребує права керування каналами.")
+    .addStringOption(opt=>opt.setName("причина").setDescription("Причина/Повідомлення чому чат розблокований.").setRequired(false)),
     aliases: ["анлок", "unlockchannel", "unblockchannel"],
     category: "модерація",
     hidden: false,
@@ -14,6 +15,13 @@ module.exports = {
         if(!message.member.permissions.has("MANAGE_CHANNELS")) return await client.replyOrSend({content: "Ви не маєте прав керування каналами."},message);
 
         let memberRole = (config.guilds[message.guildId].memberRole ? (await message.guild.roles.fetch(config.guilds[message.guildId].memberRole)) : message.channel.guild.roles.everyone);
+
+
+        if(message.type === "APPLICATION_COMMAND") {
+            args = [message?.options?.get("причина")?.value];
+        } else {
+            args[0] = args?.join(" ")?.trim();
+        }
 
         await message.channel.permissionOverwrites.edit(memberRole, {
             "SEND_MESSAGES": true,
@@ -28,7 +36,7 @@ module.exports = {
         
         let embed = new Discord.MessageEmbed()
         .setTitle("✅ Увага!")
-        .setDescription("Цей канал розблокований! Насолоджуйтесь.")
+        .setDescription("Цей канал розблокований" + (args[0] ? (":\n\n_" + args[0] + "_") : "! Насолоджуйтесь."))
         .setColor("#40e224");
 
         await client.replyOrSend({embeds: [embed]}, message);
