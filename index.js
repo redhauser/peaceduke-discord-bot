@@ -802,11 +802,11 @@ client.once("ready", async () => {
 client.on("guildMemberAdd", async (guildmember) => {
     client.updateClientStatsOfMember(guildmember);
 
-    console.log("Приєднався новий користувач " + guildmember.user.tag + " на сервер " + guildmember.guild.name + ", тому добавляю його у client.stats");
+    console.log("[" + guildmember.guild.name + "] Приєднався новий користувач (" + guildmember.user.tag + ") на сервер! Добавляю його у client.stats.");
 });
 
 client.on("guildCreate", async (guild) => {
-    console.log("Мене добавили на новий сервер - " + guild.name + " ! Добавляю сервер у client.stats і config.guilds...");
+    console.log("[" + guild.name + "] - новий для мене сервер! Добавляю сервер у client.stats і config.guilds...");
 
     config.guilds[guild.id] = {
         guildId: guild.id,
@@ -820,7 +820,7 @@ client.on("guildCreate", async (guild) => {
         roleTrackers: []
     };
 
-    console.log("Добавив сервер " + guild.name + " у config.guilds, добавляю його до client.stats...");
+    console.log("[" + guild.name + "] Добавив сервер у config.guilds, добавляю його до client.stats...");
 
     for (let i = 0; i < client.users.cache.size; i++) {
         let guildmember = client.users.cache.at(i);
@@ -828,11 +828,39 @@ client.on("guildCreate", async (guild) => {
         client.updateClientStatsOfMember(guildmember);
     }
 
-    console.log("Добавив сервер " + guild.name + " у client.stats!");
+    console.log("[" + guild.name + "] Добавив сервер у client.stats!");
 
     voice.createGuildVoiceObject(guild.id);
+    //new stuff
+    
+    let accessOnThisGuild = true;
 
-    console.log("Закінчив конфігурування ново-добавленого серверу " + guild.name + ".");
+    const { REST } = require("@discordjs/rest");
+    const { Routes } = require("discord-api-types/v9");
+    const rest = new REST({ version: "9" }).setToken(config.token);
+    try {
+        await rest.get(Routes.applicationGuildCommands(config.clientId, guild.id));
+    } catch (err) {
+        accessOnThisGuild = false;
+        console.log(err);
+    }
+
+    if (accessOnThisGuild) {
+        await rest.put(
+            Routes.applicationGuildCommands(config.clientId, guild.id),
+            { body: client.commandsForREST },
+        );
+
+        config.guilds[guild.id].slashCommands = true;
+        
+        console.log("[" + guild.name + "] Маю доступ до слеш (/) команд, тому добавляю їх на сервер.");
+
+    } else {
+        console.log("[" + guild.name + "] Немаю доступу до слеш (/) команд, тому нічого не чіпав.");
+    }
+
+    //end of new stuff
+    console.log("[" + guild.name + "] Закінчив конфігурування ново-добавленого серверу.");
 });
 
 client.once("shardReconnecting", () => {

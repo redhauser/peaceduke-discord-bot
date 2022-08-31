@@ -42,8 +42,10 @@ module.exports = {
             .setStyle("PRIMARY")
         );
 
-        let reply = await client.replyOrSend({embeds: [await generateEmbedQueue()], components: [actionRow]}, message);
-        
+        let reply = await client.replyOrSend({embeds: [await generateEmbedQueue()], components: [/*actionRow*/]}, message);
+        //the player buttons are never used, and they take up quite some space, so im hiding them.
+        return;
+
         let filter;
         
         if(message.type === "APPLICATION_COMMAND") {

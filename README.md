@@ -68,12 +68,24 @@ pm2 log
 If you want to see the entirety of output logs:
 
 ```sh
-cat ~/.pm2/logs/index-out.log
+less ~/.pm2/logs/index-out.log
 ```
 
 ```sh
-cat ~/.pm2/logs/index-error.log
+less ~/.pm2/logs/index-error.log
 ```
+
+Or, if you only want to see a certain amount of lines at the end of the logs. do this:
+
+```sh
+tail -n 30 ~/.pm2/logs/index-out.log
+```
+
+```sh
+tail -n 30 ~/.pm2/logs/index-error.log
+```
+
+Be sure to replace `30` with the amount of lines you want to see.
 
 ## Configuration files:
 

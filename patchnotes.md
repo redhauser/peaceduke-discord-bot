@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.4` - `about` has been renamed to `info`. Upon adding the bot to a server, if it has application.commands permission, it will automatically add slash commands to that server. Slight update of readme. `queue` no longer has player buttons.
+
 `1.5.3` - finally ytdl-core issue has been solved so playback errors should not occur. fixed a bug with `play` and `plnow`. added `reason` option for `lock` and `unlock` commands.
 
 `1.5.2` - a fucking tiny change again. added `ffmpeg` dependency.

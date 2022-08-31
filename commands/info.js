@@ -4,9 +4,9 @@ const Discord = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("about")
-    .setDescription("Дізнайтеся більше про бота... якщо вам з якоїсь радості це цікаво?!"),
-    aliases: ["абоут","botinfo", "faq", "пробота", "ебаут", "peaceduke", "aboutbot", "whyisbotsofuckingshit"],
+    .setName("info")
+    .setDescription("Дізнайтеся більше про бота... якщо вам з якоїсь радості це цікаво."),
+    aliases: ["about", "абоут","botinfo", "faq", "пробота", "ебаут", "peaceduke", "aboutbot", "whyisbotsofuckingshit", "botinformation", "інфо", "інформація"],
     category: "інформація",
     hidden: false,
     botChatExclusive: true,
@@ -24,8 +24,7 @@ module.exports = {
         //Bot version and some update bs
         "\n\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Версія бота - **" + client.botVersion + "**\n" +
         "⠀⠀⠀⠀⠀⠀⠀Головні нові фічи та зміни цієї версії: \n" +
-        "⠀⠀⠀⠀⠀_Нові команди (які непрацюють): `mafia`, `rpg`._\n" +
-        "⠀⠀⠀⠀⠀⠀⠀_Невеличкі покращення, оптимізація._\n" + 
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀_Невеличкі покращення._\n" + 
         "\n\n⠀⠀Перезапущений востаннє :" + builders.time((new Date(client.readyTimestamp))) +
         "\n⠀⠀⠀⠀⠀⠀Розроблюється з: " + builders.time((new Date(client.user.createdTimestamp))) + 
         "\n" +
