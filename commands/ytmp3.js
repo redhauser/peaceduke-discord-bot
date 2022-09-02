@@ -132,5 +132,19 @@ module.exports = {
 
             return outputTimestamp;
         }
+
+        function getLengthFromTimestamp(timestamp) {
+            let outputSeconds = 0;
+            if(timestamp.lastIndexOf(":") != timestamp.indexOf(":")) {
+                outputSeconds += +(timestamp.slice(0, timestamp.indexOf(":"))) * 60 * 60;
+                timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+            }
+            
+            outputSeconds += +(timestamp.slice(0, timestamp.lastIndexOf(":"))) * 60;
+            timestamp = timestamp.slice(timestamp.indexOf(":")+1);
+
+            outputSeconds += +timestamp;
+            return +outputSeconds;
+        }
     }
 }
