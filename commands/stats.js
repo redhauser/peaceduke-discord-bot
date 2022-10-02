@@ -58,12 +58,13 @@ module.exports = {
         statembed.setDescription(userDescription);
         statembed.addFields({name: "\u200B", value: "\u200B"},
                     {name:"🆔 Discord тег:", value:"`" + statuser.tag + "`", inline: true},
-                    {name: "#️⃣ Повідомлень:", value: client.stats[userid]?.guilds[message.guildId]?.messageCount?.toString() || "Дані відсутні.", inline: true});
+                    {name: "#️⃣ Повідомлень:", value: client?.stats[userid]?.guilds[message?.guildId]?.messageCount || "Дані відсутні.", inline: true});
         
         let status = "";
         let statusfrom = [];
-        if(statguilduser.presence?.status === "offline") {
+        if(statguilduser.presence?.status === "offline" || !statguilduser.presence?.status) {
             status += "Офлайн ▫️";
+            statusfrom = [""];
         } else {
             if(statguilduser.presence?.status === "online")  status += "Онлайн 🟢";
             else if(statguilduser.presence?.status === "idle") status += "АФК 🟡";
@@ -76,7 +77,7 @@ module.exports = {
                 if(statguilduser.presence?.clientStatus?.web) statusfrom.push("з веба");
             }
         }
-        statembed.addFields({name: "📡 Статус:", value: status + "\n" + statusfrom.join(", "), inline: true});
+        statembed.addFields({name: "📡 Статус:", value: status + "\n" + statusfrom?.join(", "), inline: true});
 
         statembed.addFields({name: "\u200B", value: "\u200B"},
                     {name: "🌟 Має аккаунт з: ", value: builders.time(statuser.createdAt), inline: true},

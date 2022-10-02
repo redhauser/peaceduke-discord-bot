@@ -89,7 +89,11 @@ module.exports = {
                     video.timestamp = generateTimestampFromLength(video.lengthSeconds);
                 }
                 if(plid) {
-                playlist = (await ytpl(plid, {limit: Infinity}));
+                    try {
+                        playlist = (await ytpl(plid, {limit: Infinity}));
+                    } catch (err) {
+                        return reply.edit({embeds: [callbackEmbed.setColor("#fc2557").setDescription("⚠️ Вибачте! Відбулася помилка при перевірці плейлиста.\nСкоріше всього, що цей плейлист приватний або більше не існує.")]});
+                    }
                 video = playlist.items[0];
                 video.image = playlist.items[0].bestThumbnail.url;
                 video.timestamp = generateTimestampFromLength(playlist.items[0].durationSec);

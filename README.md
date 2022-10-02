@@ -116,11 +116,9 @@ If you already have filled out files from bot's runtime, use them. If not, here 
 
 If _correctionFluidMainChannelId_ is set to null or false, the bot won't send out any random quotes to the server Correction Fluid.
 
-_debugMode_ should be set to false on releases, and only should be used for debugging.
+_debugMode_ allows for me, the developer of peaceduke, to ignore server-config's channel permissions. 
 
-_debugMode_ is an experimental property. It currently only affects a single* function of the bot, but might be expanded upon in the future.
-
-\* - that function as of right now is ignoring command requirements like having the appropriate DJ role and using the command in the dedicated bot chat.
+For example, i could use the `play` command in #general, even though the bot's server config specifies the bot channel to be #music.
 
 Every other value is **required** for the bot to work properly.
 
@@ -168,7 +166,6 @@ Still, if you would like to tinker with any of the values manually, here is this
 ```
 
 However, if you want to tinker with some of its contents, as an example, change the previously mentioned _messageCount_ values, here is its template: 
-**P.S** planning on changing userdata.json soon.
 
 ```json
 {

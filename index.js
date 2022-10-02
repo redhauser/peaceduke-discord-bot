@@ -68,7 +68,7 @@ voice.createGuildVoiceObject = async (gid) => {
 
                 try {
                 let vidinfo = await ytdl.getInfo(urltovid);
-                stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 1<<25});
+                stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 32768});
                 } catch (err) {
                     stream = false;
 
@@ -920,13 +920,13 @@ client.on("messageCreate", async message => {
             //.setColor("#" + (Math.ceil(Math.random() * 255).toString(16)) + (Math.ceil(Math.random() * 255).toString(16)) + (Math.ceil(Math.random() * 255).toString(16)))
             .setColor(((await message.member.user.fetch()).hexAccentColor))
             .setTitle(message.member.displayName + " досяг нового рівня!")
-            .setDescription(`🎉 **Вітаю, ${builders.userMention(message.member.id)}! Ти досяг ${client.getUserLvl(message.member.id, message.guildId)} рівня!\nВикористай \`${(config.guilds[message.guildId].slashCommands ? "/" : config.guilds[message.guildId].botPrefix)}stats\`, щоби дізнатися більше! 🎉**`);
+            .setDescription(`🎉 **Вітаю, ${builders.userMention(message.member.id)}! Ти досяг ${client.getUserLvl(message.member.id, message.guildId)} рівня!`);
         
         let reply = await message.channel.send({ embeds: [newEmbed] });
         
         setTimeout(async () => {
             await reply.delete();
-        }, 7000);
+        }, 3000);
     }
 
     client.updateUserMessageCount(message.member.id, message.guildId);

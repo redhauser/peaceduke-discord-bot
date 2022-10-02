@@ -1,6 +1,6 @@
 {
   "name": "peaceduke-discord-bot",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "PeaceDuke is a Discord bot that has powerful music features, and bunch of moderation and community features.",
   "keywords": [
     "discord",
@@ -45,7 +45,7 @@
     "spotify-web-api-node": "^5.0.2",
     "tweetnacl": "^1.0.3",
     "utf-8-validate": "^5.0.9",
-    "ytdl-core": ">=4.11.1",
+    "ytdl-core": ">=4.11.2",
     "ytpl": "^2.3.0",
     "ytsr": "^3.8.0",
     "zlib-sync": "^0.1.7"
