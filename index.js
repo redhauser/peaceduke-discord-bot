@@ -68,7 +68,7 @@ voice.createGuildVoiceObject = async (gid) => {
 
                 try {
                 let vidinfo = await ytdl.getInfo(urltovid);
-                stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 32768});
+                stream = ytdl.downloadFromInfo(vidinfo, {filter: "audioonly", quality:"lowestaudio", highWaterMark: 1<<25});
                 } catch (err) {
                     stream = false;
 

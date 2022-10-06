@@ -2,6 +2,10 @@
 
 ## post 1.5 patch notes:
 
+`1.5.8` revert change of downloadFromInfo
+
+`1.5.7` fix `stats` and `lyrics`
+
 `1.5.6` - checks for private/non-existant playlists in `play` and `plnow`. package.json ytdl-core's version updated to at least 4.11.2. a few changes to the `stats` command that should address a bug related to it. changed `highWatermark` option in `index.js` at `ytdl.downloadFromInfo`. should fix a bug `R: aborted`.
 not much else. and probably won't be much else for a while, unless i'm really, really bored. still! i like what became of this project. it's nice, and me and my friends use this bot a lot. so, i think it was worth making it.
 
