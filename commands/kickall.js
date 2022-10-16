@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("kickall")
     .setDescription("Кікає всіх з усіх голосових. (Funny troll potential)"),
-    aliases: ["кікол","kickeveryone","disconnectall"],
+    aliases: ["кікол","kickeveryone","disconnectall", "кікни", "кікнивсіх"],
     category: "модерація",
     hidden: false,
     botChatExclusive: true,

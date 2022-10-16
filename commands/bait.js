@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("bait")
     .setDescription("Ви повелися на байт."),
-    aliases: ["masterbait", "байт", "freemoney"],
+    aliases: ["masterbait", "байт", "freemoney","бейт","ізібайт","jebaited"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

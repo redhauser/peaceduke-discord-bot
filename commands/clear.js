@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("clear")
     .setDescription("Зупиняє музику і очищує музичну чергу."),
-    aliases: ["стоп", "очистити", "stop", "клір", "stopmusic", "клеар", "clear", "c", "с", "emptyqueue"],
+    aliases: ["стоп", "очистити", "stop", "клір", "stopmusic", "клеар", "clear", "c", "с", "emptyqueue", "зупини"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,

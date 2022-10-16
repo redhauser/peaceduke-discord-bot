@@ -12,7 +12,7 @@ module.exports = {
 			.addChoice("Повторення поточної пісні", "on")
 			.addChoice("Повторення всієї черги", "all")
 			.addChoice("Вимкнути повторення", "off")),
-    aliases: ["луп", "повтор", "повторення", "repeat", "replay"],
+    aliases: ["луп", "повтор", "повторення", "repeat", "replay", "залуп", "лоп", "лооп", "l00p"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,

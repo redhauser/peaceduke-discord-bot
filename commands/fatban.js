@@ -7,7 +7,7 @@ module.exports = {
     .setName("fatban")
     .setDescription("Кину нуба в таймаут від 5 хвилин до 4 днів. Потребує права мутити користувачів.")
     .addUserOption(option => option.setName("жертва").setDescription("Person, яку ви хочете кинути в таймаут.").setRequired(true)),
-    aliases: ["фетбан", "timeout"],
+    aliases: ["фетбан", "timeout", "fatбан", "фетban", "fisting"],
     category: "модерація",
     hidden: false,
     botChatExclusive: false,

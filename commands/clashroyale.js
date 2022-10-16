@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("clashroyale")
     .setDescription("Гляньте на цей смішний клеш рояль мем!"),
-    aliases: ["clashroyalememe"],
+    aliases: ["clashroyalememe", "клешрояль", "клеш"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

@@ -5,7 +5,7 @@ module.exports = {
     .setName("delete")
     .setDescription("Видаляє дану кількість повідомлень. Потрібні права керування повідомленнями.")
     .addNumberOption(option => option.setName("число").setDescription("Кількість повідомлень, яке ви хочете видалити.").setRequired(true)),
-    aliases: ["делете", "del", "видалити", "видал"],
+    aliases: ["делете", "del", "видалити", "видал", "дел", "деліт"],
     category: "модерація",
     hidden: false,
     botChatExclusive: false,

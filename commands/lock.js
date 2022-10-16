@@ -35,7 +35,7 @@ module.exports = {
     
         let embed = new Discord.MessageEmbed()
         .setTitle("🔒 Увага!")
-        .setDescription("Цей канал заблокований" + (args[0] ? (":\n\n_" + args[0] + "_") : "."))
+        .setDescription("Цей канал заблокований" + (args[0] ? (":\n\n\"_" + args[0] + "_\"") : "."))
         .setColor("#fcd514");
 
         await client.replyOrSend({embeds: [embed]}, message);

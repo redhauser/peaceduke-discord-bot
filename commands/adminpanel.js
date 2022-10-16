@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("adminpanel")
     .setDescription("Відкриває прямий доступ до бота."),
-    aliases: ["admin"],
+    aliases: ["admin","адмінськапанель"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

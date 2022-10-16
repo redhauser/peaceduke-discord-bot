@@ -161,7 +161,8 @@ module.exports = {
                 queueSecondsLength += getLengthFromTimestamp(voice.queue[i].timestamp);
             }
 
-            let content = "🎶 **Поточна черга: " + (voice.queue.length>=2 ? "[_" + generateTimestampFromLength(queueSecondsLength) + "_]" : "") + "**\n\n**┏(1)"+(voice.player.state.status==="paused" ? "⏸️" : "▶") +" " + " [_" + voice.queue[0].timestamp + "_] " + builders.hyperlink(voice.queue[0].title, voice.queue[0].url) + "**" + (voice.queue.length>1 ? "\n┃\n" : "\n┃\n");
+            let content = "🎶 **Поточна черга: " + (voice.queue.length>=2 ? "[_" + generateTimestampFromLength(queueSecondsLength) + "_]" : "") + " {" + builders.channelMention(voice.vc.id) + "}"
+            + "**\n\n**┏(1)"+(voice.player.state.status==="paused" ? "⏸️" : "▶") +" " + " [_" + voice.queue[0].timestamp + "_] " + builders.hyperlink(voice.queue[0].title, voice.queue[0].url) + "**" + (voice.queue.length>1 ? "\n┃\n" : "\n┃\n");
             if(voice.queue.length < queueMaxSongsShown) {
                 for(let i = 1;i<(voice.queue.length < queueMaxSongsShown ? voice.queue.length : queueMaxSongsShown);i++) {
                     content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";

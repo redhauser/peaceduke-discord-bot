@@ -36,7 +36,7 @@ module.exports = {
         
         let embed = new Discord.MessageEmbed()
         .setTitle("✅ Увага!")
-        .setDescription("Цей канал розблокований" + (args[0] ? (":\n\n_" + args[0] + "_") : "! Насолоджуйтесь."))
+        .setDescription("Цей канал розблокований" + (args[0] ? (":\n\n\"_" + args[0] + "_\"") : "! Насолоджуйтесь."))
         .setColor("#40e224");
 
         await client.replyOrSend({embeds: [embed]}, message);

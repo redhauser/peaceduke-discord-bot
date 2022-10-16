@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("epic")
     .setDescription("very epic"),
-    aliases: ["megafuckingepic"],
+    aliases: ["megafuckingepic", "епік"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

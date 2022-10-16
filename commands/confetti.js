@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("confetti")
     .setDescription("Вітаю!"),
-    aliases: ["congrats", "congratulations"],
+    aliases: ["congrats", "congratulations", "конфетті", "ура", "hooray", "yaay", "yay"],
     category: "розваги",
     hidden: true,
     botChatExclusive: false,

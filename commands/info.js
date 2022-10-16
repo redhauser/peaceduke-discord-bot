@@ -6,7 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("info")
     .setDescription("Дізнайтеся більше про бота... якщо вам з якоїсь радості це цікаво."),
-    aliases: ["about", "абоут","botinfo", "faq", "пробота", "ебаут", "peaceduke", "aboutbot", "whyisbotsofuckingshit", "botinformation", "інфо", "інформація"],
+    aliases: ["about", "абоут","botinfo", "faq", "пробота", "ебаут", "peaceduke", "aboutbot", "whyisbotsofuckingshit", "botinformation", "інфо", "інформація", "wtfbot"],
     category: "інформація",
     hidden: false,
     botChatExclusive: true,

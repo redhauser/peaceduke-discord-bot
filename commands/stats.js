@@ -55,11 +55,6 @@ module.exports = {
             userDescription += "Цей користувач один з адміністраторів цього серверу.";
         }
 
-        statembed.setDescription(userDescription);
-        statembed.addFields({name: "\u200B", value: "\u200B"},
-                    {name:"🆔 Discord тег:", value:"`" + statuser.tag + "`", inline: true},
-                    {name: "#️⃣ Повідомлень:", value: client?.stats[userid]?.guilds[message?.guildId]?.messageCount || "Дані відсутні.", inline: true});
-        
         let status = "";
         let statusfrom = [];
         if(statguilduser.presence?.status === "offline" || !statguilduser.presence?.status) {
@@ -77,14 +72,20 @@ module.exports = {
                 if(statguilduser.presence?.clientStatus?.web) statusfrom.push("з веба");
             }
         }
-        statembed.addFields({name: "📡 Статус:", value: status + "\n" + statusfrom?.join(", "), inline: true});
 
+        statembed.setDescription(userDescription);
+
+        statembed.addFields({name: "\u200B", value: "\u200B"},
+                    {name:"🆔 Discord тег:", value: "`" + statuser.username + "#" + statuser.discriminator + "`", inline: true},
+                    {name: "#️⃣ Повідомлень:", value: client.getUserMessageCount(statuser.id, message.guildId).toString() || "---", inline: true},
+                    {name: "📡 Статус:", value: status + "\n" + statusfrom?.join(", "), inline: true});
+        
         statembed.addFields({name: "\u200B", value: "\u200B"},
                     {name: "🌟 Має аккаунт з: ", value: builders.time(statuser.createdAt), inline: true},
                     {name: "👋 Приєднався на сервер: ", value: (statguilduser ? builders.time(statguilduser?.joinedAt) : "Не учасник цього сервера."), inline: true},
                     {name: "\u200B", value: "\u200B"})
         .setImage(statuser.bannerURL());
-        
+
         let userlvl = client.stats[statuser.id].guilds[message.guildId].lvl;
 
         if(userlvl && !statuser.bot) {

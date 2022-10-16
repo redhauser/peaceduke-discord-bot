@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.9` - small changes. fixed `stats` bug
+
 `1.5.8` revert change of downloadFromInfo
 
 `1.5.7` fix `stats` and `lyrics`

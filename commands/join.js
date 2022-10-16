@@ -7,7 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("join")
     .setDescription("Приєднує бота до вашого голосового каналу."),
-    aliases: ["джоін", "джойн", "приєднатися", "vcrn", "j"],
+    aliases: ["джоін", "джойн", "приєднатися", "vcrn", "j", "джойн", "джойн", "сюда", "сюди", "thisvc"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,

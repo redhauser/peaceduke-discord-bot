@@ -214,7 +214,7 @@ module.exports = {
                         let vc = message.member.voice.channel;
                         if(!vc) {
                             if(message.type === "APPLICATION_COMMAND") {
-                                await message.followUp({content: "Ви повинні бути у голосовому каналі!", ephemeral: true});
+                                await message.followUp({content: "⏩❌ Ви повинні бути у голосовому каналі!", ephemeral: true});
                             }
                             return;
                         }
@@ -395,7 +395,7 @@ module.exports = {
             .setColor("#fc2557");
         
             const vc = message.member.voice.channel;
-            if(!vc) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Ви повинні бути у голосовому каналі!")], ephemeral: true}, message);
+            if(!vc) return await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("⏩❌ Ви повинні бути у голосовому каналі!")], ephemeral: true}, message);
 
             if(!client.stats[userId].playlists || !client.stats[userId].playlists[0]) { 
                 let embedDeletedAllPlaylists = new Discord.MessageEmbed()

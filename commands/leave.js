@@ -6,7 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName("leave")
     .setDescription("Виганяє бота з голосового каналу."),
-    aliases: ["лів", "лівни", "novcrn", "disconnect", "leavevc", "l"],
+    aliases: ["лів", "лівни", "novcrn", "disconnect", "leavevc", "l", "лівай", "леаве"],
     category: "музика",
     hidden: false,
     botChatExclusive: true,
@@ -17,7 +17,7 @@ module.exports = {
         let embed = new Discord.MessageEmbed().setColor("#55bffc");
 
         if(!message.guild.me.voice?.channelId) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("↩️❌ Не був у голосовому каналі.")], ephemeral: true},message);
-        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [embed.setColor("#fc2557").setDescription("↩️❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
         
         voice.vc = false;
         voice.tc = message.channel;

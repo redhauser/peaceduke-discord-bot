@@ -28,9 +28,9 @@ module.exports = {
        let vc = message.member.voice.channel;
        let callbackEmbed = new Discord.MessageEmbed().setColor("#FF0000");
 
-        if(!vc) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
+        if(!vc) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("⏩❌ Ви повинні бути у голосовому каналі, щоби використати цю команду!")], ephemeral: true},message);
         if(!args) args = [message.options.get("пісня").value];
-        if(!args.length) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("❌ Ви повинні вказати посилання/назву пісні!")], ephemeral: true},message);
+        if(!args.length) return await client.replyOrSend({content: " ", embeds: [callbackEmbed.setColor("#fc2557").setDescription("⏩❌ Ви повинні вказати посилання/назву пісні!")], ephemeral: true},message);
         voice.vc = vc;
         voice.tc = message.channel;
         

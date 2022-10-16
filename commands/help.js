@@ -6,7 +6,7 @@ module.exports = {
     .setName("help")
     .setDescription("Дізнайтеся про всі команди бота та їхнє використання.")
     .addStringOption(option => option.setName("name").setDescription("Назва команди, про яку ви б хотіли більше дізнатись.")),
-    aliases: ["хелп","commandinfo","commands","команди", "допомога"],
+    aliases: ["хелп","commandinfo","commands","команди", "допомога", "wtfcommands", "wtf"],
     category: "інформація",
     hidden: false,
     botChatExclusive: true,
