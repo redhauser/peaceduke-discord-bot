@@ -34,7 +34,7 @@ module.exports = {
 
         //✨ Special ✨ descriptions
         if (userid == config.redhauserId) {
-            userDescription += "Цей користувач той ще дурень... 💀💀";
+            userDescription += "Цей користувач is pretty fucking dumb XD 💀💀";
         } else if(userid == message.guild?.ownerId) {
             userDescription += "Цей користувач власник цього серверу. 👑";
         } else if (userid == config.clientId) {

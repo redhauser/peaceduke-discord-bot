@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.10` - changes to `plist` command, to make it more in line with the style that `queue` command uses.
+
 `1.5.9` - small changes. fixed `stats` bug
 
 `1.5.8` revert change of downloadFromInfo

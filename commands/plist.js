@@ -189,7 +189,7 @@ module.exports = {
                         newPlaylist.queueTimestamp = generateTimestampFromLength(queueTotalLength);
                     }
 
-                    let embedShowPlaylist = await generateShowPlaylistEmbed("Показую " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_" + newPlaylist.queueTimestamp + "_]", newPlaylist);
+                    let embedShowPlaylist = await generateShowPlaylistEmbed("Показую " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_**" + newPlaylist.queueTimestamp + "**_]", newPlaylist);
 
                     reply = await client.replyOrSend({content: " ", embeds: [embedShowPlaylist], components: [playlistViewPlaylistActionRow]}, message);
                 }
@@ -320,7 +320,7 @@ module.exports = {
                             newPlaylist.queueTimestamp = generateTimestampFromLength(queueTotalLength);
                         }
     
-                        let embedShowPlaylist = await generateShowPlaylistEmbed("Показую " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_" + newPlaylist.queueTimestamp + "_]", newPlaylist);
+                        let embedShowPlaylist = await generateShowPlaylistEmbed("Показую " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_**" + newPlaylist.queueTimestamp + "**_]", newPlaylist);
 
                         await reply.edit({content: " ", embeds: [embedShowPlaylist], components: [playlistViewPlaylistActionRow]});
                     }
@@ -355,6 +355,13 @@ module.exports = {
                 args[1] = args.join(" ").slice(4).trim();
             }
 
+            if(!args[1] || args[1].trim() == "") { 
+                let embedToDeny = new Discord.MessageEmbed()
+                .setColor("#fc2557")
+                .setDescription("Вкажіть назву для вашого нового плейлиста!");
+                return await client.replyOrSend({embeds: [embedToDeny]}, message);
+            }
+
             let compressedQueue = [];
             let queueTotalLength = 0;
             for(let i = 0;i < voice.queue.length;i++) {
@@ -371,25 +378,34 @@ module.exports = {
 
             client.stats[userId].playlists.push({title: args[1], image: compressedQueue[0].image, queue: compressedQueue, queueTimestamp: generateTimestampFromLength(queueTotalLength)});
 
-            let isTheQueueTooLong = compressedQueue.length>9;
-            let content = "Ваший новий плейлист: \n\n**┏(1)▶️ " + " " + " [_" + compressedQueue[0].timestamp + "_] " + builders.hyperlink(compressedQueue[0].title, compressedQueue[0].url) + "**" + (compressedQueue.length>1 ? "\n┃\n┃\n" : "\n");
-            for(let i = 1;i<compressedQueue.length;i++) {
-                content += "┣(" + (i+1) + ")↪️ " + " [_" + compressedQueue[i].timestamp +"_] " + builders.hyperlink(compressedQueue[i].title, compressedQueue[i].url) + "\n";
-                if(i==8) i=compressedQueue.length;
+            let content = "Ваший новий плейлист: **[" + generateTimestampFromLength(queueTotalLength) + "]**\n\n**┏(1)▶️ " + " " + " [_" + compressedQueue[0].timestamp + "_] " + builders.hyperlink(compressedQueue[0].title, compressedQueue[0].url) + "**" + (compressedQueue.length>1 ? "\n┃\n┃\n" : "\n");
+
+            let queueMaxSongsShown = 16;
+            if(voice.queue.length < queueMaxSongsShown) {
+                for(let i = 1;i<(voice.queue.length < queueMaxSongsShown ? voice.queue.length : queueMaxSongsShown);i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
+            } else {
+                for(let i = 1; i<8; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
+                content += "┣ {...}\n";
+                for (let i = voice.queue.length-3; i<voice.queue.length; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + voice.queue[i].timestamp +"_] " + builders.hyperlink(voice.queue[i].title, voice.queue[i].url) + "\n";
+                }
             }
+            
             content += "┗━━━━━━━━━━━━━━━━━━━━━━━\n";
-            let addInfo = "";
-            if(isTheQueueTooLong) addInfo+="**⏩ А також ще " + (compressedQueue.length-9) + " пісень!**\n";
+            
             let embedPreviewPlaylist = new Discord.MessageEmbed()
             .setColor("#25fc62")
             .setTitle("Показую плейлист \"" + args[1] + "\":")
             .setImage(compressedQueue[0].image)
-            .setDescription(content+addInfo);
+            .setDescription(content);
             
             await client.replyOrSend({embeds: [embedPreviewPlaylist]}, message);
         
         } else if(args[0] == "play" || args[0] == "плей" || args[0] == "грай") {
-
 
             let anErrorOccuredEmbed = new Discord.MessageEmbed()
             .setColor("#fc2557");
@@ -410,6 +426,13 @@ module.exports = {
             if(message.type === "APPLICATION_COMMAND") {
                 reply = await message.fetchReply();
                 args[1] = message.options.get("playlist").value;
+            }
+
+            if(!args[1] || args[1].trim() == "") { 
+                let embedToDeny = new Discord.MessageEmbed()
+                .setColor("#fc2557")
+                .setDescription("Вкажіть назву або ID вашого плейлиста!");
+                return await reply.edit({content: " ", embeds: [embedToDeny]},message);
             }
 
             let newPlaylist;
@@ -449,6 +472,8 @@ module.exports = {
             await client.replyOrSend({content: " ", embeds: [anErrorOccuredEmbed.setDescription("Вибачте, але ви вказали неправильну сабкоманду. Спробуйте: `" + config.guilds[message.guildId].botPrefix + "plist show`, `" + config.guilds[message.guildId].botPrefix + "plist save`, `" + config.guilds[message.guildId].botPrefix + "plist play`.")]}, message);
         }
 
+        //functions
+
         async function playAndShow(reply, newPlaylist) {
             if(!newPlaylist.queueTimestamp) {
                 let queueTotalLength = 0;
@@ -458,21 +483,31 @@ module.exports = {
                 newPlaylist.queueTimestamp = generateTimestampFromLength(queueTotalLength);
             }
 
-            let content = "Поставив у чергу " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_" + newPlaylist.queueTimestamp + "_]\n\n**┏(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n┃\n┃\n" : "\n┃\n");
-            for(let i = 1;i<newPlaylist.queue.length;i++) {
-                content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
-                if(i==12) i=newPlaylist.queue.length;
+            let content = "Поставив у чергу " + (isMainUser ? "ваший плейлист" : ("плейлист від " + builders.userMention(userId))) + " \"**" + newPlaylist.title + "**\": [_**" + newPlaylist.queueTimestamp + "**_]\n\n**┏(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n┃\n┃\n" : "\n┃\n");
+
+            let queueMaxSongsShown = 15;
+            if(newPlaylist.queue.length < queueMaxSongsShown) {
+                for(let i = 1;i<(newPlaylist.queue.length < queueMaxSongsShown ? newPlaylist.queue.length : queueMaxSongsShown);i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
+            } else {
+                for(let i = 1; i<8; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
+                content += "┣ {...}\n";
+                for (let i = newPlaylist.queue.length-3; i<newPlaylist.queue.length; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
             }
+
             content += "┗━━━━━━━━━━━━━━━━━━━━━━━\n";
-            let addInfo = "";
-            if(newPlaylist.queue.length > 13) addInfo+="**⏩ А також ще " + (newPlaylist.queue.length-13) + " пісень!**\n";
 
             let embedNewPlaylist = new Discord.MessageEmbed()
             .setColor("#ac00fc")
             .setTitle("В чергу добавлений" + (isMainUser ? " ваший" : "") + " збережений плейлист!")
             .setAuthor({name: message.member.user.tag, iconURL: message.member.displayAvatarURL()})
             .setImage(newPlaylist.image)
-            .setDescription(content+addInfo);
+            .setDescription(content);
 
             await reply.edit({content: " ", embeds: [embedNewPlaylist], components: []});
 
@@ -510,13 +545,13 @@ module.exports = {
                         }
                         playlists[i].queueTimestamp = generateTimestampFromLength(queueTotalLength);
                     }
-                content += (i === selectedPlaylistIndex ? "▶️  " : "") + "**" + (i+1) + "**-й плейлист \"**" + playlists[i].title + "**\": [_" + playlists[i].queueTimestamp + "_]\n";
+                content += (i === selectedPlaylistIndex ? "▶️  " : "") + "**" + (i+1) + "**-й плейлист \"**" + playlists[i].title + "**\": [_**" + playlists[i].queueTimestamp + "**_]\n";
 
                 //Playlist contents preview.
-                content += "┏(1)" + " [_" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[0].timestamp)) + "_] " +builders.hyperlink(playlists[i].queue[0].title, playlists[i].queue[0].url) + "\n";
-                content += "┣(2)" + " [_" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[1].timestamp)) + "_] " +builders.hyperlink(playlists[i].queue[1].title, playlists[i].queue[1].url) + "\n";
+                content += "┏(1)" + " [_**" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[0].timestamp)) + "**_] " +builders.hyperlink(playlists[i].queue[0].title, playlists[i].queue[0].url) + "\n";
+                content += "┣(2)" + " [_**" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[1].timestamp)) + "**_] " +builders.hyperlink(playlists[i].queue[1].title, playlists[i].queue[1].url) + "\n";
                 if(playlists[i].queue.length>=3) {
-                    content += "┣(3)" + " [_" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[2].timestamp)) + "_] " +builders.hyperlink(playlists[i].queue[2].title, playlists[i].queue[2].url) + "\n";
+                    content += "┣(3)" + " [_**" + generateTimestampFromLength(getLengthFromTimestamp(playlists[i].queue[2].timestamp)) + "**_] " +builders.hyperlink(playlists[i].queue[2].title, playlists[i].queue[2].url) + "\n";
                     if(playlists[i].queue.length > 4) {
                         content += "┗ _... та ще " + (playlists[i].queue.length-3) + " пісень._\n";
                     } else if(playlists[i].queue.length == 4) {
@@ -544,22 +579,36 @@ module.exports = {
         async function generateShowPlaylistEmbed(additionalText, newPlaylist) {
 
             content = additionalText+"\n\n**┏(1)▶  [_" + newPlaylist.queue[0].timestamp + "_] " + builders.hyperlink(newPlaylist.queue[0].title, newPlaylist.queue[0].url) + "**" + (newPlaylist.queue.length>1 ? "\n┃\n┃\n" : "\n┃\n");
-            for(let i = 1;i<newPlaylist.queue.length;i++) {
-                content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
-                if(i==15) i=newPlaylist.queue.length;
+            
+            let queueMaxSongsShown = 12;
+
+            if(newPlaylist.queue.length < queueMaxSongsShown) {
+                for(let i = 1;i<(voice.queue.length < queueMaxSongsShown ? newPlaylist.queue.length : queueMaxSongsShown);i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
+            } else {
+                for(let i = 1; i<8; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
+                content += "┣ {...}\n";
+                for (let i = newPlaylist.queue.length-3; i<newPlaylist.queue.length; i++) {
+                    content += "┣(" + (i+1) + ")↪️ " + " [_" + newPlaylist.queue[i].timestamp +"_] " + builders.hyperlink(newPlaylist.queue[i].title, newPlaylist.queue[i].url) + "\n";
+                }
             }
+            
             content += "┗━━━━━━━━━━━━━━━━━━━━━━━\n";
-            addInfo = "";
-            if(newPlaylist.queue.length > 16) addInfo+="**⏩ А також ще " + (newPlaylist.queue.length-16) + " пісень!**\n";
+            
 
             let embedPlaylistShow = new Discord.MessageEmbed()
             .setColor("#25a3fc")
             .setTitle("Показую " + (isMainUser ? "ваший" : "") + " плейлист:")
             .setImage(newPlaylist.image)
-            .setDescription(content+addInfo);
+            .setDescription(content);
 
             return embedPlaylistShow;
         }
+
+        //help functions
 
         function generateTimestampFromLength(seconds) {
             seconds = +seconds;

@@ -180,8 +180,6 @@ module.exports = {
             content += "┗━━━━━━━━━━━━━━━━━━━━━━━\n";
             
             let addInfo = "";
-            //let isTheQueueTooLong = voice.queue.length>15;
-            //if(isTheQueueTooLong) addInfo+="**⏩ Всього у черзі " + voice.queue.length + " пісень!**\n";
             if(voice.isLooped === "on") addInfo+="**🔂 Програвач повторює поточну пісню!**\n";
             if(voice.isLooped === "all") addInfo+="**🔄 Програвач повторює всю чергу!**\n";
             addInfo += voice.player.state.status==="paused" ? "**⏸️ Програвач поставлений на паузу.**\n" : "";
