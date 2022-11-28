@@ -1,37 +1,66 @@
 # peaceduke-discord-bot
-## This is the repository representing the code of PeaceDuke the Discord bot.
 
-PeaceDuke is a Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
+## About
 
-PeaceDuke is developed by me, **redhauser** (_redhauser#8140_ on Discord).
+This is the repository containing the source code of the Discord bot by the name "PeaceDuke".
+
+PeaceDuke is a simple Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
 
 <p align="center">
-  <img src="https://cdn.discordapp.com/attachments/760919347131973682/940014844449546290/epicemoji.png" alt="peaceduke">
+  <img src="./media/peaceduke.png" alt="peaceduke">
 </p>
 
-## How to boot the bot up and update it (this is for myself):
+---
 
-### How to update it on my current hosting:
+## Table of contents
 
-Go into the current running build by doing:
+- [About](#about)
+- [Update & Management](#update--management)
+    - [Installation](#installation)
+    - [Update](#update)
+    - [Logs](#logs)
+    - [Extras](#extras)
+- [Config](#config)
+    - [config.json](#configjson)
+    - [guildsconfig.json](#guildsconfigjson)
+    - [userdata.json](#userdatajson)
+- [Tasklist](#to-do)
+- [Patch Notes](#patch-notes)
+- [Special Thanks](#special-thanks)
 
-```sh
-cd ~/currentRunbuild
-```
+---
 
-or
+## Update & Management
 
-```sh
-cd ~/peaceduke-discord-bot
-```
+### Installation 
 
-Or, if you want to, install the git repository from the ground up by doing:
+Clone the repository to get the latest and greatest version of PeaceDuke:
 
 ```sh
 git clone git@github.com:redhauser/peaceduke-discord-bot.git
 ```
 
-If you clone it, don't forget to create three .json files (mentioned here later), and to do `npm install`!
+Now, head into peaceduke-discord-bot by doing:
+
+```sh
+cd peaceduke-discord-bot
+```
+
+Now, to finish the installation process do:
+
+```sh
+npm install
+```
+
+This will download all the libraries and packages PeaceDuke requires to function.
+
+### Update
+
+Go into the current running build by doing:
+
+```sh
+cd ~/peaceduke-discord-bot
+```
 
 Then, do:
 
@@ -47,17 +76,11 @@ npm install
 
 From here, go to any server and do `=shutdown` (or `!shutdown` or `/shutdown`). The bot shutdowns and also saves all important data (guildsconfig.json and userdata.json).
 
-PM2 will automatically restart the bot.
+PM2 will automatically restart the bot. If you haven't set up PM2, do it.
 
-If you're planning to update and not touch the bot for a while, I'd also recommend to do:
-
-```sh
-env YTDL_NO_UPDATE=1 pm2 restart 0 --update-env
-```
+### Logs
 
 It will ensure that ytdl-core package won't cause any issues.
-
-Congrats! You've successfuly updated the bot to the latest build and restarted it.
 
 If you want to see the current log do:
 
@@ -87,7 +110,19 @@ tail -n 30 ~/.pm2/logs/index-error.log
 
 Be sure to replace `30` with the amount of lines you want to see.
 
-## Configuration files:
+### Extras
+
+If you're experiencing the bot giving out errors for any single video you're trying to play, try doing:
+
+```sh
+env YTDL_NO_UPDATE=1 pm2 restart 0 --update-env
+```
+
+It might fix the issue.
+
+---
+
+## Config
 
 The bot requires three files to function: a **config.json** file, a **guildsconfig.json** file, and a **userdata.json** file.
 
@@ -119,6 +154,8 @@ If _correctionFluidMainChannelId_ is set to null or false, the bot won't send ou
 _debugMode_ allows for me, the developer of peaceduke, to ignore server-config's channel permissions. 
 
 For example, i could use the `play` command in #general, even though the bot's server config specifies the bot channel to be #music.
+
+I recommend for this value to be on all the time. Lol. Not really `debug`, huh?
 
 Every other value is **required** for the bot to work properly.
 
@@ -182,6 +219,24 @@ However, if you want to tinker with some of its contents, as an example, change 
 }
 ```
 
-##### :>
+## To-Do
 
-##### And well, that's it.
+- [ ] Welcome message by the bot. Part of the `config` command.
+
+- [ ] The `/mafia` command.
+
+- [ ] The `/rpg` command.
+
+- [ ] Auto-remove a channel from the config if it was deleted.
+
+- [ ] Think up of more features. Or, expand on the existing ones.
+
+## Patch Notes
+
+See `patchnotes.md` for patch notes.
+
+## Special Thanks
+
+This bot was developed entirely by me, **redhauser**, for the server Correction Fluid.
+
+I am grateful to have worked on something like this, that is being used to this day by the members of the community!

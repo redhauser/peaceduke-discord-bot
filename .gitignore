@@ -1,10 +1,7 @@
+/.git
 /config.json
-/OLDcommands 
-/old_commands
 /userdata.json
-/WIPcommands
-/soundpad
 /node_modules
 /guildsconfig.json
 /media/audio.mp3
-/.git
+/wip-features
