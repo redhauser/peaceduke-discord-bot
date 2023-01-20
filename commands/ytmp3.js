@@ -98,26 +98,29 @@ module.exports = {
         .setThumbnail(songdata.videoDetails.thumbnails[0].url)
         .setDescription(`🔀 Конвертую пісню \"**${songdata.videoDetails.title}**\" **[${generateTimestampFromLength(songdata.videoDetails.lengthSeconds)}]**\nз каналу **${songdata.videoDetails.ownerChannelName}**`)
         .setFooter({text: `Конвертую пісню від ${message.member.user.tag}`, iconURL: await message.member.user.avatarURL()})
-        await daReply.edit({content: " ", embeds: [previewSongEmbed], components: []});
+        await daReply.edit({embeds: [previewSongEmbed], components: []});
+
 
         try {
         ffmpeg(song)
         .toFormat("mp3")
         .on("end", async () => {
             try {
-                await daReply.edit({content: " ", embeds: [new Discord.MessageEmbed(previewSongEmbed).setDescription(`**Ось ваший MP3!**\n\n✅ 🔀 Зконвертував відео \n\"**${songdata.videoDetails.title}**\" **[${generateTimestampFromLength(songdata.videoDetails.lengthSeconds)}]**\nз каналу **${songdata.videoDetails.ownerChannelName}** у MP3 файл.`).setFooter({text: `Зконвертував пісню від ${message.member.user.tag}`, iconURL: await message.member.user.avatarURL()})], files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title) + ".mp3"}]});
+                await daReply.edit({embeds: [new Discord.MessageEmbed(previewSongEmbed).setDescription(`**Ось ваший MP3!**\n\n✅ 🔀 Зконвертував відео \n\"**${songdata.videoDetails.title}**\" **[${generateTimestampFromLength(songdata.videoDetails.lengthSeconds)}]**\nз каналу **${songdata.videoDetails.ownerChannelName}** у MP3 файл.`).setFooter({text: `Зконвертував пісню від ${message.member.user.tag}`, iconURL: await message.member.user.avatarURL()})], files: [{attachment: "./media/audio.mp3", name: (args[1] || songdata.videoDetails.title).toString() + ".mp3"}]});
                 console.log("[" + message.guild.name + "] Вдало конвертував \"" + songdata.videoDetails.title +  "\" відео у mp3.");
             } catch (err) {
                 console.log("[" + message.guild.name + "] Відбулась помилка при конвертуванні в mp3:", err);
-                await daReply.edit({content: " ", embeds: [new Discord.MessageEmbed(previewSongEmbed).setColor("#fc2557").setTitle("Сталася помилка").setDescription("**⚠️ Сталася помилка при конвертації відео у MP3 :(\n\nЦе могло статися через ці причини: \n - _Конвертований файл більше за 8МБ_\n - _Відео на ютубі позначено як 18+_\n - _радя криво написав бота_**\n\n:(").setFooter(null).setThumbnail(null)]});
+                await daReply.edit({embeds: [new Discord.MessageEmbed(previewSongEmbed).setColor("#fc2557").setTitle("Сталася помилка").setDescription("**⚠️ Сталася помилка при конвертації відео у MP3 :(\n\nЦе могло статися через ці причини: \n - _Конвертований файл більше за 8МБ_\n - _Відео на ютубі позначено як 18+_\n - _радя криво написав бота_**\n\n:(").setFooter(null).setThumbnail(null)]});
             }
             //In the future might wanna add more metadata
         }).addOutputOption("-metadata", `title=\"${(args[1] || songdata.videoDetails.title.toString())}\"`).output("./media/audio.mp3").run();
         } catch (err) {
             console.log("[" + message.guild.name + "] Відбулась помилка при конвертуванні в mp3:", err);
-            await daReply.edit({content: " ", embeds: [new Discord.MessageEmbed(previewSongEmbed).setColor("#fc2557").setTitle("Сталася помилка").setDescription("**⚠️ Сталася помилка при конвертації відео у MP3 :(\n\nЦе могло статися через ці причини: \n - _Конвертований файл більше за 8МБ_\n - _Відео на ютубі позначено як 18+_\n - _радя криво написав бота_**\n\n:(").setFooter(null).setThumbnail(null)]});
+            await daReply.edit({embeds: [new Discord.MessageEmbed(previewSongEmbed).setColor("#fc2557").setTitle("Сталася помилка").setDescription("**⚠️ Сталася помилка при конвертації відео у MP3 :(\n\nЦе могло статися через ці причини: \n - _Конвертований файл більше за 8МБ_\n - _Відео на ютубі позначено як 18+_\n - _радя криво написав бота_**\n\n:(").setFooter(null).setThumbnail(null)]});
         } 
 
+        
+        //Helper functions
         function generateTimestampFromLength(seconds) {
             seconds = +seconds;
             

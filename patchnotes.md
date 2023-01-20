@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.12` - small cleanup.
+
 `1.5.11` - Removed `todolist.md` and merged it into the README. Remade the README.
 
 `1.5.10` - changes to `plist` command, to make it more in line with the style that `queue` command uses.

@@ -2,19 +2,18 @@
 
 ## About
 
-This is the repository containing the source code of the Discord bot by the name "PeaceDuke".
+This is the repository containing the source code of the Discord bot by the name "**PeaceDuke**".
 
-PeaceDuke is a simple Discord bot, that's got all the basic music features you'll need, like play, plnow, queue, loop, pause, skip, remove, shuffle, etc. It also has a bunch of mini-games, moderation features, and several community features. 
+**PeaceDuke** is a simple Discord bot, that has some basic music-related features: it can play videos from youtube, albums from spotify, you can put it on loop, shuffle it, save the queue as a playlist, etc. It's also got some moderational and community features. 
 
 <p align="center">
   <img src="./media/peaceduke.png" alt="peaceduke">
 </p>
 
----
-
 ## Table of contents
 
 - [About](#about)
+- [Features](#features)
 - [Update & Management](#update--management)
     - [Installation](#installation)
     - [Update](#update)
@@ -28,7 +27,19 @@ PeaceDuke is a simple Discord bot, that's got all the basic music features you'l
 - [Patch Notes](#patch-notes)
 - [Special Thanks](#special-thanks)
 
----
+## Features
+
+**PeaceDuke** is mostly a music bot, but it also has built-in mini-games, it can add and handle "self-assign roles" messages on your server, etc.
+
+The bot has 5 main categories of commands, with only 3 of them being kinda-feature-complete:
+
+- Music commands
+- Games
+- "Fun"
+- Informational commands
+- Moderational commands
+
+You can get more info on what these commands are from the `help` command built-in to the bot.
 
 ## Update & Management
 
@@ -80,8 +91,6 @@ PM2 will automatically restart the bot. If you haven't set up PM2, do it.
 
 ### Logs
 
-It will ensure that ytdl-core package won't cause any issues.
-
 If you want to see the current log do:
 
 ```sh
@@ -112,15 +121,19 @@ Be sure to replace `30` with the amount of lines you want to see.
 
 ### Extras
 
-If you're experiencing the bot giving out errors for any single video you're trying to play, try doing:
+If you're experiencing the bot giving out errors for any single video you're trying to play, try running the bot with this environment variable:
+
+```sh
+env YTDL_NO_UPDATE=1 node .
+```
+
+Or if you have PM2 set up:
 
 ```sh
 env YTDL_NO_UPDATE=1 pm2 restart 0 --update-env
 ```
 
 It might fix the issue.
-
----
 
 ## Config
 
@@ -238,5 +251,3 @@ See `patchnotes.md` for patch notes.
 ## Special Thanks
 
 This bot was developed entirely by me, **redhauser**, for the server Correction Fluid.
-
-I am grateful to have worked on something like this, that is being used to this day by the members of the community!
