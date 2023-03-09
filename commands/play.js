@@ -248,11 +248,7 @@ module.exports = {
         let urltovid = ytdl.validateURL(args[0]) ? args[0] : video.url;
         video.url = urltovid;
         video.sender = message.member.user.tag;
-        let connection = await voiceAPI.joinVoiceChannel({
-            channelId: vc.id,
-            guildId: vc.guild.id,
-            adapterCreator: vc.guild.voiceAdapterCreator,
-        });
+        let connection = voice.createConnection(vc);
         //a few visual changes, i think they are meh but better than before for sure..????
         let embedLink = new Discord.MessageEmbed()
         .setColor("#FF0000")

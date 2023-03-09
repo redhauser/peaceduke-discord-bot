@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.13` - because discord is a mess they updated the api without warning anyone. fixed that.
+
 `1.5.12` - small cleanup.
 
 `1.5.11` - Removed `todolist.md` and merged it into the README. Remade the README.

@@ -514,11 +514,7 @@ module.exports = {
             const vc = message.member.voice.channel;
             voice.vc = vc;
             voice.tc = message.channel;
-            let connection = await voiceAPI.joinVoiceChannel({
-                channelId: vc.id,
-                guildId: vc.guild.id,
-                adapterCreator: vc.guild.voiceAdapterCreator,
-            });
+            let connection = voice.createConnection(vc);
 
             let wasQEmpty = voice.queue.length;
 

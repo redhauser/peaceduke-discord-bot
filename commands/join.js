@@ -24,11 +24,7 @@ module.exports = {
         voice.vc = vc; 
         voice.tc = message.channel;
 
-        voiceAPI.joinVoiceChannel({
-            channelId: vc.id,
-            guildId: vc.guild.id,
-            adapterCreator: vc.guild.voiceAdapterCreator,
-        });
+        voice.createConnection(vc);
 
         await client.replyOrSend({embeds: [new Discord.MessageEmbed().setColor("#55bffc").setDescription(`↪️ Приєднався до ${builders.channelMention(vc.id)} !`)]}, message);
     }

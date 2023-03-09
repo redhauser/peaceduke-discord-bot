@@ -251,11 +251,7 @@ module.exports = {
         //if(!urltovid) return await client.replyOrSend({content: "Сталась надзвичайна помилка. Якщо ви бачете цю помилку, повідомте редхаузеру!"},message);
         video.sender = message.member.user.tag;
         //video.interaction = message;
-        let connection = await voiceAPI.joinVoiceChannel({
-            channelId: vc.id,
-            guildId: vc.guild.id,
-            adapterCreator: vc.guild.voiceAdapterCreator,
-        });
+        let connection = voice.createConnection(vc);
         connection.subscribe(voice.player);
         let embedLink = new Discord.MessageEmbed()
         .setColor("#FF0000")

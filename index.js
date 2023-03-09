@@ -55,13 +55,43 @@ voice.createGuildVoiceObject = async (gid) => {
         vc: false,
         isLooped: "off"
     };
+
+
+    //Creates connection to a vc, applies patch
+    voice.guilds[gid].createConnection = (vc) => {
+
+        let voiceConnection = voiceAPI.joinVoiceChannel({
+            channelId: vc.id,
+            guildId: vc.guild.id,
+            adapterCreator: vc.guild.voiceAdapterCreator,
+        });
+
+        const networkStateChangeHandler = (oldNetworkState, newNetworkState) => {
+            const newUdp = Reflect.get(newNetworkState, 'udp');
+            clearInterval(newUdp?.keepAliveInterval);
+        }
+        voiceConnection.on('stateChange', (oldState, newState) => {
+            Reflect.get(oldState, 'networking')?.off('stateChange', networkStateChangeHandler);
+            Reflect.get(newState, 'networking')?.on('stateChange', networkStateChangeHandler);
+        });
+
+        return voiceConnection;
+    };
     
+    //player function
     voice.guilds[gid].pf = async () => {
         if(voice.guilds[gid].vc && voice.guilds[gid].queue.length) {
             let vc = voice.guilds[gid].vc;
             
 
                 let connection = voiceAPI.getVoiceConnection(vc.guild?.id);
+                const { VoiceConnectionStatus } = require('@discordjs/voice');
+
+                connection.on('stateChange', (old_state, new_state) => {
+                 if (old_state.status === VoiceConnectionStatus.Ready && new_state.status === VoiceConnectionStatus.Connecting) {
+                  connection.configureNetworking();
+                 }
+                })
 
                 let urltovid = voice.guilds[gid].queue[0].url;
                 let stream = false;
@@ -556,7 +586,7 @@ client.once("ready", async () => {
             { activities: [{ name: "OMORI", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Undertale", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Deltarune", type: "PLAYING" }], status: "online" },
-            { activities: [{ name: "STALKER: Shadow of Chernobyl", type: "PLAYING" }], status: "online" },
+            { activities: [{ name: "STALKER: Shadow of Chornobyl", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Among Us", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "STALKER: Call of Pripyat", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "STALKER: Clear Sky", type: "PLAYING" }], status: "online" },
@@ -576,7 +606,6 @@ client.once("ready", async () => {
             { activities: [{ name: "Epic Battle Fantasy 4", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Epic Battle Fantasy 5", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Epic Battle Fantasy Collection", type: "PLAYING" }], status: "online" },
-            { activities: [{ name: "Everlasting Summer", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "Doki Doki Literature Club", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "osu!", type: "PLAYING" }], status: "online" },
             { activities: [{ name: "osu!", type: "COMPETING" }], status: "online" },
