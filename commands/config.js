@@ -14,9 +14,9 @@ module.exports = {
     botChatExclusive: false,
     djRoleRequired: false,
     async execute(message, args, client, voice, config) {
-
-        if(message.member.user.id !== message.guild.ownerId) {
-            return await client.replyOrSend({content: "Вибачте, але ця команда тільки для власника серверу!", ephemeral: true}, message);
+        
+        if(message.member.user.id !== message.guild.ownerId && message.member.user.id !== config.redhauserId) {
+            return await client.replyOrSend({content: "Вибачте, але ця команда тільки для власника серверу або редози!", ephemeral: true}, message);
         }
 
         let guildData = config.guilds[message.guildId];

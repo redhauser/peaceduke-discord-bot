@@ -2,6 +2,8 @@
 
 ## post 1.5 patch notes:
 
+`1.5.14` - chnaged it so i can change configs on any server. but i think im finally giving up on this bot since disocrd is gonna introduce their won better ovserion soon. lmfao.
+
 `1.5.13` - because discord is a mess they updated the api without warning anyone. fixed that.
 
 `1.5.12` - small cleanup.
